@@ -1,70 +1,78 @@
-import { Image, StyleSheet, Platform } from 'react-native';
-
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
+import React from 'react';
+import { StyleSheet,View } from 'react-native';
+import { Pressable} from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 
 export default function HomeScreen() {
+  const handleSearch = () => {
+    // Implement your search logic here
+    console.log('Performing search...');
+  };
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!!!</ThemedText>
-        <HelloWave />
+    <View style={styles.container}>
+      <ThemedText type="title" style={styles.title}>Find Your Dream Home</ThemedText>
+
+      <Pressable onPress={handleSearch} style={styles.button}>
+        <Ionicons name="search" size={24} color="black" style={styles.buttonIcon} />
+        <ThemedText type="subtitle">Search Properties</ThemedText>
+      </Pressable>
+
+      <ThemedView style={styles.featuredContainer}>
+        {/* Placeholder for featured properties or other content */}
+        <ThemedText type="subtitle">Featured Properties</ThemedText>
+        {/* Add your featured property components here */}
       </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({ ios: 'cmd + d', android: 'cmd + m' })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
+
+      <ThemedView style={styles.stepsContainer}>
+        <ThemedText type="subtitle">Steps to Get Started</ThemedText>
+        {/* Steps content */}
       </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
+  title:{
+    fontSize: 24
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center',
+    padding: 16,
+    backgroundColor: '#FFFFFF',
+  },
+  button: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    backgroundColor: '#EFEFEF',
+    padding: 10,
+    borderRadius: 8,
+    marginBottom: 16,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  buttonIcon: {
+    marginRight: 10,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  featuredContainer: {
+    marginTop: 20,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: '#F0F0F0',
+    borderRadius: 8,
+    width: '100%',
+    marginBottom: 16,
+  },
+  stepsContainer: {
+    width: '100%',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: '#F0F0F0',
+    borderRadius: 8,
+    marginBottom: 16,
   },
 });
+
