@@ -17,7 +17,7 @@ const SearchScreen: React.FC = () => {
   return (
     
     <View style={styles.container}>
-     <Text>okii</Text>
+     <Text>ok</Text>
       <Ionicons name="search" size={24} color="gray" style={styles.icon} />
       <TextInput
         style={styles.input}
