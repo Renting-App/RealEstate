@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, StyleSheet, Platform, Pressable } from 'react-native';
+import { View, TextInput, StyleSheet, Platform, Pressable, Text} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Picker } from '@react-native-picker/picker'; 
 
@@ -11,10 +11,13 @@ const SearchScreen: React.FC = () => {
   const handleSearch = () => {
     console.log('Searching for:', searchQuery, category, transactionType);
     // Implement your search logic here Ines
+    
   };
 
   return (
+    
     <View style={styles.container}>
+     <Text>ok</Text>
       <Ionicons name="search" size={24} color="gray" style={styles.icon} />
       <TextInput
         style={styles.input}
