@@ -10,6 +10,7 @@ export default function TabLayout() {
 
   return (
     <Tabs
+    //test
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerShown: false,
