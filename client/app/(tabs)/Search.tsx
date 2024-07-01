@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { View, TextInput, StyleSheet, Platform, Pressable, Text} from 'react-native';
+import { TextInput, StyleSheet, Platform, Pressable, Text} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Picker } from '@react-native-picker/picker'; 
+import { ThemedView } from '@/components/ThemedView';
 
 const SearchScreen: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -16,7 +17,7 @@ const SearchScreen: React.FC = () => {
 
   return (
     
-    <View style={styles.container}>
+    <ThemedView style={styles.container}>
      <Text>ok</Text>
       <Ionicons name="search" size={24} color="gray" style={styles.icon} />
       <TextInput
@@ -47,7 +48,7 @@ const SearchScreen: React.FC = () => {
       <Pressable style={styles.button} onPress={handleSearch}>
         <Ionicons name="search" size={24} color="white" />
       </Pressable>
-    </View>
+    </ThemedView>
   );
 };
 
