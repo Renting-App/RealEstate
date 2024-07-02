@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, TextInput, Image, FlatList, Pressable } from 'react-native';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView'; // Import ThemedView component
+import React ,{useState} from "react";
+import { View, Image, StyleSheet} from 'react-native';
+import { ThemedText } from "@/components/ThemedText";
+import { ThemedView } from "@/components/ThemedView";
+import { useNavigation } from 'expo-router';
+import { Pressable ,TextInput,FlatList } from "react-native";
 
 interface Property {
   id: string;
@@ -34,29 +36,47 @@ const mockData: Property[] = [
   }
 ];
 
+
 const HomeScreen = () => {
   const [search, setSearch] = useState('');
+  const navigation = useNavigation();
 
   const handleSearch = (text: string) => {
-    setSearch(text); 
-    // Implement your search logic here 
+    setSearch(text);
     console.log('Searching for:', text);
   };
 
- 
+  const handlePress = (property : Property) => {
+    navigation.navigate('PropertyDetailsScreen/index', { property });
+  };
+
   const renderItem = ({ item }: { item: Property }) => (
-     <ThemedView style={styles.card}>
+    <ThemedView style={styles.card}>
       <View style={[styles.typeContainer, item.type === 'rent' ? styles.rent : styles.sale]}>
         <ThemedText type="subtitle" style={styles.typeText}>
           {item.type === 'rent' ? 'Rent' : 'Sale'}
         </ThemedText>
       </View>
-      <Image source={{ uri: item.image }} style={styles.image} resizeMode="center" />
-      <ThemedText type="subtitle" style={styles.title}>{item.title}</ThemedText>
-      <ThemedText type="default" style={styles.address}>{item.address}</ThemedText>
-      <ThemedText type="default" style={styles.description}>{item.description}</ThemedText>
-      <Pressable style={styles.contactButton} onPress={() => console.log('Pressed')}>
-        <ThemedText type="link" style={styles.contactButtonText}>{item.contact}</ThemedText>
+      <Image
+        source={{ uri: item.image }}
+        style={styles.image}
+        resizeMode="center"
+      />
+      <ThemedText
+        type="subtitle"
+        style={styles.title}>{item.title}
+      </ThemedText>
+      <ThemedText
+        type="default"
+        style={styles.address}>{item.address}
+      </ThemedText>
+      <ThemedText type="default"
+        style={styles.description}>{item.description}
+      </ThemedText>
+      <Pressable
+        style={styles.contactButton}
+        onPress={() => handlePress(item)}>
+        <ThemedText type="link" style={styles.contactButtonText}>Details</ThemedText>
       </Pressable>
     </ThemedView>
   );
@@ -80,12 +100,11 @@ const HomeScreen = () => {
     </ThemedView>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    marginTop:30
+    marginTop: 30
   },
   pageTitle: {
     fontSize: 24,

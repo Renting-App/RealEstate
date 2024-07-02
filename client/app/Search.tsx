@@ -18,7 +18,6 @@ const SearchScreen: React.FC = () => {
   return (
     
     <ThemedView style={styles.container}>
-     <Text>ok</Text>
       <Ionicons name="search" size={24} color="gray" style={styles.icon} />
       <TextInput
         style={styles.input}
