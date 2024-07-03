@@ -1,20 +1,20 @@
 import React from 'react';
 import { View, ScrollView, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
-import { FontAwesome } from '@expo/vector-icons'; // Example icon library, adjust as needed
+import { FontAwesome } from '@expo/vector-icons'; 
 
 interface PropertyDetails {
   id: string;
   type: 'rent' | 'sale';
   title: string;
-  images: string[]; // Array of image URLs
-  price: number; // Price per month if rentable, else sale price
+  images: string[]; 
+  price: number; 
   description: string;
   rooms: number;
   bedrooms: number;
   bathrooms: number;
-  amenities: string[]; // Array of amenity names
-  location: string; // Address or location name
+  amenities: string[]; 
+  location: string; 
 }
 
 const mockProperty: PropertyDetails = {
