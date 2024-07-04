@@ -47,6 +47,7 @@ CREATE TABLE IF NOT EXISTS `realestate`.`houses` (
   `category` VARCHAR(20) NULL DEFAULT NULL,
   `iduser` INT NULL DEFAULT NULL,
   `images` JSON NULL DEFAULT NULL,
+  `operation` ENUM('rent', 'sale') NOT NULL DEFAULT 'rent',
   PRIMARY KEY (`idhouses`),
   INDEX `fk_user` (`iduser` ASC) VISIBLE,
   CONSTRAINT `fk_user`
