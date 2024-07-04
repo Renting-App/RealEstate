@@ -5,7 +5,7 @@ import {
   FlatList,
   ActivityIndicator,
   Image,
-  Button
+  Button,
 } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
@@ -27,7 +27,7 @@ const HousesScreen = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/gethouse")
+    fetch("http://192.168.1.13:5000/api/gethouse")
       .then((response) => response.json())
       .then((data) => {
         const mappedResidences = data.map((residence: any) => ({
@@ -37,7 +37,7 @@ const HousesScreen = () => {
           description: residence.description,
           contact_info: residence.contact_info,
           images: residence.images,
-          operation: residence.type,
+          operation: residence.operation,
         }));
         setResidences(mappedResidences);
         setLoading(false);
@@ -50,7 +50,12 @@ const HousesScreen = () => {
 
   const renderItem = ({ item }: { item: Residence }) => (
     <ThemedView style={styles.card}>
-      <View style={[styles.typeContainer, item.operation === "rent" ? styles.rent : styles.sale]}>
+      <View
+        style={[
+          styles.typeContainer,
+          item.operation === "rent" ? styles.rent : styles.sale,
+        ]}
+      >
         <ThemedText type="subtitle" style={styles.typeText}>
           {item.operation === "rent" ? "Rent" : "Sale"}
         </ThemedText>
@@ -72,7 +77,13 @@ const HousesScreen = () => {
       <ThemedText type="default" style={styles.contact}>
         Contact: {item.contact_info}
       </ThemedText>
-      <Link href={{ pathname: "/PropertyDetails", params: { residence: JSON.stringify(item) } }} asChild >
+      <Link
+        href={{
+          pathname: "/PropertyDetails",
+          params: { residence: JSON.stringify(item) },
+        }}
+        asChild
+      >
         <Button title="details" />
       </Link>
     </ThemedView>
@@ -80,7 +91,9 @@ const HousesScreen = () => {
 
   if (loading) {
     return (
-      <ThemedView style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <ThemedView
+        style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+      >
         <ActivityIndicator size="large" color="#0007ff" />
       </ThemedView>
     );
@@ -88,7 +101,9 @@ const HousesScreen = () => {
 
   return (
     <View style={styles.container}>
-      <ThemedText type="title" style={styles.pageTitle}>Home</ThemedText>
+      <ThemedText type="title" style={styles.pageTitle}>
+        Home
+      </ThemedText>
       <FlatList
         data={residences}
         renderItem={renderItem}
@@ -101,8 +116,8 @@ const HousesScreen = () => {
 
 const styles = StyleSheet.create({
   bgContainer: {
-    alignItems: 'center',
-    justifyContent: 'center'
+    alignItems: "center",
+    justifyContent: "center",
   },
   container: {
     flex: 1,

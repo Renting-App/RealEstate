@@ -10,7 +10,8 @@ const addHouse = async (req, res) => {
       contact_info,
       category,
       images,
-      iduser
+      iduser,
+      operation,
     });
     res.status(201).json(newHouse);
   } catch (err) {
@@ -81,7 +82,7 @@ const updateHouseById = async (req, res) => {
     house.notification = notification;
     house.category = category;
     house.images = images;
-
+    house.operation = operation;  
     await house.save();
 
     res.json(house);
