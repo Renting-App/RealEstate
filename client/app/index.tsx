@@ -7,10 +7,13 @@ import {
   Image,
   Button,
   TextInput,
+  Pressable,
 } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { Link } from "expo-router";
+import DrawerContent from "@/app/DrawerContent"; // Import the DrawerContent component
 
 interface Residence {
   _id: number;
@@ -26,7 +29,8 @@ interface Residence {
 const HousesScreen = () => {
   const [residences, setResidences] = useState<Residence[]>([]);
   const [loading, setLoading] = useState(true);
- 
+  const [isSidebarVisible, setIsSidebarVisible] = useState(false);
+
   useEffect(() => {
     fetch("http://localhost:5000/api/gethouse")
       .then((response) => response.json())
@@ -90,7 +94,6 @@ const HousesScreen = () => {
     </ThemedView>
   );
 
-
   if (loading) {
     return (
       <ThemedView style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
@@ -101,11 +104,12 @@ const HousesScreen = () => {
 
   return (
     <ThemedView style={styles.container}>
+      <DrawerContent isVisible={isSidebarVisible} onClose={() => setIsSidebarVisible(false)} />
       <View style={styles.header}>
-      
-          <Image style={styles.menuIcon} /> icon
-      
-        <ThemedText type="title" style={styles.companyName}>
+        <Pressable onPress={() => setIsSidebarVisible(true)}>
+          <Ionicons name="menu" style={styles.menuIcon} size={24} />
+        </Pressable>
+        <ThemedText type="title" style={[styles.bgContainer]}>
           Rent&Sell
         </ThemedText>
       </View>
@@ -126,7 +130,7 @@ const HousesScreen = () => {
               style={styles.searchInput}
               placeholder="Search for a property..."
             />
-            <Button title="Search" onPress={() => { }} />
+            <Pressable style={[styles.rent ,{backgroundColor:"#1183CE"}]}> <ThemedText>Search</ThemedText> </Pressable>
           </View>
         </View>
       </View>
@@ -137,42 +141,27 @@ const HousesScreen = () => {
         contentContainerStyle={styles.cardsContainer}
       />
     </ThemedView>
-
   );
 };
 
-
 const styles = StyleSheet.create({
-  bgContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-  },
   container: {
     flex: 1,
-    padding: 16,
-    marginTop: 30,
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-  },
-  menuButton: {
     padding: 10,
   },
   menuIcon: {
-    width: 24,
-    height: 24,
+    marginLeft: 10,
   },
-  companyName: {
-    flex: 1,
+  bgContainer: {
     textAlign: "center",
-    fontSize: 24,
   },
   banner: {
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 16,
+    position: "relative",
   },
   bannerImage: {
     width: "100%",
@@ -180,95 +169,110 @@ const styles = StyleSheet.create({
   },
   bannerContent: {
     position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
     alignItems: "center",
+    justifyContent: "center",
   },
   bannerTitle: {
     fontSize: 24,
-    color: "#FFFFFF",
+    fontWeight: "bold",
+    color: "#fff",
   },
   bannerSubtitle: {
     fontSize: 16,
-    color: "#FFFFFF",
-    marginBottom: 16,
+    color: "#fff",
   },
   searchContainer: {
     flexDirection: "row",
-    alignItems: "center",
+    marginTop: 10,
   },
   searchInput: {
-    height: 40,
-    borderColor: "#CCCCCC",
+    flex: 1,
     borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    marginRight: 8,
+    borderColor: "#ccc",
+    borderRadius: 4,
+    padding: 10,
+    marginRight: 10,
+    backgroundColor:'#cccccccc'
   },
   cardsContainer: {
-    paddingBottom: 16,
+    padding: 10,
   },
   card: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "#fff",
     borderRadius: 8,
-    padding: 16,
-    marginBottom: 16,
-    elevation: 2,
-    position: "relative",
+    padding: 15,
+    marginBottom: 10,
   },
   typeContainer: {
-    position: "absolute",
-    top: 16,
-    left: 16,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
     borderRadius: 4,
-    zIndex: 1,
+    padding: 5,
+    marginBottom: 10,
   },
-  rent: {
-    backgroundColor: "#00FF00",
+   rent: {
+    backgroundColor: "#6FDCE3",
+    width:80,
+    textAlign: "center",
+    alignItems: "center",
+    justifyContent: "center",
   },
   sale: {
-    backgroundColor: "#FF0000",
-  },
-  typeText: {
-    color: "#FFFFFF",
-    fontWeight: "bold",
+    backgroundColor: "#FFC700",
+    width:80,
+    textAlign: "center",
+    alignItems: "center",
+    justifyContent: "center",
   },
   image: {
-    width: "100%",
+    width:"100%",
     height: 200,
-    borderRadius: 8,
-    marginBottom: 16,
+  },
+  typeText: {
+    color: "#fff",
   },
   title: {
     fontSize: 18,
-    marginBottom: 4,
+    fontWeight: "bold",
+    marginBottom: 10,
   },
   description: {
-    fontSize: 14,
-    marginBottom: 16,
+    marginBottom: 10,
   },
   price: {
-    fontSize: 14,
-    marginBottom: 16,
+    marginBottom: 10,
   },
   contact: {
-    fontSize: 14,
-    marginBottom: 16,
-  },
-  contactButton: {
-    backgroundColor: "#0000FF",
-    paddingVertical: 8,
-    borderRadius: 4,
-    alignItems: "center",
-  },
-  contactButtonText: {
-    color: "#FFFFFF",
-    fontWeight: "bold",
+    marginBottom: 10,
   },
   sidebar: {
-    flex: 1,
-    backgroundColor: "#FFFFFF",
-    padding: 16,
+    position: "absolute",
+    top: 0,
+    bottom: 0,
+    left: 0,
+    width: 250,
+    backgroundColor: "#fff",
+    zIndex: 1000,
+    padding: 20,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  sidebarHidden: {
+    left: -250,
+  },
+  sidebarVisible: {
+    left: 0,
+  },
+  closeButton: {
+    alignSelf: "flex-end",
   },
 });
 
