@@ -2,7 +2,7 @@ const House = require('../models/houses');
 
 const addHouse = async (req, res) => {
   try {
-    const { address, price, description, contact_info,category,images,iduser} = req.body;
+    const { address, price, description, contact_info,category,images,iduser,operation} = req.body;
     const newHouse = await House.create({
       address,
       price,
@@ -65,7 +65,7 @@ const deleteHouseById = async (req, res) => {
 
 const updateHouseById = async (req, res) => {
   const { id } = req.params;
-  const { address, price, description, contact_info, status, notification, category,images} = req.body;
+  const { address, price, description, contact_info, status, notification, category,images,operation} = req.body;
   
   try {
     let house = await House.findByPk(id);
