@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TextInput, StyleSheet, Platform, Pressable, Text} from 'react-native';
+import { TextInput, StyleSheet, Platform, Pressable} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Picker } from '@react-native-picker/picker'; 
 import { ThemedView } from '@/components/ThemedView';
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     height: 40,
   },
-  button: {
+ button: {
     backgroundColor: 'blue',
     alignItems: 'center',
     justifyContent: 'center',

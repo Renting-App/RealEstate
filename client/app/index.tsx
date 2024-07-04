@@ -6,6 +6,7 @@ import {
   ActivityIndicator,
   Image,
   Button,
+  TextInput,
 } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
@@ -25,7 +26,7 @@ interface Residence {
 const HousesScreen = () => {
   const [residences, setResidences] = useState<Residence[]>([]);
   const [loading, setLoading] = useState(true);
-
+ 
   useEffect(() => {
     fetch("http://localhost:5000/api/gethouse")
       .then((response) => response.json())
@@ -84,35 +85,62 @@ const HousesScreen = () => {
         }}
         asChild
       >
-        <Button title="details" />
+        <Button title="btn" />
       </Link>
     </ThemedView>
   );
 
+
   if (loading) {
     return (
-      <ThemedView
-        style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
-      >
+      <ThemedView style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
         <ActivityIndicator size="large" color="#0007ff" />
       </ThemedView>
     );
   }
 
   return (
-    <View style={styles.container}>
-      <ThemedText type="title" style={styles.pageTitle}>
-        Home
-      </ThemedText>
+    <ThemedView style={styles.container}>
+      <View style={styles.header}>
+      
+          <Image style={styles.menuIcon} /> icon
+      
+        <ThemedText type="title" style={styles.companyName}>
+          Rent&Sell
+        </ThemedText>
+      </View>
+      <View style={styles.banner}>
+        <Image
+          source={require("../assets/images/banner01.jpg")}
+          style={styles.bannerImage}
+        />
+        <View style={styles.bannerContent}>
+          <ThemedText type="title" style={styles.bannerTitle}>
+            Discover Your New Home
+          </ThemedText>
+          <ThemedText type="subtitle" style={styles.bannerSubtitle}>
+            Helping 100 thousand renters and sellers
+          </ThemedText>
+          <View style={styles.searchContainer}>
+            <TextInput
+              style={styles.searchInput}
+              placeholder="Search for a property..."
+            />
+            <Button title="Search" onPress={() => { }} />
+          </View>
+        </View>
+      </View>
       <FlatList
         data={residences}
         renderItem={renderItem}
         keyExtractor={(item) => item._id.toString()}
         contentContainerStyle={styles.cardsContainer}
       />
-    </View>
+    </ThemedView>
+
   );
 };
+
 
 const styles = StyleSheet.create({
   bgContainer: {
@@ -124,20 +152,56 @@ const styles = StyleSheet.create({
     padding: 16,
     marginTop: 30,
   },
-  pageTitle: {
-    fontSize: 24,
-    marginBottom: 16,
-    textAlign: "center",
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
-  searchBar: {
+  menuButton: {
+    padding: 10,
+  },
+  menuIcon: {
+    width: 24,
+    height: 24,
+  },
+  companyName: {
+    flex: 1,
+    textAlign: "center",
+    fontSize: 24,
+  },
+  banner: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 16,
+  },
+  bannerImage: {
+    width: "100%",
+    height: 200,
+  },
+  bannerContent: {
+    position: "absolute",
+    alignItems: "center",
+  },
+  bannerTitle: {
+    fontSize: 24,
+    color: "#FFFFFF",
+  },
+  bannerSubtitle: {
+    fontSize: 16,
+    color: "#FFFFFF",
+    marginBottom: 16,
+  },
+  searchContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  searchInput: {
     height: 40,
-    width: "70%",
     borderColor: "#CCCCCC",
     borderWidth: 1,
     borderRadius: 8,
     paddingHorizontal: 10,
-    marginBottom: 16,
-    alignSelf: "center",
+    marginRight: 8,
   },
   cardsContainer: {
     paddingBottom: 16,
@@ -200,6 +264,11 @@ const styles = StyleSheet.create({
   contactButtonText: {
     color: "#FFFFFF",
     fontWeight: "bold",
+  },
+  sidebar: {
+    flex: 1,
+    backgroundColor: "#FFFFFF",
+    padding: 16,
   },
 });
 
