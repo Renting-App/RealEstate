@@ -87,7 +87,7 @@ const HousesScreen = () => {
   }
 
   return (
-    <View style={[styles.container,{flex:1,alignItems:'center',justifyContent:'center'}]}>
+    <View style={styles.container}>
       <ThemedText type="title" style={styles.pageTitle}>Home</ThemedText>
       <FlatList
         data={residences}
