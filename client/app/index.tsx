@@ -89,7 +89,7 @@ const HousesScreen = () => {
         }}
         asChild
       >
-        <Button title="btn" />
+        <Button title="View Details" />
       </Link>
     </ThemedView>
   );
@@ -97,7 +97,7 @@ const HousesScreen = () => {
   if (loading) {
     return (
       <ThemedView style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        <ActivityIndicator size="large" color="#0007ff" />
+        <ActivityIndicator size="large" color="#0000ff" />
       </ThemedView>
     );
   }
@@ -130,7 +130,9 @@ const HousesScreen = () => {
               style={styles.searchInput}
               placeholder="Search for a property..."
             />
-            <Pressable style={[styles.rent ,{backgroundColor:"#1183CE"}]}> <ThemedText>Search</ThemedText> </Pressable>
+            <Pressable style={[styles.rent ,{backgroundColor:"#1183CE"}]}>
+              <ThemedText>Search</ThemedText>
+            </Pressable>
           </View>
         </View>
       </View>
