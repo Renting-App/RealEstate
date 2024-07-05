@@ -37,6 +37,11 @@ const House = sequelize.define('houses', {
   },
   images: {
     type: DataTypes.ARRAY(DataTypes.STRING)
+  },
+    operation: {
+    type: DataTypes.ENUM('rent', 'sale'),
+    defaultValue: 'sale',
+    allowNull: false
   }
 }, {
   tableName: 'houses',
