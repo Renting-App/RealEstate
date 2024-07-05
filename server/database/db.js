@@ -1,9 +1,11 @@
 const { Sequelize } = require('sequelize');
 
-const sequelize = new Sequelize('realestate', 'root', 'admin', {
+const sequelize = new Sequelize('realestate', 'root', 'root', {
+  
   host: 'localhost',
   dialect: 'mysql'
 });
+
 
 async function testConnection() {
   try {

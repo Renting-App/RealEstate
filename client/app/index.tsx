@@ -1,5 +1,5 @@
 import React ,{useState} from "react";
-import { View, Image, StyleSheet} from 'react-native';
+import { View, Image, StyleSheet,Platform} from 'react-native';
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { useNavigation } from 'expo-router';
@@ -47,7 +47,7 @@ const HomeScreen = () => {
   };
 
   const handlePress = (property : Property) => {
-    navigation.navigate('PropertyDetailsScreen/index', { property });
+    navigation.navigate('PropertyDetailsScreen/index', { property });    
   };
 
   const renderItem = ({ item }: { item: Property }) => (
