@@ -1,8 +1,10 @@
-// DrawerContent.tsx
+// hetha el sidebar
+
 import React from "react";
 import { View, StyleSheet, Pressable } from "react-native";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { ThemedText } from "@/components/ThemedText";
+import { Link } from "expo-router";
 
 interface SidebarProps {
   isVisible: boolean;
@@ -16,7 +18,13 @@ const DrawerContent: React.FC<SidebarProps> = ({ isVisible, onClose }) => {
         <Ionicons name="close" size={24} color="black" />
       </Pressable>
       <ThemedText type="title">Sidebar Content</ThemedText>
-      {/* Add more sidebar content here */}
+      <Link href={'/AboutUs'}>
+      <ThemedText type="subtitle">About Us</ThemedText>
+      </Link>
+      <Link href={'/FAQ'}>
+      <ThemedText type="subtitle">FAQ</ThemedText>
+      </Link>
+
     </View>
   );
 };

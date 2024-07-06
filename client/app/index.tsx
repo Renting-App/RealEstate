@@ -8,6 +8,7 @@ import {
   Button,
   TextInput,
   Pressable,
+  Dimensions
 } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
@@ -137,7 +138,14 @@ const HousesScreen = () => {
         <Pressable onPress={() => setIsSidebarVisible(true)}>
           <Ionicons name="menu" style={styles.menuIcon} size={24} />
         </Pressable>
-        <ThemedText type="title" style={[styles.bgContainer]}>
+        <ThemedText type="title" style={[styles.bgContainer , { 
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#333',  // Adjust color to your preference
+    textTransform: 'uppercase',
+    letterSpacing: 1,  // Increase or decrease letter spacing as desired
+    fontFamily: 'Arial',  // Use a suitable font family
+  }]}>
           Rent&Sell
         </ThemedText>
       </View>
@@ -158,7 +166,7 @@ const HousesScreen = () => {
               style={styles.searchInput}
               placeholder="Search for a property..."
             />
-            <Pressable style={[styles.rent ,{backgroundColor:"#1183CE"}]}> <ThemedText>Search</ThemedText> </Pressable>
+            <Pressable style={[styles.searchButton]}> <ThemedText style= {styles.buttonText} >Search</ThemedText> </Pressable>
           </View>
         </View>
       </View>
@@ -179,6 +187,7 @@ const HousesScreen = () => {
     </ThemedView>
   );
 };
+const { width } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   container: {
@@ -224,6 +233,7 @@ const styles = StyleSheet.create({
   searchContainer: {
     flexDirection: "row",
     marginTop: 10,
+    width: width * 0.8,
   },
   searchInput: {
     flex: 1,
@@ -232,8 +242,24 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     padding: 10,
     marginRight: 10,
-    backgroundColor:'#cccccccc'
+    backgroundColor: "#fff",
   },
+  searchButton: {
+    backgroundColor: "#1183CE",
+    borderRadius: 10,  // Make the button rounder by increasing the borderRadius
+    paddingVertical: 14,
+    paddingHorizontal: 24,
+    justifyContent: "center",
+    alignItems: "center",
+    elevation: 3, 
+  },
+  buttonText: {
+    fontSize: 14,
+    color: "#FFF",
+    fontWeight: "600",
+    textTransform: "uppercase",
+  },
+
   cardsContainer: {
     padding: 10,
   },
@@ -247,27 +273,21 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     padding: 5,
     marginBottom: 10,
+    alignSelf: "flex-start",
   },
   rent: {
     backgroundColor: "#6FDCE3",
-    width:80,
-    textAlign: "center",
-    alignItems: "center",
-    justifyContent: "center",
   },
   sale: {
     backgroundColor: "#FFC700",
-    width:80,
-    textAlign: "center",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  image: {
-    width:"100%",
-    height: 200,
   },
   typeText: {
     color: "#fff",
+    fontWeight: "bold",
+  },
+  image: {
+    width: "100%",
+    height: 200,
   },
   title: {
     fontSize: 18,
@@ -311,7 +331,7 @@ const styles = StyleSheet.create({
     alignSelf: "flex-end",
   },
   prevButton: {
-   
+    position: "absolute",
     bottom: 2,
     left: 20,
     backgroundColor: "#f5f5f5",
