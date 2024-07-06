@@ -30,12 +30,18 @@ const HousesScreen = () => {
   const [residences, setResidences] = useState<Residence[]>([]);
   const [loading, setLoading] = useState(true);
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
+  const itemsNumber = 3; // number of items we want to render
+  const [limit, setLimit] = useState(itemsNumber);
+  const [start, setStart] = useState(0);
+  const [page, setPage] = useState(1);
+  
 
   useEffect(() => {
     fetch("http://localhost:5000/api/gethouse")
       .then((response) => response.json())
       .then((data) => {
-        const mappedResidences = data.map((residence: any) => ({
+        // Limiting to only 3 items
+        const limitedResidences = data.slice(start, limit).map((residence: any) => ({
           _id: residence.idhouses,
           address: residence.address,
           price: residence.price,
@@ -44,15 +50,37 @@ const HousesScreen = () => {
           images: residence.images,
           operation: residence.operation,
         }));
-        setResidences(mappedResidences);
+        setResidences(limitedResidences);
         setLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching residences:", error);
         setLoading(false);
       });
-  }, []);
+  }, [start, limit]);
 
+  
+  const handleNext = () => {
+    if ( residences.length >= itemsNumber ) {
+    setStart(start + itemsNumber);
+    setLimit(limit + itemsNumber);
+   }
+  else {
+    setStart(0);
+    setLimit(itemsNumber)
+  }
+}
+
+  const handlePrev = () => {
+    if (start > 0)
+    {setStart(start - itemsNumber);
+    setLimit(limit - itemsNumber);}
+    else {
+      setStart(residences.length - itemsNumber);
+      setLimit(residences.length)
+    }
+ 
+  }
   const renderItem = ({ item }: { item: Residence }) => (
     <ThemedView style={styles.card}>
       <View
@@ -89,7 +117,7 @@ const HousesScreen = () => {
         }}
         asChild
       >
-        <Button title="btn" />
+        <Button title="Details" />
       </Link>
     </ThemedView>
   );
@@ -140,6 +168,14 @@ const HousesScreen = () => {
         keyExtractor={(item) => item._id.toString()}
         contentContainerStyle={styles.cardsContainer}
       />
+      {/* Previous Button */}
+      <Pressable style={styles.prevButton} onPress={handlePrev}>
+        <Ionicons name="arrow-back" size={24} color="#000" />
+      </Pressable>
+      {/* Next Button */}
+      <Pressable style={styles.nextButton} onPress={handleNext}>
+        <Ionicons name="arrow-forward" size={24} color="#000" />
+      </Pressable>
     </ThemedView>
   );
 };
@@ -212,7 +248,7 @@ const styles = StyleSheet.create({
     padding: 5,
     marginBottom: 10,
   },
-   rent: {
+  rent: {
     backgroundColor: "#6FDCE3",
     width:80,
     textAlign: "center",
@@ -273,6 +309,24 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     alignSelf: "flex-end",
+  },
+  prevButton: {
+   
+    bottom: 2,
+    left: 20,
+    backgroundColor: "#f5f5f5",
+    padding: 10,
+    borderRadius: 100,
+    elevation: 5,
+  },
+  nextButton: {
+    position: "absolute",
+    bottom: 2,
+    right: 20,
+    backgroundColor: "#f5f5f5",
+    padding: 10,
+    borderRadius: 100,
+    elevation: 5,
   },
 });
 

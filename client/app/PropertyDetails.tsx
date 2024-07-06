@@ -43,7 +43,7 @@ const PropertyDetails = () => {
       <Text style={styles.contact}>Contact: {residenceData.contact_info}</Text>
       <View style={styles.buttonContainer}>
         <Button
-          title="Contact Seller"
+          title="Request a Tour"
           onPress={handleContactSeller}
         />
       </View>
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
   image: {
     width: screenWidth,
     height: 300,
-    
+
   },
   price: {
     fontSize: 18,
