@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, ScrollView, Button, Dimensions } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
+import { Link } from 'expo-router';
 
 interface ResidenceData {
   address: string;
@@ -42,10 +43,13 @@ const PropertyDetails = () => {
       <Text style={styles.description}>{residenceData.description}</Text>
       <Text style={styles.contact}>Contact: {residenceData.contact_info}</Text>
       <View style={styles.buttonContainer}>
-        <Button
+        
+        <Link href={'RequestaTour'}>
+         <Button
           title="Request a Tour"
-          onPress={handleContactSeller}
         />
+        </Link>
+       
       </View>
     </ScrollView>
   );
