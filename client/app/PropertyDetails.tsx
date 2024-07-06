@@ -1,56 +1,102 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
-import { useRouter, useLocalSearchParams } from 'expo-router';
+import { View, Text, StyleSheet, Image, ScrollView, Button, Dimensions } from 'react-native';
+import { useLocalSearchParams } from 'expo-router';
+
+interface ResidenceData {
+  address: string;
+  images: string[];
+  price: number;
+  description: string;
+  contact_info: string;
+}
 
 const PropertyDetails = () => {
   const { residence } = useLocalSearchParams();
-  const residenceData = JSON.parse(residence as string);
+  const residenceData: ResidenceData = JSON.parse(residence as string);
+
+  const handleContactSeller = () => {
+    console.log(`Contacting seller: ${residenceData.contact_info}`);
+  };
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>{residenceData.address}</Text>
-      <Image
-        source={{ uri: residenceData.images[0] }}
-        style={styles.image}
-        resizeMode="center"
-      />
-      <Text style={styles.price}>Price: {residenceData.price}</Text>
+      <View style={styles.imageWrapper}>
+        <ScrollView
+          horizontal
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.imageContainer}
+        >
+          {residenceData.images.map((image, index) => (
+            <Image
+              key={index}
+              source={{ uri: image }}
+              style={styles.image}
+              resizeMode="center"
+            />
+          ))}
+        </ScrollView>
+      </View>
+      <Text style={styles.price}>Price: ${residenceData.price}</Text>
       <Text style={styles.description}>{residenceData.description}</Text>
       <Text style={styles.contact}>Contact: {residenceData.contact_info}</Text>
-      {/* Add more details as needed */}
-    </View>
+      <View style={styles.buttonContainer}>
+        <Button
+          title="Contact Seller"
+          onPress={handleContactSeller}
+        />
+      </View>
+    </ScrollView>
   );
 };
 
+const { width: screenWidth } = Dimensions.get('window');
+
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 16,
+    margin: 16,
     alignItems: 'center',
-    justifyContent: 'center',
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 16,
+    textAlign: 'center',
+  },
+  imageWrapper: {
+    width: screenWidth,
+    height: 300,
+    marginBottom: 16,
+  },
+  imageContainer: {
+    display:'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   image: {
-    width: '100%',
-    height: 200,
-    borderRadius: 8,
-    marginBottom: 16,
+    width: screenWidth,
+    height: 300,
+    
   },
   price: {
     fontSize: 18,
-    marginBottom: 16,
+    marginBottom: 20,
+    textAlign: 'center',
   },
   description: {
     fontSize: 14,
-    marginBottom: 16,
+    marginBottom: 20,
+    textAlign: 'center',
   },
   contact: {
     fontSize: 14,
-    marginBottom: 16,
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  buttonContainer: {
+    alignItems: 'center',
+    marginBottom: 20,
   },
 });
 
