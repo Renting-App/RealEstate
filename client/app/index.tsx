@@ -132,6 +132,9 @@ const HousesScreen = () => {
             />
             <Pressable style={[styles.rent ,{backgroundColor:"#1183CE"}]}> <ThemedText>Search</ThemedText> </Pressable>
           </View>
+          <Link href='/Airbnb'>
+          <Button title="Go to map"/>
+          </Link>
         </View>
       </View>
       <FlatList
