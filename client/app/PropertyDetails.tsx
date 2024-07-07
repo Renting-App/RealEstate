@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, Button } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView, Button, Dimensions } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
+import { Link } from 'expo-router';
 
 interface ResidenceData {
   address: string;
@@ -19,40 +20,47 @@ const PropertyDetails = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>{residenceData.address}</Text>
-      <ScrollView
-        horizontal
-        pagingEnabled
-        showsHorizontalScrollIndicator={false}
-        style={styles.imageContainer}
-      >
-        {residenceData.images.map((image, index) => (
-          <Image
-            key={index}
-            source={{ uri: image }}
-            style={styles.image}
-            resizeMode="cover"
-          />
-        ))}
-      </ScrollView>
+      <View style={styles.imageWrapper}>
+        <ScrollView
+          horizontal
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.imageContainer}
+        >
+          {residenceData.images.map((image, index) => (
+            <Image
+              key={index}
+              source={{ uri: image }}
+              style={styles.image}
+              resizeMode="center"
+            />
+          ))}
+        </ScrollView>
+      </View>
       <Text style={styles.price}>Price: ${residenceData.price}</Text>
       <Text style={styles.description}>{residenceData.description}</Text>
       <Text style={styles.contact}>Contact: {residenceData.contact_info}</Text>
       <View style={styles.buttonContainer}>
-        <Button
-          title="Contact Seller"
-          onPress={handleContactSeller}
+        
+        <Link href={'RequestaTour'}>
+         <Button
+          title="Request a Tour"
         />
+        </Link>
+       
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
+const { width: screenWidth } = Dimensions.get('window');
+
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 16,
+    margin: 16,
+    alignItems: 'center',
   },
   title: {
     fontSize: 24,
@@ -60,15 +68,20 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     textAlign: 'center',
   },
-  imageContainer: {
+  imageWrapper: {
+    width: screenWidth,
     height: 300,
     marginBottom: 16,
   },
+  imageContainer: {
+    display:'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   image: {
-    width: 300,
-    height: 200,
-    borderRadius: 8,
-    marginRight: 10,
+    width: screenWidth,
+    height: 300,
+
   },
   price: {
     fontSize: 18,
@@ -82,12 +95,12 @@ const styles = StyleSheet.create({
   },
   contact: {
     fontSize: 14,
-    marginBottom: 200,
+    marginBottom: 20,
     textAlign: 'center',
   },
   buttonContainer: {
-    marginBottom: 90,
     alignItems: 'center',
+    marginBottom: 20,
   },
 });
 
