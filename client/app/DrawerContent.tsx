@@ -1,4 +1,4 @@
-// hetha el sidebar
+//hetha el sidebar
 
 import React from "react";
 import { View, StyleSheet, Pressable } from "react-native";
@@ -15,16 +15,19 @@ const DrawerContent: React.FC<SidebarProps> = ({ isVisible, onClose }) => {
   return (
     <View style={[styles.sidebar, isVisible ? styles.sidebarVisible : styles.sidebarHidden]}>
       <Pressable style={styles.closeButton} onPress={onClose}>
-        <Ionicons name="close" size={24} color="black" />
+        <Ionicons name="close-circle" size={32} color="#333" />
       </Pressable>
-      <ThemedText type="title">Sidebar Content</ThemedText>
-      <Link href={'/AboutUs'}>
-      <ThemedText type="subtitle">About Us</ThemedText>
-      </Link>
-      <Link href={'/FAQ'}>
-      <ThemedText type="subtitle">FAQ</ThemedText>
-      </Link>
-
+      <View style={styles.linksContainer}>
+        <Link href={'/AboutUs'} style={styles.link}>
+          <ThemedText type="subtitle">About Us</ThemedText>
+        </Link>
+        <Link href={'/FAQ'} style={styles.link}>
+          <ThemedText type="subtitle">FAQ</ThemedText>
+        </Link>
+        <Link href={'/PostProperty'} style={styles.link}>
+          <ThemedText type="subtitle">Post a Property</ThemedText>
+        </Link>
+      </View>
     </View>
   );
 };
@@ -56,6 +59,15 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     alignSelf: "flex-end",
+    marginBottom: 10,
+  },
+  linksContainer: {
+    marginTop: 20,
+  },
+  link: {
+    marginBottom: 10,
+    textDecorationLine: "none",
+    color: "#333",
   },
 });
 

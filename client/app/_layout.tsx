@@ -9,6 +9,7 @@ type RootStackParamList = {
   index: undefined;
   PropertyDetails: undefined;
   RequestaTour: undefined;
+  PostProperty: undefined; // Add PostProperty route
 };
 
 // Component
@@ -38,6 +39,7 @@ export default function TabLayout() {
           ),
         }}
       />
+      <Stack.Screen name="PostProperty"  options={{ title: 'Post a Property' }} />
     </Stack>
   );
 }
