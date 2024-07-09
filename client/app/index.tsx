@@ -86,7 +86,7 @@ const HousesScreen = () => {
       setStart(start - itemsPerPage);
     }
   };
-
+//     handle previous      
   const renderItem = ({ item }: { item: Residence }) => (
     <ThemedView style={styles.card}>
       <View
