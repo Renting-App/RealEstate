@@ -1,21 +1,42 @@
-import React from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import { LatLngExpression } from 'leaflet';
+// import React from 'react';
+// import { View, StyleSheet } from 'react-native';
+// import { LeafletView, MapMarker, LatLng } from 'react-native-leaflet';
 
-const position: LatLngExpression = [51.505, -0.09];
+// const MapComponent: React.FC = () => {
+//   const mapMarkers: MapMarker[] = [
+//     {
+//       position: {
+//         lat: 51.505,
+//         lng: -0.09,
+//       },
+//       icon: '❤️',
+//       size: [32, 32],
+//       popup: 'A pretty CSS3 popup.<br>Easily customizable.',
+//     },
+//   ];
 
-const Airbnb = () => (
-  <MapContainer center={position} zoom={13} scrollWheelZoom={false}>
-    <TileLayer
-      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-    />
-    <Marker position={position}>
-      <Popup>
-        A pretty CSS3 popup. <br /> Easily customizable.
-      </Popup>
-    </Marker>
-  </MapContainer>
-);
+//   const mapCenter: LatLng = {
+//     lat: 51.505,
+//     lng: -0.09,
+//   };
 
-export default Airbnb;
+//   return (
+//     <View style={styles.container}>
+//       <LeafletView
+//         mapMarkers={mapMarkers}
+//         mapCenterPosition={mapCenter}
+//         zoom={13}
+//         doDebug={false}
+//         onMessage={(msg) => console.log(msg)}
+//       />
+//     </View>
+//   );
+// };
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//   },
+// });
+
+// export default MapComponent;

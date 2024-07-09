@@ -11,6 +11,9 @@ interface SidebarProps {
   onClose: () => void;
 }
 
+
+
+
 const DrawerContent: React.FC<SidebarProps> = ({ isVisible, onClose }) => {
   return (
     <View style={[styles.sidebar, isVisible ? styles.sidebarVisible : styles.sidebarHidden]}>
@@ -23,6 +26,9 @@ const DrawerContent: React.FC<SidebarProps> = ({ isVisible, onClose }) => {
       </Link>
       <Link href={'/FAQ'}>
       <ThemedText type="subtitle">FAQ</ThemedText>
+      </Link>
+      <Link href={'/Filter'}>
+      <ThemedText type="subtitle">FIND</ThemedText>
       </Link>
 
     </View>

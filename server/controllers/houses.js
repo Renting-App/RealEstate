@@ -50,17 +50,25 @@ const getHouses = async (req, res) => {
     type= {$in: ['sale','rent']}
    }
 
+   let state = req.query.type
+   if (state===undefined || type==='all') {
+    state= {$in: ['occasion','new']}
+   }
    const searchTerm = req.query.searchTerm || '';
    const sort = req.query.sort || 'createdAt';
    const order = req.query.order || 'desc';
 
+   const priceMin = parseFloat(req.query.priceMin) || 0;
+   const priceMax = parseFloat(req.query.priceMax) || Number.MAX_SAFE_INTEGER;
 
    const Listings = await House.find({
     name: {$regex:searchTerm, $options:'i'},
      offer,
       furnished,
       parking,
-      type
+      type,
+      state,
+      price: { $gte: priceMin, $lte: priceMax }
    }).sort(
     {[sort]: order}
    ).limit(limit).skip(startIndex);
