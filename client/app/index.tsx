@@ -14,6 +14,7 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Link } from "expo-router";
+
 import DrawerContent from "@/app/DrawerContent"; // Import the DrawerContent component
 
 interface Residence {
@@ -93,6 +94,7 @@ const HousesScreen = () => {
         <ThemedText type="subtitle" style={styles.typeText}>
           {item.operation === "rent" ? "Rent" : "Sale"}
         </ThemedText>
+        
       </View>
       <Image
         source={{ uri: item.images[0] }} // Render only the first image

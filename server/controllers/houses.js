@@ -46,7 +46,7 @@ const getHouses = async (req, res) => {
    }
 
    let type = req.query.type
-   if (type===undefined || type==='all') {
+   if (type===undefined ) {
     type= {$in: ['sale','rent']}
    }
 
