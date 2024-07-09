@@ -9,8 +9,6 @@ import {
   Pressable,
   Text,
   Dimensions,
-
-
 } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
@@ -43,7 +41,6 @@ const HousesScreen = () => {
     fetchResidences();
   }, []);
 
-
   useEffect(() => {
     const filteredData = residences.filter((residence) =>
       residence.address.toLowerCase().includes(searchQuery.toLowerCase())
@@ -56,8 +53,7 @@ const HousesScreen = () => {
     fetch("http://192.168.1.13:5000/api/gethouse")
       .then((response) => response.json())
       .then((data) => {
-        // Limiting to only 3 items
-        const limitedResidences = data.slice(start, limit).map((residence: any) => ({
+        const mappedResidences = data.map((residence: any) => ({
           _id: residence.idhouses,
           address: residence.address,
           price: residence.price,
@@ -66,18 +62,17 @@ const HousesScreen = () => {
           images: JSON.parse(residence.images),
           operation: residence.operation,
         }));
-        setResidences(limitedResidences);
+        setResidences(mappedResidences);
         setLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching residences:", error);
         setLoading(false);
       });
-
   };
 
   const handleSearch = () => {
-   // useEffect will take care of it...for now
+    // useEffect will take care of it...for now
   };
 
   const handleNext = () => {
@@ -92,28 +87,6 @@ const HousesScreen = () => {
     }
   };
 
-  
-  const handleNext = () => {
-    if ( residences.length >= itemsNumber ) {
-    setStart(start + itemsNumber);
-    setLimit(limit + itemsNumber);
-   }
-  else {
-    setStart(0);
-    setLimit(itemsNumber)
-  }
-}
-
-  const handlePrev = () => {
-    if (start > 0)
-    {setStart(start - itemsNumber);
-    setLimit(limit - itemsNumber);}
-    else {
-      setStart(residences.length - itemsNumber);
-      setLimit(residences.length)
-    }
- 
-  }
   const renderItem = ({ item }: { item: Residence }) => (
     <ThemedView style={styles.card}>
       <View
@@ -175,7 +148,6 @@ const HousesScreen = () => {
         <Pressable onPress={() => setIsSidebarVisible(true)}>
           <Ionicons name="menu" style={styles.menuIcon} size={24} />
         </Pressable>
-
         <ThemedText
           type="title"
           style={[
@@ -190,7 +162,6 @@ const HousesScreen = () => {
             },
           ]}
         >
-
           Rent&Sell
         </ThemedText>
       </View>
@@ -206,15 +177,11 @@ const HousesScreen = () => {
           <ThemedText type="subtitle" style={styles.bannerSubtitle}>
             Helping 100 thousand renters and sellers
           </ThemedText>
-
           <Search
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
             onSearch={handleSearch}
           />
-
-         
-
         </View>
       </View>
       <FlatList
@@ -223,18 +190,15 @@ const HousesScreen = () => {
         keyExtractor={(item) => item._id.toString()}
         contentContainerStyle={styles.cardsContainer}
       />
-
       <Pressable style={styles.prevButton} onPress={handlePrev}>
         <Ionicons name="arrow-back" size={24} color="#000" />
       </Pressable>
-
       <Pressable style={styles.nextButton} onPress={handleNext}>
         <Ionicons name="arrow-forward" size={24} color="#000" />
       </Pressable>
     </ThemedView>
   );
 };
-const { width } = Dimensions.get("window");
 
 const { width } = Dimensions.get("window");
 
@@ -295,14 +259,11 @@ const styles = StyleSheet.create({
   },
   searchButton: {
     backgroundColor: "#1183CE",
-
     borderRadius: 10,
-
     paddingVertical: 14,
     paddingHorizontal: 24,
     justifyContent: "center",
     alignItems: "center",
-
     elevation: 3,
   },
   buttonText: {
@@ -310,15 +271,7 @@ const styles = StyleSheet.create({
     color: "#FFF",
     fontWeight: "600",
     textTransform: "uppercase",
-
   },
-  buttonText: {
-    fontSize: 14,
-    color: "#FFF",
-    fontWeight: "600",
-    textTransform: "uppercase",
-  },
-
   cardsContainer: {
     padding: 10,
   },
@@ -361,24 +314,6 @@ const styles = StyleSheet.create({
   },
   contact: {
     marginBottom: 10,
-  },
-  prevButton: {
-    position: "absolute",
-    bottom: 2,
-    left: 20,
-    backgroundColor: "#f5f5f5",
-    padding: 10,
-    borderRadius: 100,
-    elevation: 5,
-  },
-  nextButton: {
-    position: "absolute",
-    bottom: 2,
-    right: 20,
-    backgroundColor: "#f5f5f5",
-    padding: 10,
-    borderRadius: 100,
-    elevation: 5,
   },
   prevButton: {
     position: "absolute",
