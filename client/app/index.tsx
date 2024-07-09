@@ -38,6 +38,10 @@ const HousesScreen = () => {
   const [filteredResidences, setFilteredResidences] = useState<Residence[]>([]);
 
   useEffect(() => {
+    fetchResidences();
+  }, []);
+
+  const fetchResidences = () => {
     fetch("http://localhost:5000/api/gethouse")
       .then((response) => response.json())
       .then((data) => {
@@ -50,6 +54,7 @@ const HousesScreen = () => {
           contact_info: residence.contact_info,
           images: residence.images,
           operation: residence.operation,
+          amenities:residence.amenities
         }));
         setResidences(mappedResidences);
         setFilteredResidences(mappedResidences);
@@ -59,7 +64,7 @@ const HousesScreen = () => {
         console.error("Error fetching residences:", error);
         setLoading(false);
       });
-  }, []);
+  };
 
   const handleSearch = () => {
     const filteredData = residences.filter((residence) =>

@@ -5,6 +5,7 @@ const addHouse = async (req, res) => {
   try {
     const {
       address,
+      title,
       price,
       description,
       contact_info,
@@ -12,9 +13,16 @@ const addHouse = async (req, res) => {
       images,
       iduser,
       operation,
+      size,
+      date_of_creation,
+      rooms,
+      bathrooms,
+      amenities // Include amenities here
     } = req.body;
+
     const newHouse = await House.create({
       address,
+      title,
       price,
       description,
       contact_info,
@@ -22,13 +30,20 @@ const addHouse = async (req, res) => {
       images,
       iduser,
       operation,
+      size,
+      date_of_creation,
+      rooms,
+      bathrooms,
+      amenities // Assign amenities to the database field
     });
+
     res.status(201).json(newHouse);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Failed to add house" });
   }
 };
+
 
 const getAllHouses = async (req, res) => {
   try {
@@ -84,6 +99,11 @@ const updateHouseById = async (req, res) => {
     category,
     images,
     operation,
+    size,
+    date_of_creation,
+    rooms,
+    bathrooms,
+    amenities // Include amenities here
   } = req.body;
 
   try {
@@ -93,6 +113,7 @@ const updateHouseById = async (req, res) => {
       return res.status(404).json({ message: "House not found" });
     }
 
+    // Update the house object with the new values
     house.address = address;
     house.price = price;
     house.description = description;
@@ -102,6 +123,12 @@ const updateHouseById = async (req, res) => {
     house.category = category;
     house.images = images;
     house.operation = operation;
+    house.size = size;
+    house.date_of_creation = date_of_creation;
+    house.rooms = rooms;
+    house.bathrooms = bathrooms;
+    house.amenities = amenities; // Assign amenities to the database field
+
     await house.save();
 
     res.json(house);
@@ -110,6 +137,7 @@ const updateHouseById = async (req, res) => {
     res.status(500).json({ message: "Failed to update house" });
   }
 };
+
 
 
 
