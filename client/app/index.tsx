@@ -53,6 +53,7 @@ const HousesScreen = () => {
           description: residence.description,
           contact_info: residence.contact_info,
           images: residence.images,
+          visits: residence.visits,
           operation: residence.operation,
           amenities:residence.amenities
         }));

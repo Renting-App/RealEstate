@@ -17,6 +17,7 @@ const addHouse = async (req, res) => {
       date_of_creation,
       rooms,
       bathrooms,
+      visits,
       amenities // Include amenities here
     } = req.body;
 
@@ -34,6 +35,7 @@ const addHouse = async (req, res) => {
       date_of_creation,
       rooms,
       bathrooms,
+      visits,
       amenities // Assign amenities to the database field
     });
 
