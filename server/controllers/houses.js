@@ -1,10 +1,11 @@
-const House = require('../models/houses');
+const House = require("../models/houses");
+const { Op } = require("sequelize");
 
 const addHouse = async (req, res) => {
   try {
-    const { address, price, description, contact_info,category,images,iduser} = req.body;
-    const newHouse = await House.create({
+    const {
       address,
+      title,
       price,
       description,
       contact_info,
@@ -12,13 +13,39 @@ const addHouse = async (req, res) => {
       images,
       iduser,
       operation,
+      size,
+      date_of_creation,
+      rooms,
+      bathrooms,
+      visits,
+      amenities // Include amenities here
+    } = req.body;
+
+    const newHouse = await House.create({
+      address,
+      title,
+      price,
+      description,
+      contact_info,
+      category,
+      images,
+      iduser,
+      operation,
+      size,
+      date_of_creation,
+      rooms,
+      bathrooms,
+      visits,
+      amenities // Assign amenities to the database field
     });
+
     res.status(201).json(newHouse);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: 'Failed to add house' });
+    res.status(500).json({ message: "Failed to add house" });
   }
 };
+
 
 const getAllHouses = async (req, res) => {
   try {
@@ -26,22 +53,21 @@ const getAllHouses = async (req, res) => {
     res.json(houses);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: 'Server Error' });
+    res.status(500).json({ message: "Server Error" });
   }
 };
-
 
 const getHouseById = async (req, res) => {
   const { id } = req.params;
   try {
     const house = await House.findByPk(id);
     if (!house) {
-      return res.status(404).json({ message: 'House not found' });
+      return res.status(404).json({ message: "House not found" });
     }
     res.json(house);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: 'Server Error' });
+    res.status(500).json({ message: "Server Error" });
   }
 };
 
@@ -50,30 +76,46 @@ const deleteHouseById = async (req, res) => {
   try {
     const deletedCount = await House.destroy({
       where: {
-        idhouses: id
-      }
+        idhouses: id,
+      },
     });
     if (deletedCount === 0) {
-      return res.status(404).json({ message: 'House not found' });
+      return res.status(404).json({ message: "House not found" });
     }
-    res.json({ message: 'House deleted successfully' });
+    res.json({ message: "House deleted successfully" });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: 'Failed to delete house' });
+    res.status(500).json({ message: "Failed to delete house" });
   }
 };
 
 const updateHouseById = async (req, res) => {
   const { id } = req.params;
-  const { address, price, description, contact_info, status, notification, category,images} = req.body;
-  
+  const {
+    address,
+    price,
+    description,
+    contact_info,
+    status,
+    notification,
+    category,
+    images,
+    operation,
+    size,
+    date_of_creation,
+    rooms,
+    bathrooms,
+    amenities // Include amenities here
+  } = req.body;
+
   try {
     let house = await House.findByPk(id);
 
     if (!house) {
-      return res.status(404).json({ message: 'House not found' });
+      return res.status(404).json({ message: "House not found" });
     }
 
+    // Update the house object with the new values
     house.address = address;
     house.price = price;
     house.description = description;
@@ -82,20 +124,30 @@ const updateHouseById = async (req, res) => {
     house.notification = notification;
     house.category = category;
     house.images = images;
-    house.operation = operation;  
+    house.operation = operation;
+    house.size = size;
+    house.date_of_creation = date_of_creation;
+    house.rooms = rooms;
+    house.bathrooms = bathrooms;
+    house.amenities = amenities; // Assign amenities to the database field
+
     await house.save();
 
     res.json(house);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: 'Failed to update house' });
+    res.status(500).json({ message: "Failed to update house" });
   }
 };
+
+
+
 
 module.exports = {
   addHouse,
   getAllHouses,
   getHouseById,
   deleteHouseById,
-  updateHouseById
+  updateHouseById,
+ 
 };

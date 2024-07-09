@@ -1,52 +1,91 @@
 import React, { useEffect, useState } from "react";
 import {
   View,
-  StyleSheet,
   FlatList,
   ActivityIndicator,
   Image,
   Button,
+  Pressable,
+  Text,
 } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import { Link } from "expo-router";
+import DrawerContent from "@/app/DrawerContent";
+import Search from "./Search";
+import styles from "./styles"; // Importing styles
+
+const itemsPerPage = 3;
 
 interface Residence {
   _id: number;
+  title: string;
   address: string;
   price: string;
   description: string;
   contact_info: string;
   images: string[];
   operation: "rent" | "sale";
-  status: "pending" | "approved" | "declined";
 }
 
 const HousesScreen = () => {
   const [residences, setResidences] = useState<Residence[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isSidebarVisible, setIsSidebarVisible] = useState(false);
+  const [start, setStart] = useState(0);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredResidences, setFilteredResidences] = useState<Residence[]>([]);
 
   useEffect(() => {
+    fetchResidences();
+  }, []);
+
+  const fetchResidences = () => {
     fetch("http://localhost:5000/api/gethouse")
       .then((response) => response.json())
       .then((data) => {
         const mappedResidences = data.map((residence: any) => ({
           _id: residence.idhouses,
+          title: residence.title,
           address: residence.address,
           price: residence.price,
           description: residence.description,
           contact_info: residence.contact_info,
           images: residence.images,
+          visits: residence.visits,
           operation: residence.operation,
+          amenities:residence.amenities
         }));
         setResidences(mappedResidences);
+        setFilteredResidences(mappedResidences);
         setLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching residences:", error);
         setLoading(false);
       });
-  }, []);
+  };
+
+  const handleSearch = () => {
+    const filteredData = residences.filter((residence) =>
+      residence.address.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setFilteredResidences(filteredData);
+    setStart(0); // Reset the pagination start index
+  };
+
+  const handleNext = () => {
+    if (start + itemsPerPage < filteredResidences.length) {
+      setStart(start + itemsPerPage);
+    }
+  };
+
+  const handlePrev = () => {
+    if (start - itemsPerPage >= 0) {
+      setStart(start - itemsPerPage);
+    }
+  };
 
   const renderItem = ({ item }: { item: Residence }) => (
     <ThemedView style={styles.card}>
@@ -61,7 +100,7 @@ const HousesScreen = () => {
         </ThemedText>
       </View>
       <Image
-        source={{ uri: item.images[0] }} // Render only the first image
+        source={{ uri: item.images[0] }}
         style={styles.image}
         resizeMode="center"
       />
@@ -84,7 +123,7 @@ const HousesScreen = () => {
         }}
         asChild
       >
-        <Button title="details" />
+        <Button title="Details" />
       </Link>
     </ThemedView>
   );
@@ -100,107 +139,65 @@ const HousesScreen = () => {
   }
 
   return (
-    <View style={styles.container}>
-      <ThemedText type="title" style={styles.pageTitle}>
-        Home
-      </ThemedText>
+    <ThemedView style={styles.container}>
+      <DrawerContent
+        isVisible={isSidebarVisible}
+        onClose={() => setIsSidebarVisible(false)}
+      />
+      <View style={styles.header}>
+        <Pressable onPress={() => setIsSidebarVisible(true)}>
+          <Ionicons name="menu" style={styles.menuIcon} size={24} />
+        </Pressable>
+        <ThemedText
+          type="title"
+          style={[
+            styles.bgContainer,
+            {
+              fontSize: 22,
+              fontWeight: "bold",
+              color: "#333",
+              textTransform: "uppercase",
+              letterSpacing: 1,
+              fontFamily: "Arial",
+            },
+          ]}
+        >
+          Rent&Sell
+        </ThemedText>
+      </View>
+      <View style={styles.banner}>
+        <Image
+          source={require("../assets/images/banner01.jpg")}
+          style={styles.bannerImage}
+        />
+        <View style={styles.bannerContent}>
+          <ThemedText type="title" style={styles.bannerTitle}>
+            Discover Your New Home
+          </ThemedText>
+          <ThemedText type="subtitle" style={styles.bannerSubtitle}>
+            Helping 100 thousand renters and sellers
+          </ThemedText>
+          <Search
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            onSearch={handleSearch}
+          />
+        </View>
+      </View>
       <FlatList
-        data={residences}
+        data={filteredResidences.slice(start, start + itemsPerPage)}
         renderItem={renderItem}
         keyExtractor={(item) => item._id.toString()}
         contentContainerStyle={styles.cardsContainer}
       />
-    </View>
+      <Pressable style={styles.prevButton} onPress={handlePrev}>
+        <Ionicons name="arrow-back" size={24} color="#000" />
+      </Pressable>
+      <Pressable style={styles.nextButton} onPress={handleNext}>
+        <Ionicons name="arrow-forward" size={24} color="#000" />
+      </Pressable>
+    </ThemedView>
   );
 };
-
-const styles = StyleSheet.create({
-  bgContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  container: {
-    flex: 1,
-    padding: 16,
-    marginTop: 30,
-  },
-  pageTitle: {
-    fontSize: 24,
-    marginBottom: 16,
-    textAlign: "center",
-  },
-  searchBar: {
-    height: 40,
-    width: "70%",
-    borderColor: "#CCCCCC",
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    marginBottom: 16,
-    alignSelf: "center",
-  },
-  cardsContainer: {
-    paddingBottom: 16,
-  },
-  card: {
-    backgroundColor: "#FFFFFF",
-    borderRadius: 8,
-    padding: 16,
-    marginBottom: 16,
-    elevation: 2,
-    position: "relative",
-  },
-  typeContainer: {
-    position: "absolute",
-    top: 16,
-    left: 16,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 4,
-    zIndex: 1,
-  },
-  rent: {
-    backgroundColor: "#00FF00",
-  },
-  sale: {
-    backgroundColor: "#FF0000",
-  },
-  typeText: {
-    color: "#FFFFFF",
-    fontWeight: "bold",
-  },
-  image: {
-    width: "100%",
-    height: 200,
-    borderRadius: 8,
-    marginBottom: 16,
-  },
-  title: {
-    fontSize: 18,
-    marginBottom: 4,
-  },
-  description: {
-    fontSize: 14,
-    marginBottom: 16,
-  },
-  price: {
-    fontSize: 14,
-    marginBottom: 16,
-  },
-  contact: {
-    fontSize: 14,
-    marginBottom: 16,
-  },
-  contactButton: {
-    backgroundColor: "#0000FF",
-    paddingVertical: 8,
-    borderRadius: 4,
-    alignItems: "center",
-  },
-  contactButtonText: {
-    color: "#FFFFFF",
-    fontWeight: "bold",
-  },
-});
 
 export default HousesScreen;

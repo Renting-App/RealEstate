@@ -11,12 +11,46 @@ const House = sequelize.define('houses', {
     type: DataTypes.STRING,
     allowNull: false
   },
-  price: {
-    type: DataTypes.STRING,
-    allowNull: false
+  size: {
+    type: DataTypes.INTEGER 
+  },
+  category: {
+    type: DataTypes.ENUM('apartment', 'house', 'office', 'studio', 'penthouse')
+  },
+  title: {
+    type: DataTypes.STRING
+  },
+  favourite: {
+    type: DataTypes.BOOLEAN
   },
   description: {
     type: DataTypes.STRING
+  },
+  images: {
+    type: DataTypes.ARRAY(DataTypes.STRING)
+  },
+  operation: {
+    type: DataTypes.ENUM('rent', 'sale'),
+    defaultValue: 'sale',
+    allowNull: false
+  },
+  date_of_creation: {
+    type: DataTypes.DATEONLY // Assuming you want to store only the date part
+  },
+  rooms: {
+    type: DataTypes.INTEGER
+  }, 
+  price: {
+    type: DataTypes.INTEGER
+  },
+  bathrooms: {
+    type: DataTypes.INTEGER
+  }, 
+  visits: {
+    type: DataTypes.JSONB // Using JSONB for flexibility
+  },
+  amenities: {
+    type: DataTypes.JSONB // Using JSONB for flexibility
   },
   contact_info: {
     type: DataTypes.STRING
@@ -28,20 +62,9 @@ const House = sequelize.define('houses', {
   notification: {
     type: DataTypes.STRING
   },
-  category: {
-    type: DataTypes.STRING
-  },
   iduser: {
     type: DataTypes.INTEGER,
     allowNull: true
-  },
-  images: {
-    type: DataTypes.ARRAY(DataTypes.STRING)
-  },
-    operation: {
-    type: DataTypes.ENUM('rent', 'sale'),
-    defaultValue: 'sale',
-    allowNull: false
   }
 }, {
   tableName: 'houses',
