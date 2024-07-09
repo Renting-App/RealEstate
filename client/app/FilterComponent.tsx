@@ -20,13 +20,17 @@ interface Property {
   amenities: string[];
 }
 
+
+//filterItem
 interface FilterComponentProps {
   properties?: Property[]; // Make properties optional
   onFilter: (filteredProperties: Property[]) => void;
 }
 
-const categories = ['Select Category', 'Apartment', 'House', 'Studio', 'Penthouse'];
-const amenitiesList = ['Parking', 'AC', 'Furnished', 'Pool', 'Microwave', 'Near Station', 'Beach View', 'Alarm', 'Garden'];
+const categories = 
+['Select Category', 'Apartment', 'House', 'Studio', 'Penthouse'];
+const amenitiesList =
+ ['Parking', 'AC', 'Furnished', 'Pool', 'Microwave', 'Near Station', 'Beach View', 'Alarm', 'Garden'];
 
 const FilterComponent: React.FC<FilterComponentProps> = ({ properties = [], onFilter }) => { // Default properties to an empty array
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -81,7 +85,9 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ properties = [], onFi
         onValueChange={handleCategoryChange}
       >
         {categories.map((category, index) => (
-          <Picker.Item key={index.toString()} label={category} value={category.toLowerCase()} />
+          <Picker.Item key={index.toString()} 
+          label={category} 
+          value={category.toLowerCase()} />
         ))}
       </Picker>
 
