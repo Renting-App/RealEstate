@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, ScrollView, StyleSheet, Button, Switch, TouchableOpacity } from 'react-native';
-import  CheckBox  from '@react-native-community/checkbox';
 
 interface Property {
   address: string;
@@ -33,14 +32,13 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ properties = [], onFi
   const [priceMin, setPriceMin] = useState('');
   const [priceMax, setPriceMax] = useState('');
   const [condition, setCondition] = useState('Neuf');
-  const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
+  const [selectedAmenities, setSelectedAmenities] = useState<Record<string, boolean>>({});
 
   const toggleAmenity = (amenity: string) => {
-    setSelectedAmenities(prevState =>
-      prevState.includes(amenity)
-        ? prevState.filter(item => item !== amenity)
-        : [...prevState, amenity]
-    );
+    setSelectedAmenities(prevState => ({
+      ...prevState,
+      [amenity]: !prevState[amenity],
+    }));
   };
 
   const handleSearch = async () => {
@@ -58,7 +56,7 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ properties = [], onFi
           priceMin,
           priceMax,
           condition,
-          amenities: selectedAmenities
+          amenities: Object.keys(selectedAmenities).filter(amenity => selectedAmenities[amenity])
         }),
       });
       const data = await response.json();
@@ -111,12 +109,12 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ properties = [], onFi
       />
       <View style={styles.checkboxContainer}>
         <Text>Neuf</Text>
-        <CheckBox
+        <Switch
           value={condition === 'Neuf'}
           onValueChange={() => setCondition('Neuf')}
         />
         <Text>Occasion</Text>
-        <CheckBox
+        <Switch
           value={condition === 'Occasion'}
           onValueChange={() => setCondition('Occasion')}
         />
@@ -125,11 +123,11 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ properties = [], onFi
       <View style={styles.amenitiesContainer}>
         {amenitiesList.map((amenity, index) => (
           <View key={index} style={styles.amenityItem}>
-            <CheckBox
-              value={selectedAmenities.includes(amenity)}
+            <Text>{amenity}</Text>
+            <Switch
+              value={selectedAmenities[amenity] || false}
               onValueChange={() => toggleAmenity(amenity)}
             />
-            <Text>{amenity}</Text>
           </View>
         ))}
       </View>
