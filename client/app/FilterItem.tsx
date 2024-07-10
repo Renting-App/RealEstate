@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, ScrollView, StyleSheet, Button, Switch, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, ScrollView, StyleSheet, Button, Switch } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 
 interface Property {
   address: string;
@@ -22,17 +23,66 @@ interface FilterComponentProps {
   onFilter: (filteredProperties: Property[]) => void;
 }
 
-const amenitiesList = ['Parking', 'AC', 'Furnished', 'Pool', 'Microwave', 'Near Station', 'Beach View', 'Alarm', 'Garden'];
+const categories = ['Select Category', 'Apartment', 'House', 'Residence'];
+const tunisStates = [
+  'Select State',
+  'Ariana',
+  'Beja',
+  'Ben Arous',
+  'Bizerte',
+  'Gabes',
+  'Gafsa',
+  'Jendouba',
+  'Kairouan',
+  'Kasserine',
+  'Kebili',
+  'La Manouba',
+  'Le Kef',
+  'Mahdia',
+  'Medenine',
+  'Monastir',
+  'Nabeul',
+  'Sfax',
+  'Sidi Bouzid',
+  'Siliana',
+  'Sousse',
+  'Tataouine',
+  'Tozeur',
+  'Tunis',
+  'Zaghouan',
+];
+
+const subLocations: { [key: string]: string[] } = {
+  'Ariana': ['Ariana Essoughra', 'Raoued', 'Sokra'],
+  'Beja': ['Beja Nord', 'Beja Sud'],
+  // Add more sub-locations for other states
+};
+
+const amenitiesList = [
+  'Parking',
+  'AC',
+  'Furnished',
+  'Pool',
+  'Microwave',
+  'Near Station',
+  'Beach View',
+  'Alarm',
+  'Garden',
+];
 
 const FilterComponent: React.FC<FilterComponentProps> = ({ properties = [], onFilter }) => {
-  const [category, setCategory] = useState('Immobilier');
+  const [category, setCategory] = useState('Select Category');
   const [type, setType] = useState('Appartements');
-  const [location, setLocation] = useState('Ariana');
-  const [subLocation, setSubLocation] = useState('Ariana Essoughra');
+  const [location, setLocation] = useState('Select State');
+  const [subLocation, setSubLocation] = useState('');
   const [priceMin, setPriceMin] = useState('');
   const [priceMax, setPriceMax] = useState('');
   const [condition, setCondition] = useState('Neuf');
   const [selectedAmenities, setSelectedAmenities] = useState<Record<string, boolean>>({});
+
+  useEffect(() => {
+    setSubLocation(''); // Reset sub-location when location changes
+  }, [location]);
 
   const toggleAmenity = (amenity: string) => {
     setSelectedAmenities(prevState => ({
@@ -69,30 +119,35 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ properties = [], onFi
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.title}>Que cherchez vous ?</Text>
-      <TextInput
-        placeholder="Ex: voiture, iPhone 12, t-..."
+      <Picker
+        selectedValue={category}
+        onValueChange={(itemValue) => setCategory(itemValue)}
         style={styles.input}
-        value={category}
-        onChangeText={setCategory}
-      />
-      <TextInput
-        placeholder="Type"
+      >
+        {categories.map((cat, index) => (
+          <Picker.Item key={index} label={cat} value={cat} />
+        ))}
+      </Picker>
+      <Picker
+        selectedValue={location}
+        onValueChange={(itemValue) => setLocation(itemValue)}
         style={styles.input}
-        value={type}
-        onChangeText={setType}
-      />
-      <TextInput
-        placeholder="Location"
-        style={styles.input}
-        value={location}
-        onChangeText={setLocation}
-      />
-      <TextInput
-        placeholder="Sub-Location"
-        style={styles.input}
-        value={subLocation}
-        onChangeText={setSubLocation}
-      />
+      >
+        {tunisStates.map((state, index) => (
+          <Picker.Item key={index} label={state} value={state} />
+        ))}
+      </Picker>
+      {location !== 'Select State' && subLocations[location] && (
+        <Picker
+          selectedValue={subLocation}
+          onValueChange={(itemValue) => setSubLocation(itemValue)}
+          style={styles.input}
+        >
+          {subLocations[location].map((sub, index) => (
+            <Picker.Item key={index} label={sub} value={sub} />
+          ))}
+        </Picker>
+      )}
       <TextInput
         placeholder="Prix Min"
         style={styles.input}
