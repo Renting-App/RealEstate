@@ -101,6 +101,7 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ properties = [], onFi
   const [priceMax, setPriceMax] = useState(1000000);
   const [condition, setCondition] = useState('Neuf');
   const [selectedAmenities, setSelectedAmenities] = useState<Record<string, boolean>>({});
+  const [operation, setOperation] = useState('sale'); // Default to 'sale'
 
   useEffect(() => {
     setSubLocation(''); // Reset sub-location when location changes
@@ -128,11 +129,13 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ properties = [], onFi
           priceMin,
           priceMax,
           condition,
-          amenities: Object.keys(selectedAmenities).filter(amenity => selectedAmenities[amenity])
+          amenities: Object.keys(selectedAmenities).filter(amenity => selectedAmenities[amenity]),
+          operation,
         }),
       });
       const data = await response.json();
       console.log(data);
+      onFilter(data);
     } catch (error) {
       console.error(error);
     }
@@ -150,6 +153,16 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ properties = [], onFi
           <Picker.Item key={index} label={cat} value={cat} />
         ))}
       </Picker>
+      <Text style={styles.subtitle}>Operation Type</Text>
+      <Picker
+        selectedValue={operation}
+        onValueChange={(itemValue) => setOperation(itemValue)}
+        style={styles.input}>
+        <Picker.Item label="Sale" value="sale" />
+        <Picker.Item label="Rent" value="rent" />
+      </Picker>
+
+      <Text style={styles.subtitle}>Location</Text>
       <Picker
         selectedValue={location}
         onValueChange={(itemValue) => setLocation(itemValue)}
@@ -176,8 +189,8 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ properties = [], onFi
         <Slider
           style={styles.slider}
           minimumValue={0}
-          maximumValue={1000000}
-          step={1000}
+          maximumValue={100000}
+          step={100}
           value={priceMin}
           onValueChange={(value) => setPriceMin(value)}
         />
@@ -185,8 +198,8 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ properties = [], onFi
         <Slider
           style={styles.slider}
           minimumValue={0}
-          maximumValue={1000000}
-          step={1000}
+          maximumValue={100000}
+          step={100}
           value={priceMax}
           onValueChange={(value) => setPriceMax(value)}
         />
@@ -198,7 +211,6 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ properties = [], onFi
           onValueChange={() => setCondition('Neuf')}
         />
         <Text>Occasion</Text>
-
         <Switch
           value={condition === 'Occasion'}
           onValueChange={() => setCondition('Occasion')}
@@ -216,6 +228,7 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ properties = [], onFi
           </View>
         ))}
       </View>
+      
       <Button title="Find your sweet home" onPress={handleSearch} />
     </ScrollView>
   );

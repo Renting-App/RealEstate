@@ -150,7 +150,8 @@ const searchHouses = async (req, res) => {
     priceMin,
     priceMax,
     condition,
-    amenities
+    amenities,
+    operation // Add operation here
   } = req.body;
 
   try {
@@ -180,6 +181,9 @@ const searchHouses = async (req, res) => {
     if (amenities && amenities.length > 0) {
       searchCriteria.amenities = { [Op.contains]: amenities };
     }
+    if (operation) { // Add operation filter
+      searchCriteria.operation = operation;
+    }
 
     const houses = await House.findAll({ where: searchCriteria });
     res.json(houses);
@@ -188,7 +192,6 @@ const searchHouses = async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 };
-
 
 module.exports = {
   addHouse,
