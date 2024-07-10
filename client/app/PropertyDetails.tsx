@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, ScrollView, Button, Dimensions } from 'react-native';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, Link } from 'expo-router';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'; // Import MaterialCommunityIcons
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface Property {
   _id: string;
@@ -18,9 +18,7 @@ interface Property {
   date_of_creation: string;
   rooms: number;
   bathrooms: number;
-  visits: {
-    dates: string[]; // Array of ISO date strings
-  };
+  visits: string[];
   amenities: {
     parking: boolean;
     ac: boolean;
@@ -75,8 +73,9 @@ const PropertyDetails: React.FC = () => {
               resizeMode="cover"
             />
           ))}
-        </ScrollView>
+        </ScrollView> 
       </View>
+      
       <View style={styles.details}>
         <View style={styles.detailItem}>
           <Ionicons name="resize" size={24} color="white" />
@@ -112,12 +111,15 @@ const PropertyDetails: React.FC = () => {
         ))}
       </View>
       <View style={styles.buttonContainer}>
-        <Button
-          title="Request a Tour"
-          onPress={() => {
-            // Handle navigation to request tour screen
+        <Link
+          href={{
+            pathname: "/RequestTour",
+            params: { residence: JSON.stringify(residenceData) },
           }}
-        />
+          asChild
+        >
+          <Button title="Request a Tour" />
+        </Link>
       </View>
     </ScrollView>
   );
@@ -138,7 +140,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color:'black'
+    color: 'black',
   },
   price: {
     fontSize: 24,
