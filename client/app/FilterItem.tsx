@@ -140,7 +140,7 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ properties = [], onFi
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>Que cherchez vous ?</Text>
+      <Text style={styles.title}>Looking for... </Text>
       <Picker
         selectedValue={category}
         onValueChange={(itemValue) => setCategory(itemValue)}
@@ -170,7 +170,7 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ properties = [], onFi
           ))}
         </Picker>
       )}
-      <Text style={styles.subtitle}>Prix</Text>
+      <Text style={styles.subtitle}>Price</Text>
       <View style={styles.priceContainer}>
         <Text>Min: {priceMin}</Text>
         <Slider
@@ -192,7 +192,7 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ properties = [], onFi
         />
       </View>
       <View style={styles.checkboxContainer}>
-        <Text>Neuf</Text>
+        <Text>New</Text>
         <Switch
           value={condition === 'Neuf'}
           onValueChange={() => setCondition('Neuf')}
