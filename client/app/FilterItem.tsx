@@ -198,6 +198,7 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ properties = [], onFi
           onValueChange={() => setCondition('Neuf')}
         />
         <Text>Occasion</Text>
+        
         <Switch
           value={condition === 'Occasion'}
           onValueChange={() => setCondition('Occasion')}
