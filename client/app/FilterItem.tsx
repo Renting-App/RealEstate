@@ -26,58 +26,58 @@ interface FilterComponentProps {
 
 const categories = ['Select Category', 'Apartment', 'House', 'Residence'];
 const tunisStates = [
-  'Select State',
-  'Ariana',
-  'Beja',
-  'Ben Arous',
-  'Bizerte',
-  'Gabes',
-  'Gafsa',
-  'Jendouba',
-  'Kairouan',
-  'Kasserine',
-  'Kebili',
-  'La Manouba',
-  'Le Kef',
-  'Mahdia',
-  'Medenine',
-  'Monastir',
-  'Nabeul',
-  'Sfax',
-  'Sidi Bouzid',
-  'Siliana',
-  'Sousse',
-  'Tataouine',
-  'Tozeur',
-  'Tunis',
-  'Zaghouan',
+  // 'Select State',
+  '🗺️ Ariana',
+  '🗺️ Beja',
+  '🗺️ Ben Arous',
+  '🗺️ Bizerte',
+  '🗺️ Gabes',
+  '🗺️ Gafsa',
+  '🗺️ Jendouba',
+  '🗺️ Kairouan',
+  '🗺️ Kasserine',
+  '🗺️ Kebili',
+  '🗺️ La Manouba',
+  '🗺️ Le Kef',
+  '🗺️ Mahdia',
+  '🗺️ Medenine',
+  '🗺️ Monastir',
+  '🗺️ Nabeul',
+  '🗺️ Sfax',
+  '🗺️ Sidi Bouzid',
+  '🗺️ Siliana',
+  '🗺️ Sousse',
+  '🗺️ Tataouine',
+  '🗺️ Tozeur',
+  '🗺️ Tunis',
+  '🗺️ Zaghouan',
 ];
 
 const subLocations: { [key: string]: string[] } = {
-  'Ariana': ['Ariana Essoughra', 'Raoued', 'Sokra', 'Ariana Ville', 'Ennasr'],
-  'Beja': ['Beja Nord', 'Beja Sud', 'Nefza', 'Teboursouk'],
-  'Ben Arous': ['Hammam Lif', 'Radès', 'Ben Arous Ville', 'Ezzahra'],
-  'Bizerte': ['Bizerte Nord', 'Bizerte Sud', 'Menzel Jemil', 'Menzel Bourguiba'],
-  'Gabes': ['Gabes Ville', 'Gabes Sud', 'Mareth', 'Metouia'],
-  'Gafsa': ['Gafsa Ville', 'El Guettar', 'Moulares', 'Metlaoui'],
-  'Jendouba': ['Jendouba Ville', 'Bousalem', 'Tabarka', 'Fernana'],
-  'Kairouan': ['Kairouan Ville', 'El Oueslatia', 'Bouhajla', 'Sbikha'],
-  'Kasserine': ['Kasserine Ville', 'Sbeitla', 'Thala', 'Foussana'],
-  'Kebili': ['Kebili Ville', 'Douz', 'Jemna', 'Souk Lahad'],
-  'La Manouba': ['Manouba Ville', 'Oued Ellil', 'Douar Hicher', 'Tebourba'],
-  'Le Kef': ['Kef Ville', 'Tajerouine', 'Jerissa', 'Dahmani'],
-  'Mahdia': ['Mahdia Ville', 'Chebba', 'Ksour Essef', 'Bou Merdes'],
-  'Medenine': ['Medenine Ville', 'Houmt Souk', 'Zarzis', 'Beni Khedache'],
-  'Monastir': ['Monastir Ville', 'Skanes', 'Ksar Hellal', 'Jemmal'],
-  'Nabeul': ['Nabeul Ville', 'Hammamet', 'Korba', 'Kelibia'],
-  'Sfax': ['Sfax Ville', 'Sakiet Ezzit', 'Thyna', 'El Ain'],
-  'Sidi Bouzid': ['Sidi Bouzid Ville', 'Regueb', 'Meknassy', 'Bir El Hafey'],
-  'Siliana': ['Siliana Ville', 'Le Krib', 'Makthar', 'Gaafour'],
-  'Sousse': ['Sousse Ville', 'Akouda', 'Hammam Sousse', 'Kalaâ Kebira'],
-  'Tataouine': ['Tataouine Ville', 'Remada', 'Dehiba', 'Bir Lahmar'],
-  'Tozeur': ['Tozeur Ville', 'Nefta', 'Degache', 'Tameghza'],
-  'Tunis': ['Tunis Ville', 'Carthage', 'La Marsa', 'Le Bardo'],
-  'Zaghouan': ['Zaghouan Ville', 'Nadhour', 'Bir Mcherga', 'Zriba']
+  '🗺️ Ariana': ['Ariana Essoughra', 'Raoued', 'Sokra', 'Ariana Ville', 'Ennasr'],
+  '🗺️ Beja': ['Beja Nord', 'Beja Sud', 'Nefza', 'Teboursouk'],
+  '🗺️ Ben Arous': ['Hammam Lif', 'Radès', 'Ben Arous Ville', 'Ezzahra'],
+  '🗺️ Bizerte': ['Bizerte Nord', 'Bizerte Sud', 'Menzel Jemil', 'Menzel Bourguiba'],
+  '🗺️ Gabes': ['Gabes Ville', 'Gabes Sud', 'Mareth', 'Metouia'],
+  '🗺️ Gafsa': ['Gafsa Ville', 'El Guettar', 'Moulares', 'Metlaoui'],
+  '🗺️ Jendouba': ['Jendouba Ville', 'Bousalem', 'Tabarka', 'Fernana'],
+  '🗺️ Kairouan': ['Kairouan Ville', 'El Oueslatia', 'Bouhajla', 'Sbikha'],
+  '🗺️ Kasserine': ['Kasserine Ville', 'Sbeitla', 'Thala', 'Foussana'],
+  '🗺️ Kebili': ['Kebili Ville', 'Douz', 'Jemna', 'Souk Lahad'],
+  '🗺️ La Manouba': ['Manouba Ville', 'Oued Ellil', 'Douar Hicher', 'Tebourba'],
+  '🗺️ Le Kef': ['Kef Ville', 'Tajerouine', 'Jerissa', 'Dahmani'],
+  '🗺️ Mahdia': ['Mahdia Ville', 'Chebba', 'Ksour Essef', 'Bou Merdes'],
+  '🗺️ Medenine': ['Medenine Ville', 'Houmt Souk', 'Zarzis', 'Beni Khedache'],
+  '🗺️ Monastir': ['Monastir Ville', 'Skanes', 'Ksar Hellal', 'Jemmal'],
+  '🗺️ Nabeul': ['Nabeul Ville', 'Hammamet', 'Korba', 'Kelibia'],
+  '🗺️ Sfax': ['Sfax Ville', 'Sakiet Ezzit', 'Thyna', 'El Ain'],
+  '🗺️ Sidi Bouzid': ['Sidi Bouzid Ville', 'Regueb', 'Meknassy', 'Bir El Hafey'],
+  '🗺️ Siliana': ['Siliana Ville', 'Le Krib', 'Makthar', 'Gaafour'],
+  '🗺️ Sousse': ['Sousse Ville', 'Akouda', 'Hammam Sousse', 'Kalaâ Kebira'],
+  '🗺️ Tataouine': ['Tataouine Ville', 'Remada', 'Dehiba', 'Bir Lahmar'],
+  '🗺️ Tozeur': ['Tozeur Ville', 'Nefta', 'Degache', 'Tameghza'],
+  '🗺️ Tunis': ['Tunis Ville', 'Carthage', 'La Marsa', 'Le Bardo'],
+  '🗺️ Zaghouan': ['Zaghouan Ville', 'Nadhour', 'Bir Mcherga', 'Zriba']
 };
 
 const amenitiesList = [
@@ -198,7 +198,7 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ properties = [], onFi
           onValueChange={() => setCondition('Neuf')}
         />
         <Text>Occasion</Text>
-        
+
         <Switch
           value={condition === 'Occasion'}
           onValueChange={() => setCondition('Occasion')}
@@ -216,7 +216,7 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ properties = [], onFi
           </View>
         ))}
       </View>
-      <Button title="Chercher" onPress={handleSearch} />
+      <Button title="Find your sweet home" onPress={handleSearch} />
     </ScrollView>
   );
 };
