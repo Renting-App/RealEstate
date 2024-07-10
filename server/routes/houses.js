@@ -8,7 +8,7 @@ router.get('/gethouse/:id', houseController.getHouseById);
 router.delete('/deletehouse/:id',houseController.deleteHouseById);
 router.put('/updatehouse/:id',houseController.updateHouseById);
 ///search
-router.get('/get',houseController.getHouses)
+
 
 
 module.exports = router;
