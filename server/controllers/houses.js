@@ -140,7 +140,54 @@ const updateHouseById = async (req, res) => {
   }
 };
 
+///search
+const searchHouses = async (req, res) => {
+  const {
+    category,
+    type,
+    location,
+    subLocation,
+    priceMin,
+    priceMax,
+    condition,
+    amenities
+  } = req.body;
 
+  try {
+    const searchCriteria = {};
+
+    if (category) {
+      searchCriteria.category = category;
+    }
+    if (type) {
+      searchCriteria.type = type;
+    }
+    if (location) {
+      searchCriteria.address = { [Op.like]: `%${location}%` };
+    }
+    if (subLocation) {
+      searchCriteria.address = { [Op.like]: `%${subLocation}%` };
+    }
+    if (priceMin !== undefined) {
+      searchCriteria.price = { ...searchCriteria.price, [Op.gte]: priceMin };
+    }
+    if (priceMax !== undefined) {
+      searchCriteria.price = { ...searchCriteria.price, [Op.lte]: priceMax };
+    }
+    if (condition) {
+      searchCriteria.condition = condition;
+    }
+    if (amenities && amenities.length > 0) {
+      searchCriteria.amenities = { [Op.contains]: amenities };
+    }
+
+    const houses = await House.findAll({ where: searchCriteria });
+    res.json(houses);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
 
 
 module.exports = {
@@ -149,5 +196,5 @@ module.exports = {
   getHouseById,
   deleteHouseById,
   updateHouseById,
- 
+  searchHouses
 };
