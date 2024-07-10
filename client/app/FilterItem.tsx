@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, ScrollView, StyleSheet, Button, Switch } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
+import Slider from '@react-native-community/slider';
 
 interface Property {
   address: string;
@@ -25,6 +26,7 @@ interface FilterComponentProps {
 
 const categories = ['Select Category', 'Apartment', 'House', 'Residence'];
 const tunisStates = [
+  'Select State',
   'Ariana',
   'Beja',
   'Ben Arous',
@@ -95,8 +97,8 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ properties = [], onFi
   const [type, setType] = useState('Appartements');
   const [location, setLocation] = useState('Select State');
   const [subLocation, setSubLocation] = useState('');
-  const [priceMin, setPriceMin] = useState('');
-  const [priceMax, setPriceMax] = useState('');
+  const [priceMin, setPriceMin] = useState(0);
+  const [priceMax, setPriceMax] = useState(1000000);
   const [condition, setCondition] = useState('Neuf');
   const [selectedAmenities, setSelectedAmenities] = useState<Record<string, boolean>>({});
 
@@ -168,20 +170,27 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ properties = [], onFi
           ))}
         </Picker>
       )}
-      <TextInput
-        placeholder="Prix Min"
-        style={styles.input}
-        keyboardType="numeric"
-        value={priceMin}
-        onChangeText={setPriceMin}
-      />
-      <TextInput
-        placeholder="Prix Max"
-        style={styles.input}
-        keyboardType="numeric"
-        value={priceMax}
-        onChangeText={setPriceMax}
-      />
+      <Text style={styles.subtitle}>Prix</Text>
+      <View style={styles.priceContainer}>
+        <Text>Min: {priceMin}</Text>
+        <Slider
+          style={styles.slider}
+          minimumValue={0}
+          maximumValue={1000000}
+          step={1000}
+          value={priceMin}
+          onValueChange={(value) => setPriceMin(value)}
+        />
+        <Text>Max: {priceMax}</Text>
+        <Slider
+          style={styles.slider}
+          minimumValue={0}
+          maximumValue={1000000}
+          step={1000}
+          value={priceMax}
+          onValueChange={(value) => setPriceMax(value)}
+        />
+      </View>
       <View style={styles.checkboxContainer}>
         <Text>Neuf</Text>
         <Switch
@@ -225,16 +234,23 @@ const styles = StyleSheet.create({
     padding: 10,
     marginVertical: 5,
   },
+  subtitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginTop: 10,
+  },
+  priceContainer: {
+    marginVertical: 10,
+  },
+  slider: {
+    width: '100%',
+    height: 40,
+  },
   checkboxContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     marginVertical: 10,
-  },
-  subtitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginTop: 10,
   },
   amenitiesContainer: {
     flexDirection: 'row',
