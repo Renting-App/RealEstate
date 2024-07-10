@@ -24,7 +24,7 @@ interface FilterComponentProps {
   onFilter: (filteredProperties: Property[]) => void;
 }
 
-const categories = ['Select Category', 'Apartment', 'House', 'Residence'];
+const categories = ['Select Category', ' 🏘️Apartment', '🏘️House', '🏘️Residence'];
 const tunisStates = [
   // 'Select State',
   '🗺️ Ariana',
