@@ -140,6 +140,7 @@ const HousesScreen = () => {
   }
 
   return (
+    <View style={{ flex: 1, marginTop: 20 }}>
     <ThemedView style={styles.container}>
       <DrawerContent
         isVisible={isSidebarVisible}
@@ -198,6 +199,7 @@ const HousesScreen = () => {
         <Ionicons name="arrow-forward" size={24} color="#000" />
       </Pressable>
     </ThemedView>
+    </View>
   );
 };
 
