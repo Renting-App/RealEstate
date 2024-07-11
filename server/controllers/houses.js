@@ -141,6 +141,7 @@ const updateHouseById = async (req, res) => {
 };
 
 ///search
+///search
 const searchHouses = async (req, res) => {
   const {
     category,
@@ -151,7 +152,7 @@ const searchHouses = async (req, res) => {
     priceMax,
     condition,
     amenities,
-    operation // Add operation here
+    operation // Add operation to the request body
   } = req.body;
 
   try {
@@ -181,7 +182,7 @@ const searchHouses = async (req, res) => {
     if (amenities && amenities.length > 0) {
       searchCriteria.amenities = { [Op.contains]: amenities };
     }
-    if (operation) { // Add operation filter
+    if (operation) {
       searchCriteria.operation = operation;
     }
 
