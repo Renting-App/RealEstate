@@ -1,5 +1,5 @@
 // import React from 'react';
-// import { useAuthentication } from '../hooks/useAuth';
+// import { useAuthentication } from '../utils/hooks/useAuth';
 // import UserStack from './userStack';
 // import AuthStack from './authStack';
 

@@ -19,11 +19,20 @@ const DrawerContent: React.FC<SidebarProps> = ({ isVisible, onClose }) => {
       </Pressable>
       <ThemedText type="title">Sidebar Content</ThemedText>
       <Link href={'/AboutUs'}>
-      <ThemedText type="subtitle">About Us</ThemedText>
+        <ThemedText type="subtitle">About Us</ThemedText>
       </Link>
       <Link href={'/FAQ'}>
-      <ThemedText type="subtitle">FAQ</ThemedText>
+        <ThemedText type="subtitle">FAQ</ThemedText>
       </Link>
+      <Link href={'/SignIn'}>
+        <ThemedText type="subtitle">signin</ThemedText>
+      </Link>
+      <Link href={'/SignUp'}>
+        <ThemedText type="subtitle">signup</ThemedText>
+      </Link>
+      {/* <Link href={'/welcome'}>
+        <ThemedText type="subtitle">welcome</ThemedText>
+      </Link> */}
 
     </View>
   );

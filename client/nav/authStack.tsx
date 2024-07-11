@@ -2,9 +2,9 @@
 // import { NavigationContainer } from '@react-navigation/native';
 // import { createStackNavigator } from '@react-navigation/stack';
 
-// import WelcomeScreen from '../screens/welcome';
-// import SignInScreen from '../screens/signIn';
-// import SignOutScreen from '../screens/signUp';
+// import WelcomeScreen from '../app/index';
+// import SignInScreen from '../app/signIn';
+// import SignUpScreen from '../app/signUp';
 
 // const Stack = createStackNavigator();
 
@@ -13,9 +13,9 @@
 //   return (
 //     <NavigationContainer>
 //       <Stack.Navigator>
-//         <Stack.Screen name="Welcome" component={WelcomeScreen} />
-//         <Stack.Screen name="Sign In" component={SignInScreen} />
-//         <Stack.Screen name="Sign Up" component={SignOutScreen} />
+//         <Stack.Screen name="index" component={WelcomeScreen} />
+//         <Stack.Screen name="signIn" component={SignInScreen} />
+//         <Stack.Screen name="signUp" component={SignUpScreen} />
 //       </Stack.Navigator>
 //     </NavigationContainer>
 //   );
