@@ -7,12 +7,12 @@ export interface Property {
   _id: string;
   address: string;
   size: number;
-  category: string; // Ensure this matches your intended structure
+  category: string;
   title: string;
   description: string;
   images: string[];
   price: number;
-  operation: string;
+  operation: string; // Updated to include operation
   dateOfCreation: string;
   rooms: number;
   bathrooms: number;
@@ -20,13 +20,12 @@ export interface Property {
   amenities: string[];
 }
 
-
 interface FilterComponentProps {
   properties?: Property[];
   onFilter: (filteredProperties: Property[]) => void;
 }
 
-const categories = ['Select Category', ' 🏘️Apartment', '🏘️House', '🏘️Office', '🏘️studio', '🏘️penthouse'];
+const categories = ['Select Category', '🏘️ Apartment', '🏘️ House', '🏘️ Office', '🏘️ Studio', '🏘️ Penthouse'];
 const tunisStates = [
   '🗺️ Ariana',
   '🗺️ Beja',
@@ -93,9 +92,8 @@ const amenitiesList = [
   'Garden',
 ];
 
-const FilterComponent: React.FC<FilterComponentProps> = ({  onFilter }) => {
+const FilterComponent: React.FC<FilterComponentProps> = ({ onFilter }) => {
   const [category, setCategory] = useState('Select Category');
-  const [type, setType] = useState('Appartements'); // Assuming default type
   const [location, setLocation] = useState('Select State');
   const [subLocation, setSubLocation] = useState('');
   const [priceMin, setPriceMin] = useState(0);
@@ -124,7 +122,6 @@ const FilterComponent: React.FC<FilterComponentProps> = ({  onFilter }) => {
         },
         body: JSON.stringify({
           category,
-          type,
           location,
           subLocation,
           priceMin,
@@ -134,6 +131,9 @@ const FilterComponent: React.FC<FilterComponentProps> = ({  onFilter }) => {
           operation,
         }),
       });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
       const filteredData: Property[] = await fetchFilteredData(); // Implement your filtering logic here
       onFilter(filteredData); // Call onFilter with filtered data
     } catch (error) {
@@ -161,16 +161,14 @@ const FilterComponent: React.FC<FilterComponentProps> = ({  onFilter }) => {
         ))}
       </Picker>
 
-      {category === '🏘️Apartment' && (
+      {category === '🏘️ Apartment' && (
         <Picker
-          selectedValue={type}
-          onValueChange={(itemValue) => setType(itemValue)}
+          selectedValue={category}
+          onValueChange={(itemValue) => setCategory(itemValue)}
           style={styles.input}
         >
           <Picker.Item label="Select a type" value="Appartements" />
-          <Picker.Item label="Villa" value="villa" />
-          <Picker.Item label="Studio" value="studio" />
-          <Picker.Item label="Landscape" value="Penthouse" />
+
         </Picker>
       )}
 
@@ -184,6 +182,12 @@ const FilterComponent: React.FC<FilterComponentProps> = ({  onFilter }) => {
         ))}
       </Picker>
 
+
+
+
+
+
+
       {subLocations[location] && (
         <Picker
           selectedValue={subLocation}
@@ -196,6 +200,18 @@ const FilterComponent: React.FC<FilterComponentProps> = ({  onFilter }) => {
           ))}
         </Picker>
       )}
+
+
+{/* Operation (Rent or Sale) Selection */}
+<Text style={styles.operationLabel}>Operation:</Text>
+      <Picker
+        selectedValue={operation}
+        onValueChange={(itemValue) => setOperation(itemValue)}
+        style={styles.input}
+      >
+        <Picker.Item label="Sale" value="sale" />
+        <Picker.Item label="Rent" value="rent" />
+      </Picker>
 
       <View style={styles.priceRangeContainer}>
         <Text style={styles.priceRangeLabel}>Price Range:</Text>
@@ -253,6 +269,8 @@ const FilterComponent: React.FC<FilterComponentProps> = ({  onFilter }) => {
           </View>
         ))}
       </View>
+
+      
 
       <Button
         title="Find Your Sweet Home"
@@ -312,7 +330,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginRight: 30,
     marginLeft: 30,
-
   },
   amenitiesLabel: {
     fontSize: 18,
@@ -333,6 +350,11 @@ const styles = StyleSheet.create({
   amenityText: {
     fontSize: 16,
     marginRight: 10,
+  },
+  operationLabel: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
   },
 });
 
