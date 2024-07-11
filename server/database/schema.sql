@@ -39,7 +39,7 @@ COLLATE = utf8mb4_0900_ai_ci;
 CREATE TABLE IF NOT EXISTS `realestate`.`houses` (
   `idhouses` INT NOT NULL AUTO_INCREMENT,
   `address` VARCHAR(100) NULL DEFAULT NULL,
-  `size` INT NULL,
+  `size`  VARCHAR(100) NULL DEFAULT NULL,
   `price` INT NULL,
   `category` ENUM('apartment', 'house', 'office', 'studio', 'penthouse') NULL DEFAULT NULL,
   `title` VARCHAR(100) NULL DEFAULT NULL,
@@ -48,8 +48,8 @@ CREATE TABLE IF NOT EXISTS `realestate`.`houses` (
   `images` JSON NULL DEFAULT NULL,
   `operation` ENUM('rent', 'sale') NOT NULL DEFAULT 'rent',
   `date_of_creation` DATE NULL DEFAULT NULL,
-  `rooms` INT NULL,
-  `bathrooms` INT NULL,
+  `rooms`  VARCHAR(100) NULL DEFAULT NULL,
+  `bathrooms`  VARCHAR(100) NULL DEFAULT NULL,
   `visits` JSON NULL DEFAULT NULL,
   `amenities` JSON NULL DEFAULT NULL,
   `contact_info` VARCHAR(45) NULL DEFAULT NULL,
@@ -105,15 +105,15 @@ INSERT INTO `houses`
   `date_of_creation`, `rooms`, `bathrooms`,
    `visits`, `amenities`, `contact_info`, `status`, `iduser`)
 VALUES
-  ('123 Maple St', 150, 'house', 'Cozy Family Home',
+  ('123 Maple St', '150', 'house', 'Cozy Family Home',
    true, 'A beautiful home perfect for families.', '["https://example.com/image1.jpg", "https://example.com/image2.jpg"]', 
-   'sale', '2024-07-09', 3, 2, 
+   'sale', '2024-07-09', '3', '2', 
    '{"dates": ["2024-07-01", "2024-07-05"]}',
     '{"parking": true, "ac": true, "furnished": false, "pool": false, "microwave": true, "near_subway": false, "beach_view": false, "alarm": true, "garden": true}', 
-    'contact@example.com', 'pending', 1),
-  ('456 Oak Ave', 200, 'house', 'Modern Family Home', false,
+    'contact@example.com', 'pending', '1'),
+  ('456 Oak Ave', '200', 'house', 'Modern Family Home', false,
    'A spacious modern home with great amenities.', '["https://example.com/image3.jpg", "https://example.com/image4.jpg"]', 
-   'rent', '2024-07-09', 4, 3, '{"dates": ["2024-06-30", "2024-07-03", "2024-07-07"]}',
+   'rent', '2024-07-09', '4', '3', '{"dates": ["2024-06-30", "2024-07-03", "2024-07-07"]}',
     '{"parking": true, "ac": true, "furnished": true, "pool": false, "microwave": true,
      "near_subway": true, "beach_view": false, "alarm": false, "garden": true}', 
-     'contact@example.com', 'approved', 2);
+     'contact@example.com', 'approved', '2');
