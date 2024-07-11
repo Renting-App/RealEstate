@@ -160,7 +160,7 @@ const HousesScreen = ({ route }: { route: any }) => {
       <ThemedText type="default">Contact: {residenceObj.location}</ThemedText>
       <ThemedText type="default">Contact: {residenceObj.subLocation}</ThemedText>
       <ThemedText type="default">Contact: {residenceObj.condition}</ThemedText>
-      <ThemedText type="default">Contact: {residenceObj.ca}</ThemedText>
+      <ThemedText type="default">Contact: {residenceObj.category}</ThemedText>
 
 
 
