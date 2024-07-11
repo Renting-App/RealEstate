@@ -24,9 +24,9 @@ interface FilterComponentProps {
   onFilter: (filteredProperties: Property[]) => void;
 }
 
-const categories = ['Select Category', ' 🏘️Apartment', '🏘️House', '🏘️Residence'];
+const categories = ['Select Category', ' 🏘️Apartment', '🏘️House', '🏘️Office' , '🏘️studio' , '🏘️penthouse'];
 const tunisStates = [
-  // 'Select State',
+ 
   '🗺️ Ariana',
   '🗺️ Beja',
   '🗺️ Ben Arous',
@@ -99,7 +99,7 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ properties = [], onFi
   const [subLocation, setSubLocation] = useState('');
   const [priceMin, setPriceMin] = useState(0);
   const [priceMax, setPriceMax] = useState(1000000);
-  const [condition, setCondition] = useState('Neuf');
+  const [condition, setCondition] = useState('New');
   const [selectedAmenities, setSelectedAmenities] = useState<Record<string, boolean>>({});
   const [operation, setOperation] = useState('sale'); // Default to 'sale'
 
@@ -116,7 +116,7 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ properties = [], onFi
 
   const handleSearch = async () => {
     try {
-      const response = await fetch('http://localhost:3000/search', {
+      const response = await fetch('http://localhost:5000/api/search', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -134,8 +134,8 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ properties = [], onFi
         }),
       });
       const data = await response.json();
-      console.log(data);
-      onFilter(data);
+      console.log(data.properties);
+      // onFilter(data);
     } catch (error) {
       console.error(error);
     }
@@ -185,30 +185,30 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ properties = [], onFi
       )}
       <Text style={styles.subtitle}>Price</Text>
       <View style={styles.priceContainer}>
-        <Text>Min: {priceMin}</Text>
+        <Text>Min: {priceMin.toFixed(2)}</Text>
         <Slider
           style={styles.slider}
           minimumValue={0}
           maximumValue={100000}
-          step={100}
+          step={20}
           value={priceMin}
-          onValueChange={(value) => setPriceMin(value)}
+          onValueChange={(value) => setPriceMin(Number(value))}
         />
-        <Text>Max: {priceMax}</Text>
+        <Text>Max: {priceMax.toFixed(2)}</Text>
         <Slider
           style={styles.slider}
           minimumValue={0}
           maximumValue={100000}
-          step={100}
+          step={20}
           value={priceMax}
-          onValueChange={(value) => setPriceMax(value)}
+          onValueChange={(value) => setPriceMax(Number(value))}
         />
       </View>
       <View style={styles.checkboxContainer}>
         <Text>New</Text>
         <Switch
-          value={condition === 'Neuf'}
-          onValueChange={() => setCondition('Neuf')}
+          value={condition === 'New'}
+          onValueChange={() => setCondition('New')}
         />
         <Text>Occasion</Text>
         <Switch
