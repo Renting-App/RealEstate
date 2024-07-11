@@ -185,21 +185,21 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ properties = [], onFi
       )}
       <Text style={styles.subtitle}>Price</Text>
       <View style={styles.priceContainer}>
-        <Text>Min: {priceMin.toFixed(2)}</Text>
+        <Text>Min: {priceMin.toFixed(0)}</Text>
         <Slider
           style={styles.slider}
           minimumValue={0}
           maximumValue={100000}
-          step={20}
+          step={1}
           value={priceMin}
           onValueChange={(value) => setPriceMin(Number(value))}
         />
-        <Text>Max: {priceMax.toFixed(2)}</Text>
+        <Text>Max: {priceMax.toFixed(0)}</Text>
         <Slider
           style={styles.slider}
           minimumValue={0}
           maximumValue={100000}
-          step={20}
+          step={1}
           value={priceMax}
           onValueChange={(value) => setPriceMax(Number(value))}
         />
