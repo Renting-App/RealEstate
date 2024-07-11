@@ -43,7 +43,7 @@ interface PropertyData {
   notification: string;
   iduser: string;
 }
-
+//not functioning on mobile
 const PostProperty = () => {
   const [propertyData, setPropertyData] = useState<PropertyData>({
     _id: "1",
