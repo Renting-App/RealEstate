@@ -141,6 +141,7 @@ const updateHouseById = async (req, res) => {
 };
 
 ///search
+///search
 const searchHouses = async (req, res) => {
   const {
     category,
@@ -150,7 +151,8 @@ const searchHouses = async (req, res) => {
     priceMin,
     priceMax,
     condition,
-    amenities
+    amenities,
+    operation // Add operation to the request body
   } = req.body;
 
   try {
@@ -179,6 +181,9 @@ const searchHouses = async (req, res) => {
     }
     if (amenities && amenities.length > 0) {
       searchCriteria.amenities = { [Op.contains]: amenities };
+    }
+    if (operation) {
+      searchCriteria.operation = operation;
     }
 
     const houses = await House.findAll({ where: searchCriteria });
