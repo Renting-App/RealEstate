@@ -42,9 +42,8 @@ const HousesScreen = ({ route }: { route: any }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredResidences, setFilteredResidences] = useState<Residence[]>([]);
 
-  const { residence } = route.params;
+  
 
-  const residenceObj = JSON.parse(residence);
 
   useEffect(() => {
     fetchResidences();
@@ -152,7 +151,7 @@ const HousesScreen = ({ route }: { route: any }) => {
     <View style={{ flex: 1, marginTop: 20 }}>
     <ThemedView style={styles.container}>
       
-    <ThemedText type="title">{residenceObj.title}</ThemedText>
+    {/* <ThemedText type="title">{residenceObj.title}</ThemedText>
       <ThemedText type="subtitle">{residenceObj.address}</ThemedText>
       <ThemedText type="default">Description: {residenceObj.description}</ThemedText>
       <ThemedText type="default">Price: {residenceObj.price}</ThemedText>
@@ -160,7 +159,7 @@ const HousesScreen = ({ route }: { route: any }) => {
       <ThemedText type="default">Contact: {residenceObj.location}</ThemedText>
       <ThemedText type="default">Contact: {residenceObj.subLocation}</ThemedText>
       <ThemedText type="default">Contact: {residenceObj.condition}</ThemedText>
-      <ThemedText type="default">Contact: {residenceObj.category}</ThemedText>
+      <ThemedText type="default">Contact: {residenceObj.category}</ThemedText> */}
 
 
 
