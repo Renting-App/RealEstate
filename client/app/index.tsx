@@ -27,15 +27,24 @@ interface Residence {
   contact_info: string;
   images: string[];
   operation: "rent" | "sale";
+  category: string;
+  amenities: string[];
+  location:string;
+  subLocation:string;
+  condition:string
 }
 
-const HousesScreen = () => {
+const HousesScreen = ({ route }: { route: any }) => {
   const [residences, setResidences] = useState<Residence[]>([]);
   const [loading, setLoading] = useState(true);
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
   const [start, setStart] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredResidences, setFilteredResidences] = useState<Residence[]>([]);
+
+  const { residence } = route.params;
+
+  const residenceObj = JSON.parse(residence);
 
   useEffect(() => {
     fetchResidences();
@@ -142,6 +151,20 @@ const HousesScreen = () => {
   return (
     <View style={{ flex: 1, marginTop: 20 }}>
     <ThemedView style={styles.container}>
+      
+    <ThemedText type="title">{residenceObj.title}</ThemedText>
+      <ThemedText type="subtitle">{residenceObj.address}</ThemedText>
+      <ThemedText type="default">Description: {residenceObj.description}</ThemedText>
+      <ThemedText type="default">Price: {residenceObj.price}</ThemedText>
+      <ThemedText type="default">Contact: {residenceObj.contact_info}</ThemedText>
+      <ThemedText type="default">Contact: {residenceObj.location}</ThemedText>
+      <ThemedText type="default">Contact: {residenceObj.subLocation}</ThemedText>
+      <ThemedText type="default">Contact: {residenceObj.condition}</ThemedText>
+      <ThemedText type="default">Contact: {residenceObj.ca}</ThemedText>
+
+
+
+
       <DrawerContent
         isVisible={isSidebarVisible}
         onClose={() => setIsSidebarVisible(false)}
