@@ -23,6 +23,9 @@ interface Residence {
   title: string;
   address: string;
   price: string;
+  rooms:string;
+  bathrooms:string;
+  size:string;
   description: string;
   contact_info: string;
   images: string[];
@@ -42,14 +45,17 @@ const HousesScreen = () => {
   }, []);
 
   const fetchResidences = () => {
-    fetch("http://localhost:5000/api/gethouse")
+    fetch("http://192.168.1.105:5000/api/gethouse")
       .then((response) => response.json())
       .then((data) => {
         const mappedResidences = data.map((residence: any) => ({
           _id: residence.idhouses,
           title: residence.title,
           address: residence.address,
+          size: residence.size,
           price: residence.price,
+          rooms: residence.rooms,
+          bathrooms: residence.bathrooms,
           description: residence.description,
           contact_info: residence.contact_info,
           images: residence.images,

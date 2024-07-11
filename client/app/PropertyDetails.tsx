@@ -5,19 +5,19 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface Property {
-  _id: string;
+  _id: number;
   address: string;
-  size: number;
+  size: string;
   category: "apartment" | "house" | "office" | "studio" | "penthouse";
   title: string;
   favourite: boolean;
   description: string;
   images: string[];
   operation: "rent" | "sale";
-  price: number;
+  price: string;
   date_of_creation: string;
-  rooms: number;
-  bathrooms: number;
+  rooms: string;
+  bathrooms: string;
   visits: string[];
   amenities: {
     parking: boolean;
@@ -70,7 +70,7 @@ const PropertyDetails: React.FC = () => {
               key={index}
               source={{ uri: image }}
               style={styles.image}
-              resizeMode="cover"
+              resizeMode="center"
             />
           ))}
         </ScrollView> 
@@ -125,13 +125,15 @@ const PropertyDetails: React.FC = () => {
   );
 };
 
-const { width: screenWidth } = Dimensions.get('window');
+const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
     padding: 16,
+    alignItems: 'center',
   },
   header: {
+    width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -148,19 +150,20 @@ const styles = StyleSheet.create({
     color: 'green',
   },
   imageWrapper: {
-    width: screenWidth,
-    height: 300,
+    width: '100%',
+    height: screenHeight * 0.4,
     marginBottom: 16,
+    alignItems: 'center',
   },
   imageContainer: {
-    justifyContent: 'center',
     alignItems: 'center',
   },
   image: {
-    width: screenWidth,
-    height: 300,
+    width: screenWidth * 0.9,
+    height: screenHeight * 0.4,
   },
   details: {
+    width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
     backgroundColor: 'orange',
@@ -177,15 +180,18 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   description: {
+    width: '100%',
     fontSize: 16,
     marginBottom: 16,
   },
   address: {
+    width: '100%',
     fontSize: 16,
     marginBottom: 16,
     fontStyle: 'italic',
   },
   amenities: {
+    width: '100%',
     marginBottom: 16,
   },
   amenity: {
@@ -198,6 +204,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   buttonContainer: {
+    width: '100%',
     alignItems: 'center',
     marginBottom: 20,
   },

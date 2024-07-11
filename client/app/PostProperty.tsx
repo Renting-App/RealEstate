@@ -10,6 +10,7 @@ import {
 import { Picker } from "@react-native-picker/picker";
 import { StyleSheet } from "react-native";
 import axios from "axios";
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/dw1sxdmac/upload";
 const CLOUDINARY_PRESET = "hotel_preset";
@@ -83,6 +84,18 @@ const PostProperty = () => {
     notification: "",
     iduser: "1",
   });
+
+  const amenityIcons: { [key: string]: string } = {
+    parking: 'car',
+    ac: 'snowflake-o',
+    furnished: 'bed',
+    pool: 'tint',
+    microwave: 'cutlery',
+    near_subway: 'subway',
+    beach_view: 'umbrella',
+    alarm: 'bell',
+    garden: 'tree',
+  };
 
   const handleImageSelection = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -287,30 +300,29 @@ const PostProperty = () => {
         <View style={styles.amenitiesContainer}>
           {Object.keys(propertyData.amenities).map((key) => (
             <View key={key} style={styles.amenityCheckbox}>
-              <Text style={styles.amenityLabel}>{key.replace(/_/g, " ")}</Text>
               <TouchableOpacity
                 style={styles.checkbox}
-                onPress={() =>
-                  toggleCheckbox(key as keyof typeof propertyData.amenities)
-                }
+                onPress={() => toggleCheckbox(key as keyof typeof propertyData.amenities)}
               >
-                {propertyData.amenities[
-                  key as keyof typeof propertyData.amenities
-                ] && <View style={styles.checkboxInner} />}
+                {propertyData.amenities[key as keyof typeof propertyData.amenities] && (
+                  <View style={styles.checkboxInner} />
+                )}
               </TouchableOpacity>
+              <Icon name={amenityIcons[key]} size={20} color="#007bff" style={styles.amenityIcon} />
+              <Text style={styles.amenityLabel}>{key.replace(/_/g, ' ')}</Text>
             </View>
           ))}
         </View>
-
-        <TouchableOpacity style={styles.imageButton}>
-          <Text>Select Images</Text>
+        
+        <Text>Select Images</Text>
+       
           <input
             type="file"
             onChange={handleImageSelection}
             accept="image/*"
             multiple
           />
-        </TouchableOpacity>
+      
 
         <View style={styles.selectedImagesContainer}>
           {propertyData.images.map((image, index) => (
@@ -333,22 +345,35 @@ const PostProperty = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: "#ffffff",
+    backgroundColor: "#f5f5f5",
+    paddingHorizontal: 20,
+    paddingTop: 20,
   },
   heading: {
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 20,
     textAlign: "center",
+    color: "#333",
   },
   formContainer: {
-    marginBottom: 20,
+    backgroundColor: "#fff",
+    padding: 20,
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   label: {
     fontSize: 18,
     fontWeight: "bold",
     marginTop: 10,
+    color: "#333",
   },
   input: {
     borderWidth: 1,
@@ -357,6 +382,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginTop: 5,
     marginBottom: 15,
+    color: "#333",
   },
   textArea: {
     height: 100,
@@ -367,26 +393,35 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginTop: 20,
     marginBottom: 10,
+    color: "#333",
   },
   amenitiesContainer: {
-    flexDirection: "row",
+    flexDirection: "column",
     flexWrap: "wrap",
     marginBottom: 20,
+    justifyContent: "space-between"
   },
   amenityCheckbox: {
     flexDirection: "row",
     alignItems: "center",
-    marginRight: 20,
     marginBottom: 10,
+    marginRight: 20,
+
+  },
+  amenityIcon: {
+    marginRight: 10,
+    color: "#007bff",
   },
   amenityLabel: {
-    marginRight: 10,
+    color: "#333",
   },
   checkbox: {
     width: 20,
     height: 20,
     borderWidth: 1,
     borderColor: "#ccc",
+    borderRadius: 3,
+    marginRight: 10,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -394,14 +429,23 @@ const styles = StyleSheet.create({
     width: 14,
     height: 14,
     backgroundColor: "#007bff",
+    borderRadius: 2,
   },
+
   imageButton: {
     borderWidth: 1,
-    borderColor: "#ccc",
+    flexDirection: "column",
+    borderColor: "#007bff",
     borderRadius: 5,
     padding: 10,
     alignItems: "center",
     marginBottom: 15,
+
+  },
+  imageButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
   },
   selectedImagesContainer: {
     flexDirection: "row",
@@ -413,7 +457,7 @@ const styles = StyleSheet.create({
     height: 100,
     marginHorizontal: 10,
     marginBottom: 10,
-    resizeMode: "cover",
+    borderRadius: 5,
   },
   submitButton: {
     backgroundColor: "#007bff",
@@ -421,12 +465,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 5,
     alignItems: "center",
+    marginTop: 20,
   },
   submitButtonText: {
-    color: "#ffffff",
+    color: "#fff",
     fontSize: 18,
     fontWeight: "bold",
   },
 });
+
 
 export default PostProperty;
