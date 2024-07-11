@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, ScrollView, StyleSheet, Button, Switch } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, Button, Switch } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import Slider from '@react-native-community/slider';
 
@@ -24,9 +24,8 @@ interface FilterComponentProps {
   onFilter: (filteredProperties: Property[]) => void;
 }
 
-const categories = ['Select Category', ' 🏘️Apartment', '🏘️House', '🏘️Office' , '🏘️studio' , '🏘️penthouse'];
+const categories = ['Select Category', ' 🏘️Apartment', '🏘️House', '🏘️Office', '🏘️studio', '🏘️penthouse'];
 const tunisStates = [
- 
   '🗺️ Ariana',
   '🗺️ Beja',
   '🗺️ Ben Arous',
@@ -94,7 +93,7 @@ const amenitiesList = [
 
 const FilterComponent: React.FC<FilterComponentProps> = ({ properties = [], onFilter }) => {
   const [category, setCategory] = useState('Select Category');
-  const [type, setType] = useState('Appartements');
+  const [type, setType] = useState('Appartements'); // Assuming default type
   const [location, setLocation] = useState('Select State');
   const [subLocation, setSubLocation] = useState('');
   const [priceMin, setPriceMin] = useState(0);
@@ -134,8 +133,8 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ properties = [], onFi
         }),
       });
       const data = await response.json();
-      console.log(data.properties);
-      // onFilter(data);
+      console.log(data); // Verify data structure in console
+      onFilter(data); // Pass filtered data to parent component
     } catch (error) {
       console.error(error);
     }
@@ -153,16 +152,20 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ properties = [], onFi
           <Picker.Item key={index} label={cat} value={cat} />
         ))}
       </Picker>
-      <Text style={styles.subtitle}>Operation Type</Text>
-      <Picker
-        selectedValue={operation}
-        onValueChange={(itemValue) => setOperation(itemValue)}
-        style={styles.input}>
-        <Picker.Item label="Sale" value="sale" />
-        <Picker.Item label="Rent" value="rent" />
-      </Picker>
 
-      <Text style={styles.subtitle}>Location</Text>
+      {category === '🏘️Apartment' && (
+        <Picker
+          selectedValue={type}
+          onValueChange={(itemValue) => setType(itemValue)}
+          style={styles.input}
+        >
+          <Picker.Item label="Select a type" value="Appartements" />
+          <Picker.Item label="Villa" value="villa" />
+          <Picker.Item label="Studio" value="studio" />
+          <Picker.Item label="Landscape" value="Penthouse" />
+        </Picker>
+      )}
+
       <Picker
         selectedValue={location}
         onValueChange={(itemValue) => setLocation(itemValue)}
@@ -172,110 +175,156 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ properties = [], onFi
           <Picker.Item key={index} label={state} value={state} />
         ))}
       </Picker>
-      {location !== 'Select State' && subLocations[location] && (
+
+      {subLocations[location] && (
         <Picker
           selectedValue={subLocation}
           onValueChange={(itemValue) => setSubLocation(itemValue)}
           style={styles.input}
         >
-          {subLocations[location].map((sub, index) => (
-            <Picker.Item key={index} label={sub} value={sub} />
+          <Picker.Item label="Select Sub-Location" value="" />
+          {subLocations[location].map((subLoc, index) => (
+            <Picker.Item key={index} label={subLoc} value={subLoc} />
           ))}
         </Picker>
       )}
-      <Text style={styles.subtitle}>Price</Text>
-      <View style={styles.priceContainer}>
-        <Text>Min: {priceMin.toFixed ? priceMin.toFixed(0) : priceMin}</Text>
-        <Slider
-          style={styles.slider}
-          minimumValue={0}
-          maximumValue={100000}
-          step={1}
-          value={priceMin}
-          onValueChange={(value) => setPriceMin(Number(value))}
-        />
-        <Text>Max: {priceMax.toFixed ? priceMax.toFixed(0) : priceMax}</Text>
-        <Slider
-          style={styles.slider}
-          minimumValue={0}
-          maximumValue={100000}
-          step={1}
-          value={priceMax}
-          onValueChange={(value) => setPriceMax(Number(value))}
-        />
+
+      <View style={styles.priceRangeContainer}>
+        <Text style={styles.priceRangeLabel}>Price Range:</Text>
+        <Text style={styles.priceRangeText}>${priceMin} - ${priceMax}</Text>
       </View>
-      <View style={styles.checkboxContainer}>
-        <Text>New</Text>
+      <Slider
+        style={styles.slider}
+        minimumValue={0}
+        maximumValue={1000000}
+        step={10000}
+        minimumTrackTintColor="#1EB980"
+        maximumTrackTintColor="#000000"
+        thumbTintColor="#1EB980"
+        value={priceMin}
+        onValueChange={(value) => setPriceMin(value)}
+      />
+      <Slider
+        style={styles.slider}
+        minimumValue={0}
+        maximumValue={1000000}
+        step={10000}
+        minimumTrackTintColor="#1EB980"
+        maximumTrackTintColor="#000000"
+        thumbTintColor="#1EB980"
+        value={priceMax}
+        onValueChange={(value) => setPriceMax(value)}
+      />
+
+      <Text style={styles.conditionLabel}>Condition:</Text>
+      <View style={styles.switchContainer}>
+        <Text style={styles.conditionText}>New</Text>
         <Switch
           value={condition === 'New'}
-          onValueChange={() => setCondition('New')}
+          onValueChange={() => setCondition(condition === 'New' ? 'Occasion' : 'New')}
+          trackColor={{ false: '#767577', true: '#81b0ff' }}
+          thumbColor="#f4f3f4"
+          ios_backgroundColor="#3e3e3e"
+          style={{ transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }] }}
         />
-        <Text>Occasion</Text>
-        <Switch
-          value={condition === 'Occasion'}
-          onValueChange={() => setCondition('Occasion')}
-        />
+        <Text style={styles.conditionText}>Occasion</Text>
       </View>
-      <Text style={styles.subtitle}>Amenities</Text>
+
+      <Text style={styles.amenitiesLabel}>Amenities:</Text>
       <View style={styles.amenitiesContainer}>
         {amenitiesList.map((amenity, index) => (
           <View key={index} style={styles.amenityItem}>
-            <Text>{amenity}</Text>
+            <Text style={styles.amenityText}>{amenity}</Text>
             <Switch
               value={selectedAmenities[amenity] || false}
               onValueChange={() => toggleAmenity(amenity)}
+              trackColor={{ false: '#767577', true: '#81b0ff' }}
+              thumbColor="#f4f3f4"
+              ios_backgroundColor="#3e3e3e"
             />
           </View>
         ))}
       </View>
-      
-      <Button title="Find your sweet home" onPress={handleSearch} />
+
+      <Button
+        title="Find Your Sweet Home"
+        onPress={handleSearch}
+      />
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     padding: 20,
   },
   title: {
-    fontSize: 18,
+    fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 10,
   },
   input: {
+    height: 50,
+    marginBottom: 10,
     borderWidth: 1,
-    padding: 10,
-    marginVertical: 5,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    paddingLeft: 10,
   },
-  subtitle: {
-    fontSize: 16,
+  priceRangeContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  priceRangeLabel: {
+    fontSize: 18,
     fontWeight: 'bold',
-    marginTop: 10,
   },
-  priceContainer: {
-    marginVertical: 10,
+  priceRangeText: {
+    fontSize: 16,
   },
   slider: {
-    width: '100%',
     height: 40,
+    width: '100%',
+    marginBottom: 20,
   },
-  checkboxContainer: {
+  conditionLabel: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  switchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    marginVertical: 10,
+    marginBottom: 20,
+  },
+  conditionText: {
+    fontSize: 16,
+    marginRight: 30,
+    marginLeft: 30,
+
+  },
+  amenitiesLabel: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
   },
   amenitiesContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    marginBottom: 20,
   },
   amenityItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    width: '45%',
-    marginVertical: 5,
+    marginRight: 20,
+    marginBottom: 10,
+  },
+  amenityText: {
+    fontSize: 16,
+    marginRight: 10,
   },
 });
 
