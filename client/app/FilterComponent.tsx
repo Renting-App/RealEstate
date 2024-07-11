@@ -3,10 +3,11 @@ import { View, Text, ScrollView, StyleSheet, Button, Switch } from 'react-native
 import { Picker } from '@react-native-picker/picker';
 import Slider from '@react-native-community/slider';
 
-interface Property {
+export interface Property {
+  _id: string;
   address: string;
   size: number;
-  category: string;
+  category: string; // Ensure this matches your intended structure
   title: string;
   description: string;
   images: string[];
@@ -18,6 +19,7 @@ interface Property {
   visitsHistory: string[];
   amenities: string[];
 }
+
 
 interface FilterComponentProps {
   properties?: Property[];
@@ -91,7 +93,7 @@ const amenitiesList = [
   'Garden',
 ];
 
-const FilterComponent: React.FC<FilterComponentProps> = ({ properties = [], onFilter }) => {
+const FilterComponent: React.FC<FilterComponentProps> = ({  onFilter }) => {
   const [category, setCategory] = useState('Select Category');
   const [type, setType] = useState('Appartements'); // Assuming default type
   const [location, setLocation] = useState('Select State');
@@ -132,12 +134,18 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ properties = [], onFi
           operation,
         }),
       });
-      const data = await response.json();
-      console.log(data); // Verify data structure in console
-      onFilter(data); // Pass filtered data to parent component
+      const filteredData: Property[] = await fetchFilteredData(); // Implement your filtering logic here
+      onFilter(filteredData); // Call onFilter with filtered data
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const fetchFilteredData = async (): Promise<Property[]> => {
+    // Implement your filtering logic here (e.g., fetch from API or filter local data)
+    // Example:
+    const filteredProperties: Property[] = []; // Implement filtering logic
+    return filteredProperties;
   };
 
   return (

@@ -28,7 +28,7 @@ const DrawerContent: React.FC<SidebarProps> = ({ isVisible, onClose }) => {
         <Link href={'/PostProperty'} style={styles.link}>
           <ThemedText type="subtitle">Post a Property</ThemedText>
         </Link>
-        <Link href={'/FilterItem'} style={styles.link}>
+        <Link href={'/FilterComponent'} style={styles.link}>
           <ThemedText type="subtitle">Filter</ThemedText>
         </Link>
 
