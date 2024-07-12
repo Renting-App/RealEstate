@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS `realestate`.`user` (
   `password` VARCHAR(45) NULL DEFAULT NULL,
   `email` VARCHAR(45) NULL DEFAULT NULL,
   `phone_number` VARCHAR(45) NULL DEFAULT NULL,
+  `role` VARCHAR(45) NULL DEFAULT 'user'
   PRIMARY KEY (`iduser`))
 ENGINE = InnoDB
 AUTO_INCREMENT = 7
@@ -77,13 +78,13 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 -- Insert data into `user` table
 INSERT INTO user (iduser, username, password, email, phone_number)
-VALUES (1, 'john_doe', 'password123', 'john@example.com', 111-222-3333 );
+VALUES (1, 'john_doe', 'password123', 'john@example.com', '111-222-3333' );
 
 INSERT INTO user (iduser, username, password, email, phone_number)
-VALUES (2, 'jane_smith', 'securepass', 'jane@example.com', 34 454 214);
+VALUES (2, 'jane_smith', 'securepass', 'jane@example.com', '34 454 214');
 
 INSERT INTO user (iduser, username, password, email, phone_number)
-VALUES (3, 'alice_jones', 'alicepassword', 'alice@example.com', 67 321 684);
+VALUES (3, 'alice_jones', 'alicepassword', 'alice@example.com', '67 321 684');
 
 INSERT INTO user (iduser, username, password, email, phone_number)
 VALUES (4, 'john_doe', 'password123', 'john@example.com', '123-456-7890');
