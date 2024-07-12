@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, Button, ScrollView } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
+import { Picker } from "@react-native-picker/picker";
 
 interface ResidenceData {
   title: string;
@@ -10,9 +11,10 @@ interface ResidenceData {
 const RequestTour: React.FC = () => {
   const { residence } = useLocalSearchParams();
   const [residenceData, setResidenceData] = useState<ResidenceData | null>(null);
+  const [selectedVisitDate, setSelectedVisitDate] = useState<string>('');
 
   useEffect(() => {
-    console.log('Raw residence parameter:', residence); // Log the raw residence parameter
+    console.log('Raw residence parameter:', residence); 
     if (residence) {
       try {
         const parsedResidence = JSON.parse(residence as string) as ResidenceData;
@@ -35,6 +37,7 @@ const RequestTour: React.FC = () => {
       email,
       phone,
       message,
+      selectedVisitDate,
       residence: residenceData,
     });
   };
@@ -67,13 +70,20 @@ const RequestTour: React.FC = () => {
         onChangeText={setPhone}
         keyboardType="phone-pad"
       />
-    
+      
       {residenceData.visits && residenceData.visits.length > 0 ? (
         <View style={styles.datesContainer}>
           <Text style={styles.datesTitle}>Available Visit Dates:</Text>
-          {residenceData.visits.map((date, index) => (
-            <Text key={index} style={styles.dateText}>{date}</Text>
-          ))}
+          <Picker
+            selectedValue={selectedVisitDate}
+            onValueChange={(itemValue) => setSelectedVisitDate(itemValue)}
+            style={styles.picker}
+          >
+            <Picker.Item label="Select a date" value="" />
+            {residenceData.visits.map((date, index) => (
+              <Picker.Item key={index} label={date} value={date} />
+            ))}
+          </Picker>
         </View>
       ) : (
         <Text style={styles.noDatesText}>No available visit dates.</Text>
@@ -110,9 +120,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 8,
   },
-  dateText: {
-    fontSize: 16,
-    marginBottom: 4,
+  picker: {
+    height: 50,
+    width: '100%',
+    marginBottom: 16,
   },
   noDatesText: {
     fontSize: 16,
