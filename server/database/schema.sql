@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS `realestate`.`user` (
   `password` VARCHAR(45) NULL DEFAULT NULL,
   `email` VARCHAR(45) NULL DEFAULT NULL,
   `phone_number` VARCHAR(45) NULL DEFAULT NULL,
+  `role` VARCHAR(45) NULL DEFAULT 'user'
   PRIMARY KEY (`iduser`))
 ENGINE = InnoDB
 AUTO_INCREMENT = 7

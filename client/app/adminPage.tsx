@@ -1,62 +1,65 @@
-// import React, { useEffect, useState } from 'react';
-// import { View, Text, StyleSheet } from 'react-native';
-// import { NavigationProp } from '@react-navigation/native';
-// import { auth, firestore } from '../config/firebase';
-// import { doc, getDoc } from 'firebase/firestore';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from './index';
+import { auth, firestore } from '../config/firebase';
+import { doc, getDoc } from 'firebase/firestore';
 
-// type AdminPageProps = {
-//     navigation: NavigationProp<any>;
-// };
+type AdminScreenNavigationProp = StackNavigationProp<RootStackParamList, 'AdminPage'>;
 
-// const AdminPage: React.FC<AdminPageProps> = ({ }) => {
-//     const [loading, setLoading] = useState(true);
-//     const [isAdmin, setIsAdmin] = useState(false);
+type Props = {
+    navigation: AdminScreenNavigationProp;
+};
 
-//     useEffect(() => {
-//         const checkAdminRole = async () => {
-//             const user = auth.currentUser;
-//             if (user) {
-//                 const userDoc = await getDoc(doc(firestore, 'users', user.uid));
-//                 const userData = userDoc.data();
-//                 if (userData && userData.role === 'admin') {
-//                     setIsAdmin(true);
-//                 }
-//             }
-//             setLoading(false);
-//         };
+const AdminPage: React.FC<Props> = ({ navigation }) => {
+    const [loading, setLoading] = useState(true);
+    const [isAdmin, setIsAdmin] = useState(false);
 
-//         checkAdminRole();
-//     }, []);
+    useEffect(() => {
+        const checkAdminRole = async () => {
+            const user = auth.currentUser;
+            if (user) {
+                const userDoc = await getDoc(doc(firestore, 'users', user.uid));
+                const userData = userDoc.data();
+                if (userData && userData.role === 'admin') {
+                    setIsAdmin(true);
+                }
+            }
+            setLoading(false);
+        };
 
-//     if (loading) {
-//         return (
-//             <View style={styles.container}>
-//                 <Text>Loading...</Text>
-//             </View>
-//         );
-//     }
+        checkAdminRole();
+    }, []);
 
-//     if (!isAdmin) {
-//         return (
-//             <View style={styles.container}>
-//                 <Text>You do not have access to this page.</Text>
-//             </View>
-//         );
-//     }
+    if (loading) {
+        return (
+            <View style={styles.container}>
+                <Text>Loading...</Text>
+            </View>
+        );
+    }
 
-//     return (
-//         <View style={styles.container}>
-//             <Text>Welcome to the Admin Page!</Text>
-//         </View>
-//     );
-// };
+    if (!isAdmin) {
+        return (
+            <View style={styles.container}>
+                <Text>You do not have access to this page.</Text>
+            </View>
+        );
+    }
 
-// const styles = StyleSheet.create({
-//     container: {
-//         flex: 1,
-//         justifyContent: 'center',
-//         alignItems: 'center',
-//     },
-// });
+    return (
+        <View style={styles.container}>
+            <Text>Welcome to the Admin Page!</Text>
+        </View>
+    );
+};
 
-// export default AdminPage;
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+});
+
+export default AdminPage;
