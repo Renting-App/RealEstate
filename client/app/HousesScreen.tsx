@@ -39,7 +39,7 @@ const HousesScreen = () => {
   
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/gethouse")
+    fetch("http://192.168.1.105:5000/api/gethouse")
       .then((response) => response.json())
       .then((data) => {
         // Limiting to only 3 items
@@ -134,59 +134,68 @@ const HousesScreen = () => {
 
   return (
     <ThemedView style={styles.container}>
-      <DrawerContent isVisible={isSidebarVisible} onClose={() => setIsSidebarVisible(false)} />
-      <View style={styles.header}>
-        <Pressable onPress={() => setIsSidebarVisible(true)}>
-          <Ionicons name="menu" style={styles.menuIcon} size={24} />
-        </Pressable>
-        <ThemedText type="title" style={[styles.bgContainer , { 
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#333',  // Adjust color to your preference
-    textTransform: 'uppercase',
-    letterSpacing: 1,  // Increase or decrease letter spacing as desired
-    fontFamily: 'Arial',  // Use a suitable font family
-  }]}>
-          Rent&Sell
+    {/* DrawerContent and Header */}
+    <DrawerContent isVisible={isSidebarVisible} onClose={() => setIsSidebarVisible(false)} />
+    <View style={styles.header}>
+      <Pressable onPress={() => setIsSidebarVisible(true)}>
+        <Ionicons name="menu" style={styles.menuIcon} size={24} />
+      </Pressable>
+      <ThemedText type="title" style={[styles.bgContainer , { 
+        fontSize: 22,
+        fontWeight: 'bold',
+        color: '#333',
+        textTransform: 'uppercase',
+        letterSpacing: 1,
+        fontFamily: 'Arial',
+      }]}>
+        Rent&Sell
+      </ThemedText>
+    </View>
+
+    {/* Banner */}
+    <View style={styles.banner}>
+      <Image
+        source={require("../assets/images/banner01.jpg")}
+        style={styles.bannerImage}
+      />
+      <View style={styles.bannerContent}>
+        <ThemedText type="title" style={styles.bannerTitle}>
+          Discover Your New Home
         </ThemedText>
-      </View>
-      <View style={styles.banner}>
-        <Image
-          source={require("../assets/images/banner01.jpg")}
-          style={styles.bannerImage}
-        />
-        <View style={styles.bannerContent}>
-          <ThemedText type="title" style={styles.bannerTitle}>
-            Discover Your New Home
-          </ThemedText>
-          <ThemedText type="subtitle" style={styles.bannerSubtitle}>
-            Helping 100 thousand renters and sellers
-          </ThemedText>
-          <View style={styles.searchContainer}>
-            <TextInput
-              style={styles.searchInput}
-              placeholder="Search for a property..."
-            />
-            <Pressable style={[styles.searchButton]}> <ThemedText style= {styles.buttonText} >Search</ThemedText> </Pressable>
-          </View>
+        <ThemedText type="subtitle" style={styles.bannerSubtitle}>
+          Helping 100 thousand renters and sellers
+        </ThemedText>
+        <View style={styles.searchContainer}>
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search for a property..."
+          />
+          <Pressable style={styles.searchButton}>
+            <ThemedText style={styles.buttonText}>Search</ThemedText>
+          </Pressable>
         </View>
       </View>
-      <FlatList
-        data={residences}
-        renderItem={renderItem}
-        keyExtractor={(item) => item._id.toString()}
-        contentContainerStyle={styles.cardsContainer}
-      />
-      {/* Previous Button */}
-      <Pressable style={styles.prevButton} onPress={handlePrev}>
-        <Ionicons name="arrow-back" size={24} color="#000" />
-      </Pressable>
-      {/* Next Button */}
-      <Pressable style={styles.nextButton} onPress={handleNext}>
-        <Ionicons name="arrow-forward" size={24} color="#000" />
-      </Pressable>
-    </ThemedView>
-  );
+    </View>
+
+    {/* FlatList */}
+    <FlatList
+      data={residences}
+      renderItem={renderItem}
+      keyExtractor={(item) => item._id.toString()}
+      contentContainerStyle={styles.cardsContainer}
+    />
+
+    {/* Previous Button */}
+    <Pressable style={styles.prevButton} onPress={handlePrev}>
+      <Ionicons name="arrow-back" size={24} color="#000" />
+    </Pressable>
+    
+    {/* Next Button */}
+    <Pressable style={styles.nextButton} onPress={handleNext}>
+      <Ionicons name="arrow-forward" size={24} color="#000" />
+    </Pressable>
+  </ThemedView>
+);
 };
 const { width } = Dimensions.get("window");
 

@@ -61,12 +61,11 @@ const Signin: React.FC<Props> = ({ navigation }) => {
         }
     }
     return (
-        <View style={styles.container}>
+        <View >
             <Text>Signin Page</Text>
-            <View style={styles.controls}>
+            <View>
                 <Input
                     placeholder='Email'
-                    containerStyle={styles.control}
                     value={value.email}
                     onChangeText={(text) => setValue({ ...value, email: text })}
                     leftIcon={<Icon
@@ -76,7 +75,7 @@ const Signin: React.FC<Props> = ({ navigation }) => {
                 />
                 <Input
                     placeholder='Password'
-                    containerStyle={styles.control}
+                    
                     value={value.password}
                     onChangeText={(text) => setValue({ ...value, password: text })}
                     secureTextEntry={true}
@@ -85,7 +84,7 @@ const Signin: React.FC<Props> = ({ navigation }) => {
                         size={16}
                     />}
                 />
-                <Button title="Submit" buttonStyle={styles.control} onPress={signIn} />
+                <Button title="Submit"  onPress={signIn} />
                 <Button title="Signup" onPress={() => navigation.navigate('Signup')} />
 
             </View>
@@ -93,29 +92,29 @@ const Signin: React.FC<Props> = ({ navigation }) => {
     );
 };
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        paddingTop: 20,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
+// const styles = StyleSheet.create({
+//     container: {
+//         flex: 1,
+//         paddingTop: 20,
+//         backgroundColor: '#fff',
+//         alignItems: 'center',
+//         justifyContent: 'center',
+//     },
 
-    controls: {
-        flex: 1,
-    },
+//     controls: {
+//         flex: 1,
+//     },
 
-    control: {
-        marginTop: 10
-    },
+//     control: {
+//         marginTop: 10
+//     },
 
-    error: {
-        marginTop: 10,
-        padding: 10,
-        color: '#fff',
-        backgroundColor: '#D54826FF',
-    }
-});
+//     error: {
+//         marginTop: 10,
+//         padding: 10,
+//         color: '#fff',
+//         backgroundColor: '#D54826FF',
+//     }
+// });
 
 export default Signin;
