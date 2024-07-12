@@ -63,7 +63,7 @@ const Signin: React.FC<Props> = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <Text>Signin Page</Text>
-            <view style={styles.controls}>
+            <View style={styles.controls}>
                 <Input
                     placeholder='Email'
                     containerStyle={styles.control}
@@ -88,7 +88,7 @@ const Signin: React.FC<Props> = ({ navigation }) => {
                 <Button title="Submit" buttonStyle={styles.control} onPress={signIn} />
                 <Button title="Signup" onPress={() => navigation.navigate('Signup')} />
 
-            </view>
+            </View>
         </View>
     );
 };

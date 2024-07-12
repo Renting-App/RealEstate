@@ -8,7 +8,6 @@ import Signin from './SignIn';
 import Signup from './SignUp';
 import HousesScreen from './HousesScreen'; // Assuming Index is HousesScreen
 import AdminPage from './AdminPage'
-
 // import AdditionalInfo from './AdditionalInfo'
 
 const Stack = createStackNavigator();
@@ -22,7 +21,7 @@ export type RootStackParamList = {
   PropertyDetails: undefined;
   RequestaTour: undefined;
   PostProperty: undefined;
-  // AdditionalInfo: undefined;
+  // AdditionalInfo:{userId:string}
 };
 const App: React.FC = () => {
   return (

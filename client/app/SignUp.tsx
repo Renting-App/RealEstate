@@ -36,10 +36,14 @@ const Signup: React.FC<Props> = ({ navigation }) => {
             // const user = userCredential.user;
             // await setDoc(doc(firestore, 'users', user.uid), {
             //     email: value.email,
+            //     // userName: value.username,
+            //     // phoneNumber: value.phoneNumber,
             //     role: 'user'
             // });
 
+            // navigation.navigate('AdditionalInfo', { userId: user.uid });
             navigation.navigate('Signin');
+
         } catch (error) {
             if (error instanceof Error) {
                 setValue({
@@ -59,7 +63,7 @@ const Signup: React.FC<Props> = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <Text>Signup Page</Text>
-            <view style={styles.controls}>
+            <View style={styles.controls}>
                 <Input
                     placeholder='Email'
                     containerStyle={styles.control}
@@ -84,7 +88,7 @@ const Signup: React.FC<Props> = ({ navigation }) => {
 
                 <Button title="Submit" buttonStyle={styles.control} onPress={signUp} />
 
-            </view>
+            </View>
         </View>
     );
 };
