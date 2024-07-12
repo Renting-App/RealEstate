@@ -48,17 +48,20 @@ const styles = StyleSheet.create({
   },
   inputValue: {
     textAlign: "center",
-    paddingRight: 20,
     alignItems: "center",
     justifyContent: "center",
     color: "black",
+    paddingTop:4
   },
   input: {
     flex: 1,
+    padding:0,
     borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 4,
     backgroundColor: "#cccccccc",
+    justifyContent:"center",
+    alignItems:"center"
   },
 });
 
