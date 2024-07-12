@@ -7,7 +7,7 @@ import Welcome from './Welcome';
 import Signin from './SignIn';
 import Signup from './SignUp';
 import HousesScreen from './HousesScreen'; // Assuming Index is HousesScreen
-import AdminPage from './AdminPage'
+import AdminPage from './adminPage'
 // import AdditionalInfo from './AdditionalInfo'
 
 const Stack = createStackNavigator();
