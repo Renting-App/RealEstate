@@ -70,7 +70,7 @@ const PropertyDetails: React.FC = () => {
               key={index}
               source={{ uri: image }}
               style={styles.image}
-              resizeMode="center"
+              resizeMode="contain"
             />
           ))}
         </ScrollView> 

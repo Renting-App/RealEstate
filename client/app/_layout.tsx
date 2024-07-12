@@ -21,7 +21,7 @@ export default function TabLayout() {
       <Stack.Screen name="index" options={{ title: 'Home', headerShown: false }} />
       <Stack.Screen name="PropertyDetails" options={{ title: 'Details', headerShown: true }} />
       <Stack.Screen
-        name="RequestaTour"
+        name="RequestTour"
         options={{
           title: '',
           headerLeft: () => (

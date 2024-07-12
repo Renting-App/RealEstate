@@ -109,7 +109,7 @@ const HousesScreen = () => {
       <Image
         source={{ uri: item.images[0] }}
         style={styles.image}
-        resizeMode="center"
+        resizeMode="stretch"
       />
       <ThemedText type="subtitle" style={styles.title}>
         {item.address}
