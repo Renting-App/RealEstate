@@ -119,7 +119,7 @@ const House = sequelize.define('houses', {
     type: DataTypes.INTEGER,
     allowNull: true
   },
-  condition:{
+  state:{
     type: DataTypes.ENUM('new', 'occasion'),
     defaultValue: 'new',
   }

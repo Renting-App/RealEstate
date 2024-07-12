@@ -142,17 +142,18 @@ const updateHouseById = async (req, res) => {
 
 ///search
 ///search
+
+
 const searchHouses = async (req, res) => {
   const {
     category,
-    type,
     location,
     subLocation,
     priceMin,
     priceMax,
-    condition,
+    state,
     amenities,
-    operation // Add operation to the request body
+    operation
   } = req.body;
 
   try {
@@ -161,14 +162,15 @@ const searchHouses = async (req, res) => {
     if (category) {
       searchCriteria.category = category;
     }
-    if (type) {
-      searchCriteria.type = type;
-    }
+    
     if (location) {
       searchCriteria.address = { [Op.like]: `%${location}%` };
     }
     if (subLocation) {
-      searchCriteria.address = { [Op.like]: `%${subLocation}%` };
+      searchCriteria.address = {
+        ...searchCriteria.address,
+        [Op.like]: `%${subLocation}%`
+      };
     }
     if (priceMin !== undefined) {
       searchCriteria.price = { ...searchCriteria.price, [Op.gte]: priceMin };
@@ -176,8 +178,8 @@ const searchHouses = async (req, res) => {
     if (priceMax !== undefined) {
       searchCriteria.price = { ...searchCriteria.price, [Op.lte]: priceMax };
     }
-    if (condition) {
-      searchCriteria.condition = condition;
+    if (state) {
+      searchCriteria.state = state;
     }
     if (amenities && amenities.length > 0) {
       searchCriteria.amenities = { [Op.contains]: amenities };
@@ -193,7 +195,6 @@ const searchHouses = async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 };
-
 module.exports = {
   addHouse,
   getAllHouses,
