@@ -98,7 +98,7 @@ const places = [
   // Add more places as needed
 
 
-const Map = () => {
+const Maps = () => {
   return (
     <View style={styles.container}>
       <MapView
@@ -135,4 +135,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Map;
+export default Maps;
