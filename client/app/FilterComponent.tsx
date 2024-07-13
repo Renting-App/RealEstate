@@ -149,7 +149,7 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ onFilter }) => {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} >
       <Text style={styles.title}>Looking for... </Text>
       <Picker
         selectedValue={category}
@@ -282,6 +282,7 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ onFilter }) => {
 
 const styles = StyleSheet.create({
   container: {
+    marginBottom:30,
     flex: 1,
     padding: 20,
   },

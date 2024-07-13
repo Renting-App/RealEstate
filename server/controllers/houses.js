@@ -182,7 +182,7 @@ const searchHouses = async (req, res) => {
       searchCriteria.state = state;
     }
     if (amenities && amenities.length > 0) {
-      searchCriteria.amenities = { [Op.contains]: amenities };
+      searchCriteria.amenities = {  [Op.like]: `%${amenities.join('%')}%`  };
     }
     if (operation) {
       searchCriteria.operation = operation;

@@ -103,7 +103,7 @@ const House = sequelize.define('houses', {
     type: DataTypes.JSONB // Using JSONB for flexibility
   },
   amenities: {
-    type: DataTypes.JSONB // Using JSONB for flexibility
+    type: DataTypes.JSONB// Using JSONB for flexibility
   },
   contact_info: {
     type: DataTypes.STRING
