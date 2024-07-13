@@ -194,7 +194,6 @@ const searchHouses = async (req, res) => {
   }
 };
 
-
 module.exports = {
   addHouse,
   getAllHouses,
