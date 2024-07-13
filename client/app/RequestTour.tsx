@@ -49,8 +49,11 @@ const RequestTour: React.FC = () => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <HomeButton/>
+      <View style={styles.titleContainer}>
+      <HomeButton />
       <Text style={styles.header}>Request a Tour for {residenceData.title}</Text>
+      </View>
+    
       
       <TextInput
         style={styles.input}
@@ -103,8 +106,16 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   header: {
+    paddingTop:5.5,
     fontSize: 24,
     fontWeight: 'bold',
+    
+  },
+  titleContainer: {
+    display:'flex',
+    justifyContent:'space-evenly',
+    alignItems:'center',
+    textAlign:'center',
     marginBottom: 16,
   },
   input: {
