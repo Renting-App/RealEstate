@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, Button, ScrollView } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { Picker } from "@react-native-picker/picker";
+import {HomeButton} from './HomeButton'
 
 interface ResidenceData {
   title: string;
@@ -48,6 +49,7 @@ const RequestTour: React.FC = () => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      <HomeButton/>
       <Text style={styles.header}>Request a Tour for {residenceData.title}</Text>
       
       <TextInput

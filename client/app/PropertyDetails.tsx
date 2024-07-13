@@ -1,8 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, ScrollView, Button, Dimensions } from 'react-native';
-import { useLocalSearchParams, Link } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router'; // Assuming this is where useLocalSearchParams is imported from
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { HomeButton } from './HomeButton';
+import { Link } from 'expo-router';
 
 interface Property {
   _id: number;
@@ -53,8 +55,11 @@ const PropertyDetails: React.FC = () => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <View style={styles.container}>
+ <HomeButton />
       <View style={styles.header}>
+        
         <Text style={styles.title}>{residenceData.title}</Text>
         <Text style={styles.price}>${residenceData.price}</Text>
       </View>
@@ -73,9 +78,9 @@ const PropertyDetails: React.FC = () => {
               resizeMode="contain"
             />
           ))}
-        </ScrollView> 
+        </ScrollView>
       </View>
-      
+
       <View style={styles.details}>
         <View style={styles.detailItem}>
           <Ionicons name="resize" size={24} color="white" />
@@ -90,28 +95,32 @@ const PropertyDetails: React.FC = () => {
           <Text style={styles.detailText}>{residenceData.bathrooms} Bathrooms</Text>
         </View>
       </View>
+
       <Text style={styles.description}>{residenceData.description}</Text>
       <Text style={styles.address}>Address: {residenceData.address}</Text>
+
       <View style={styles.amenities}>
-        {residenceData.amenities && Object.keys(residenceData.amenities).map((key) => (
-          <View key={key} style={styles.amenity}>
-            <Ionicons
-              name={residenceData.amenities[key as keyof Property['amenities']] ? "checkbox" : "square-outline"}
-              size={24}
-              color={residenceData.amenities[key as keyof Property['amenities']] ? "green" : "gray"}
-            />
-            <MaterialCommunityIcons
-              name={amenityIcons[key as keyof Property['amenities']]}
-              size={24}
-              color="black"
-              style={{ marginLeft: 8 }}
-            />
-            <Text style={styles.amenityText}>{key.replace('_', ' ')}</Text>
-          </View>
-        ))}
+        <Text style={styles.amenitiesTitle}>Amenities</Text>
+        <View style={styles.amenitiesList}>
+          {Object.keys(residenceData.amenities).map((key) => (
+            <View key={key} style={styles.amenity}>
+              <Ionicons
+                name={residenceData.amenities[key as keyof Property['amenities']] ? "checkbox" : "square-outline"}
+                size={24}
+                color={residenceData.amenities[key as keyof Property['amenities']] ? "#4CAF50" : "#ccc"}
+              />
+              <MaterialCommunityIcons
+                name={amenityIcons[key as keyof Property['amenities']]}
+                size={24}
+                color="#666"
+                style={{ marginLeft: 8 }}
+              />
+              <Text style={styles.amenityText}>{key.replace('_', ' ')}</Text>
+            </View>
+          ))}
+        </View>
       </View>
-      <View style={styles.buttonContainer}>
-        <Link
+      <Link
           href={{
             pathname: "/RequestTour",
             params: { residence: JSON.stringify(residenceData) },
@@ -121,6 +130,7 @@ const PropertyDetails: React.FC = () => {
           <Button title="Request a Tour" />
         </Link>
       </View>
+     
     </ScrollView>
   );
 };
@@ -128,85 +138,108 @@ const PropertyDetails: React.FC = () => {
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
+  scrollContainer: {
+    flexGrow: 1,
+    paddingVertical: 20,
+    paddingHorizontal: 16,
+    backgroundColor: '#f7f7f7',
+  },
   container: {
-    padding: 16,
-    alignItems: 'center',
+    padding: 4,
+    backgroundColor: '#fff',
+    flex: 1,
+    borderRadius: 10,
+    margin: 4,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 8,
+    elevation: 5,
   },
   header: {
-    width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: 20,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: 'black',
+    color: '#333',
   },
   price: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: 'green',
+    color: '#4CAF50',
   },
   imageWrapper: {
-    width: '100%',
     height: screenHeight * 0.4,
-    marginBottom: 16,
-    alignItems: 'center',
+    marginBottom: 20,
   },
   imageContainer: {
+    flexGrow: 1,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   image: {
     width: screenWidth * 0.9,
-    height: screenHeight * 0.4,
+    height: '100%',
+    borderRadius: 10,
   },
   details: {
-    width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    backgroundColor: 'orange',
-    padding: 8,
-    borderRadius: 8,
-    marginBottom: 16,
+    alignItems: 'center',
+    backgroundColor: '#4CAF50',
+    padding: 12,
+    borderRadius: 10,
+    marginBottom: 20,
   },
   detailItem: {
-    flex: 1,
+    flexDirection: 'row',
     alignItems: 'center',
   },
   detailText: {
-    color: 'white',
-    marginTop: 4,
+    marginLeft: 8,
+    fontSize: 16,
+    color: '#fff',
   },
   description: {
-    width: '100%',
     fontSize: 16,
-    marginBottom: 16,
+    lineHeight: 24,
+    marginBottom: 20,
+    color: '#333',
   },
   address: {
-    width: '100%',
     fontSize: 16,
-    marginBottom: 16,
     fontStyle: 'italic',
+    marginBottom: 20,
+    color: '#666',
   },
   amenities: {
-    width: '100%',
-    marginBottom: 16,
+    marginBottom: 20,
+  },
+  amenitiesTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color: '#333',
+  },
+  amenitiesList: {
+    flexDirection: 'column',
+    flexWrap: 'wrap',
+
   },
   amenity: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginRight: 16,
     marginBottom: 8,
   },
   amenityText: {
     marginLeft: 8,
     fontSize: 16,
-  },
-  buttonContainer: {
-    width: '100%',
-    alignItems: 'center',
-    marginBottom: 20,
+    color: '#666',
   },
 });
 

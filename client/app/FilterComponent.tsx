@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView, StyleSheet, Button, Switch } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import Slider from '@react-native-community/slider';
+import { HomeButton } from "./HomeButton";
 
 export interface Property {
   _id: string;
@@ -150,6 +151,7 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ onFilter }) => {
 
   return (
     <ScrollView style={styles.container}>
+    <HomeButton/>
       <Text style={styles.title}>Looking for... </Text>
       <Picker
         selectedValue={category}
@@ -284,11 +286,21 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+  
+  },
+  homeButton: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
+    zIndex: 1, // Ensure it stays on top of other elements
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: 7,
+    marginLeft:20,
+    marginTop:8,
+    textAlign:'center',
   },
   input: {
     height: 50,

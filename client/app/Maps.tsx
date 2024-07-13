@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
-
+import { HomeButton } from "./HomeButton";
 const places = [
   {
     title: 'house',
@@ -101,6 +101,7 @@ const places = [
 const Maps = () => {
   return (
     <View style={styles.container}>
+      <HomeButton/>
       <MapView
         style={styles.map}
         initialRegion={{

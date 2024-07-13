@@ -16,6 +16,7 @@ import DrawerContent from "@/app/DrawerContent";
 import Search from "./Search";
 import styles from "./styles"; // Importing styles
 
+
 const itemsPerPage = 3;
 
 interface Residence {
@@ -45,7 +46,7 @@ const HousesScreen = () => {
   }, []);
 
   const fetchResidences = () => {
-    fetch("http://192.168.1.105:5000/api/gethouse")
+    fetch("http:///192.168.1.105:5000/api/gethouse")
       .then((response) => response.json())
       .then((data) => {
         const mappedResidences = data.map((residence: any) => ({
@@ -61,7 +62,11 @@ const HousesScreen = () => {
           images: residence.images,
           visits: residence.visits,
           operation: residence.operation,
-          amenities:residence.amenities
+          amenities:residence.amenities,
+          location:residence.location,
+          subLocation:residence.subLocation,
+          condition : residence.condition
+
         }));
         setResidences(mappedResidences);
         setFilteredResidences(mappedResidences);
@@ -109,7 +114,7 @@ const HousesScreen = () => {
       <Image
         source={{ uri: item.images[0] }}
         style={styles.image}
-        resizeMode="center"
+        resizeMode="contain"
       />
       <ThemedText type="subtitle" style={styles.title}>
         {item.address}
