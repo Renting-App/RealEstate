@@ -10,7 +10,7 @@ import AdminPage from './adminPage';
 import PostProperty from './PostProperty';
 import FAQ from './FAQ';
 import Maps from './Maps';
-import FilterComponent from './FilterItem';
+import FilterComponent from './FilterComponent';
 import RequestTour from './RequestTour';
 import AboutUs from './AboutUs';
 import PropertyDetails from './PropertyDetails';
