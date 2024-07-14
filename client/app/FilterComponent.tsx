@@ -2,12 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView, StyleSheet, Button, Switch } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import Slider from '@react-native-community/slider';
-
+import { StackNavigationProp } from '@react-navigation/stack'
+import { RootStackParamList } from './index'
 export interface Property {
   _id: string;
   address: string;
   size: number;
   category: string;
+  location:string;
+  condition:string;
+  subLocation:string;
   title: string;
   description: string;
   images: string[];
@@ -20,6 +24,12 @@ export interface Property {
   amenities: string[];
 }
 
+
+type SigninScreenNavigationProp = StackNavigationProp<RootStackParamList, 'FilterComponent'>;
+
+type Props = {
+    navigation: SigninScreenNavigationProp;
+};
 interface FilterComponentProps {
   properties?: Property[];
   onFilter: (filteredProperties: Property[]) => void;
@@ -92,7 +102,7 @@ const amenitiesList = [
   'Garden',
 ];
 
-const FilterComponent: React.FC<FilterComponentProps> = ({ onFilter }) => {
+const FilterComponent: React.FC<FilterComponentProps> = ({ onFilter ,navigation }) => {
   const [category, setCategory] = useState('Select Category');
   const [location, setLocation] = useState('Select State');
   const [subLocation, setSubLocation] = useState('');
@@ -113,40 +123,60 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ onFilter }) => {
     }));
   };
 
-  const handleSearch = async () => {
+  const handleSearch = () => {
     try {
-      const response = await fetch('http://localhost:5000/api/search', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          category,
-          location,
-          subLocation,
-          priceMin,
-          priceMax,
-          condition,
-          amenities: Object.keys(selectedAmenities).filter(amenity => selectedAmenities[amenity]),
-          operation,
-        }),
-      });
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const filteredData: Property[] = await fetchFilteredData(); // Implement your filtering logic here
-      onFilter(filteredData); // Call onFilter with filtered data
+      const filteredProperties = fetchFilteredData();
+      onFilter(filteredProperties);
+      navigation.navigate('');
     } catch (error) {
       console.error(error);
     }
   };
+      const fetchFilteredData = (): Property[] => {
+  try {
+    const allProperties = properties || []; // Assuming properties is passed as prop
 
-  const fetchFilteredData = async (): Promise<Property[]> => {
-    // Implement your filtering logic here (e.g., fetch from API or filter local data)
-    // Example:
-    const filteredProperties: Property[] = []; // Implement filtering logic
+    const filteredProperties = allProperties.filter(property => {
+      const meetsCategory = category === 'Select Category' || property.category === category;
+      const meetsLocation = location === 'Select State' || property.location === location;
+      const meetsSubLocation = !subLocation || property.subLocation === subLocation;
+      const meetsPrice = (!priceMin || property.price >= priceMin) && (!priceMax || property.price <= priceMax);
+      const meetsCondition = !condition || property.condition === condition;
+      const meetsAmenities = Object.keys(selectedAmenities)
+        .filter(amenity => selectedAmenities[amenity])
+        .every(amenity => property.amenities.includes(amenity));
+      const meetsOperation = !operation || property.operation === operation;
+
+      return meetsCategory && meetsLocation && meetsSubLocation && meetsPrice && meetsCondition && meetsAmenities && meetsOperation;
+      
+    });
+
     return filteredProperties;
+    
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
+
+  
+  const fetchAllProperties = async (): Promise<Property[]> => {
+    const response = await fetch('http://localhost:5000/api/gethouse', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+  
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+  
+    const data: Property[] = await response.json();
+    return data;
   };
+  
+  
 
   return (
     <ScrollView style={styles.container} >
@@ -161,16 +191,7 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ onFilter }) => {
         ))}
       </Picker>
 
-      {category === '🏘️ Apartment' && (
-        <Picker
-          selectedValue={category}
-          onValueChange={(itemValue) => setCategory(itemValue)}
-          style={styles.input}
-        >
-          <Picker.Item label="Select a type" value="Appartements" />
-
-        </Picker>
-      )}
+     
 
       <Picker
         selectedValue={location}

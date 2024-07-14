@@ -14,10 +14,9 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Link } from "expo-router";
-import DrawerContent from "@/app/DrawerContent"; // Import the DrawerContent component
+import DrawerContent from "@/app/DrawerContent";
 
-
-interface Residence {
+export interface Residence {
   _id: number;
   address: string;
   price: string;
@@ -30,19 +29,27 @@ interface Residence {
 
 const HousesScreen = () => {
   const [residences, setResidences] = useState<Residence[]>([]);
+  const [filteredResidences, setFilteredResidences] = useState<Residence[]>([]);
   const [loading, setLoading] = useState(true);
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
-  const itemsNumber = 3; // number of items we want to render
+  const itemsNumber = 3;
   const [limit, setLimit] = useState(itemsNumber);
   const [start, setStart] = useState(0);
   const [page, setPage] = useState(1);
-  
 
   useEffect(() => {
+    fetchResidences(); // Fetch residences when component mounts
+  }, []);
+
+  useEffect(() => {
+    applyFilters(); // Apply filters whenever residences or filter criteria change
+  }, [residences, start, limit]);
+
+  const fetchResidences = () => {
+    setLoading(true);
     fetch("http://192.168.1.105:5000/api/gethouse")
       .then((response) => response.json())
       .then((data) => {
-        // Limiting to only 3 items
         const limitedResidences = data.slice(start, limit).map((residence: any) => ({
           _id: residence.idhouses,
           address: residence.address,
@@ -59,30 +66,39 @@ const HousesScreen = () => {
         console.error("Error fetching residences:", error);
         setLoading(false);
       });
-  }, [start, limit]);
+  };
 
-  
+  const applyFilters = () => {
+    // Apply your filtering logic here based on user input
+    // Example: Filter by operation (rent/sale)
+    const filtered = residences.filter((residence) => {
+      // Replace with your actual filter criteria
+      // For example, filter only rent or sale properties
+      return residence.operation === "rent"; // Example: Filter only rent properties
+    });
+    setFilteredResidences(filtered);
+  };
+
   const handleNext = () => {
-    if ( residences.length >= itemsNumber ) {
-    setStart(start + itemsNumber);
-    setLimit(limit + itemsNumber);
-   }
-  else {
-    setStart(0);
-    setLimit(itemsNumber)
-  }
-}
+    if (residences.length >= itemsNumber) {
+      setStart(start + itemsNumber);
+      setLimit(limit + itemsNumber);
+    } else {
+      setStart(0);
+      setLimit(itemsNumber);
+    }
+  };
 
   const handlePrev = () => {
-    if (start > 0)
-    {setStart(start - itemsNumber);
-    setLimit(limit - itemsNumber);}
-    else {
+    if (start > 0) {
+      setStart(start - itemsNumber);
+      setLimit(limit - itemsNumber);
+    } else {
       setStart(residences.length - itemsNumber);
-      setLimit(residences.length)
+      setLimit(residences.length);
     }
- 
-  }
+  };
+
   const renderItem = ({ item }: { item: Residence }) => (
     <ThemedView style={styles.card}>
       <View
@@ -96,7 +112,7 @@ const HousesScreen = () => {
         </ThemedText>
       </View>
       <Image
-        source={{ uri: item.images[0] }} // Render only the first image
+        source={{ uri: item.images[0] }}
         style={styles.image}
         resizeMode="center"
       />
@@ -134,69 +150,72 @@ const HousesScreen = () => {
 
   return (
     <ThemedView style={styles.container}>
-    {/* DrawerContent and Header */}
-    <DrawerContent isVisible={isSidebarVisible} onClose={() => setIsSidebarVisible(false)} />
-    <View style={styles.header}>
-      <Pressable onPress={() => setIsSidebarVisible(true)}>
-        <Ionicons name="menu" style={styles.menuIcon} size={24} />
-      </Pressable>
-      <ThemedText type="title" style={[styles.bgContainer , { 
-        fontSize: 22,
-        fontWeight: 'bold',
-        color: '#333',
-        textTransform: 'uppercase',
-        letterSpacing: 1,
-        fontFamily: 'Arial',
-      }]}>
-        Rent&Sell
-      </ThemedText>
-    </View>
+      {/* DrawerContent and Header */}
+      <DrawerContent isVisible={isSidebarVisible} onClose={() => setIsSidebarVisible(false)} />
+      <View style={styles.header}>
+        <Pressable onPress={() => setIsSidebarVisible(true)}>
+          <Ionicons name="menu" style={styles.menuIcon} size={24} />
+        </Pressable>
+        <ThemedText type="title" style={[styles.bgContainer , { 
+          fontSize: 22,
+          fontWeight: 'bold',
+          color: '#333',
+          textTransform: 'uppercase',
+          letterSpacing: 1,
+          fontFamily: 'Arial',
+        }]}>
+          Rent&Sell
+        </ThemedText>
+      </View>
 
-    {/* Banner */}
-    <View style={styles.banner}>
-      <Image
-        source={require("../assets/images/banner01.jpg")}
-        style={styles.bannerImage}
-      />
-      <View style={styles.bannerContent}>
-        <ThemedText type="title" style={styles.bannerTitle}>
-          Discover Your New Home
-        </ThemedText>
-        <ThemedText type="subtitle" style={styles.bannerSubtitle}>
-          Helping 100 thousand renters and sellers
-        </ThemedText>
-        <View style={styles.searchContainer}>
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Search for a property..."
-          />
-          <Pressable style={styles.searchButton}>
-            <ThemedText style={styles.buttonText}>Search</ThemedText>
-          </Pressable>
+      {/* Banner */}
+      <View style={styles.banner}>
+        <Image
+          source={require("../assets/images/banner01.jpg")}
+          style={styles.bannerImage}
+        />
+        <View style={styles.bannerContent}>
+          <ThemedText type="title" style={styles.bannerTitle}>
+            Discover Your New Home
+          </ThemedText>
+          <ThemedText type="subtitle" style={styles.bannerSubtitle}>
+            Helping 100 thousand renters and sellers
+          </ThemedText>
+          <View style={styles.searchContainer}>
+            <TextInput
+              style={styles.searchInput}
+              placeholder="Search for a property..."
+              // Add onChangeText to capture user input for filtering
+              // onChangeText={(text) => handleFilter(text)}
+            />
+            <Pressable style={styles.searchButton}>
+              <ThemedText style={styles.buttonText}>Search</ThemedText>
+            </Pressable>
+          </View>
         </View>
       </View>
-    </View>
 
-    {/* FlatList */}
-    <FlatList
-      data={residences}
-      renderItem={renderItem}
-      keyExtractor={(item) => item._id.toString()}
-      contentContainerStyle={styles.cardsContainer}
-    />
+      {/* FlatList */}
+      <FlatList
+        data={filteredResidences} // Render filtered residences instead of all residences
+        renderItem={renderItem}
+        keyExtractor={(item) => item._id.toString()}
+        contentContainerStyle={styles.cardsContainer}
+      />
 
-    {/* Previous Button */}
-    <Pressable style={styles.prevButton} onPress={handlePrev}>
-      <Ionicons name="arrow-back" size={24} color="#000" />
-    </Pressable>
-    
-    {/* Next Button */}
-    <Pressable style={styles.nextButton} onPress={handleNext}>
-      <Ionicons name="arrow-forward" size={24} color="#000" />
-    </Pressable>
-  </ThemedView>
-);
+      {/* Previous Button */}
+      <Pressable style={styles.prevButton} onPress={handlePrev}>
+        <Ionicons name="arrow-back" size={24} color="#000" />
+      </Pressable>
+      
+      {/* Next Button */}
+      <Pressable style={styles.nextButton} onPress={handleNext}>
+        <Ionicons name="arrow-forward" size={24} color="#000" />
+      </Pressable>
+    </ThemedView>
+  );
 };
+
 const { width } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
@@ -256,7 +275,7 @@ const styles = StyleSheet.create({
   },
   searchButton: {
     backgroundColor: "#1183CE",
-    borderRadius: 10,  // Make the button rounder by increasing the borderRadius
+    borderRadius: 10,
     paddingVertical: 14,
     paddingHorizontal: 24,
     justifyContent: "center",
@@ -312,33 +331,6 @@ const styles = StyleSheet.create({
   },
   contact: {
     marginBottom: 10,
-  },
-  sidebar: {
-    position: "absolute",
-    top: 0,
-    bottom: 0,
-    left: 0,
-    width: 250,
-    backgroundColor: "#fff",
-    zIndex: 1000,
-    padding: 20,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  sidebarHidden: {
-    left: -250,
-  },
-  sidebarVisible: {
-    left: 0,
-  },
-  closeButton: {
-    alignSelf: "flex-end",
   },
   prevButton: {
     position: "absolute",

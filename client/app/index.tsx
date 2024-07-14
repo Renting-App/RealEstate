@@ -9,7 +9,7 @@ import Signup from './SignUp';
 import HousesScreen from './HousesScreen'; // Assuming Index is HousesScreen
 import AdminPage from './adminPage'
 // import AdditionalInfo from './AdditionalInfo'
-
+import FilterComponent from './FilterComponent'
 const Stack = createStackNavigator();
 
 export type RootStackParamList = {
@@ -21,6 +21,8 @@ export type RootStackParamList = {
   PropertyDetails: undefined;
   RequestaTour: undefined;
   PostProperty: undefined;
+  FilterComponent: undefined;
+
   // AdditionalInfo:{userId:string}
 };
 const App: React.FC = () => {
@@ -32,6 +34,8 @@ const App: React.FC = () => {
       <Stack.Screen name="Signup" component={Signup} />
       <Stack.Screen name="HousesScreen" component={HousesScreen} />
       <Stack.Screen name="AdminPage" component={AdminPage} />
+      <Stack.Screen name="FilterComponent" component={FilterComponent} />
+
       {/* <Stack.Screen name="AdditionalInfo" component={AdditionalInfo} /> */}
     </Stack.Navigator>
 
