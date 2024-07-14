@@ -59,6 +59,7 @@ CREATE TABLE IF NOT EXISTS `realestate`.`houses` (
   `location`  VARCHAR(100) NULL DEFAULT 'Ariana',
   `subLocation`  VARCHAR(100) NULL DEFAULT 'Ariana Essoughra',
   `condition`  VARCHAR(100) NULL DEFAULT 'New',
+   `map` JSON NULL DEFAULT NULL,
   `iduser` INT NULL DEFAULT NULL,
   PRIMARY KEY (`idhouses`),
   INDEX `fk_user` (`iduser` ASC) VISIBLE,

@@ -180,7 +180,7 @@ const PostProperty = () => {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch("http:///192.168.1.13:5000/api/addhouse", {
+      const response = await fetch("http:///192.168.1.105:5000/api/addhouse", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -400,7 +400,7 @@ const getMarkedDates = () => {
           }
         >
           <Picker.Item label="Rent" value="rent" />
-          <Picker.Item label="Sell" value="sell" />
+          <Picker.Item label="Sell" value="sale" />
         </Picker>
 
         <Text style={styles.label}>Amenities:</Text>
