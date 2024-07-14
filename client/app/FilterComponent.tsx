@@ -1,17 +1,19 @@
+// FilterComponent.tsx
 import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView, StyleSheet, Button, Switch } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import Slider from '@react-native-community/slider';
-import { StackNavigationProp } from '@react-navigation/stack'
-import { RootStackParamList } from './index'
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from './index';
+
 export interface Property {
   _id: string;
   address: string;
   size: number;
   category: string;
-  location:string;
-  condition:string;
-  subLocation:string;
+  location: string;
+  condition: string;
+  subLocation: string;
   title: string;
   description: string;
   images: string[];
@@ -24,16 +26,12 @@ export interface Property {
   amenities: string[];
 }
 
-
-type SigninScreenNavigationProp = StackNavigationProp<RootStackParamList, 'FilterComponent'>;
-
-type Props = {
-    navigation: SigninScreenNavigationProp;
-};
-interface FilterComponentProps {
-  properties?: Property[];
+export interface FilterComponentProps {
+  properties: Property[];
   onFilter: (filteredProperties: Property[]) => void;
+  navigation: any; // add navigation prop
 }
+
 
 const categories = ['Select Category', '🏘️ Apartment', '🏘️ House', '🏘️ Office', '🏘️ Studio', '🏘️ Penthouse'];
 const tunisStates = [
@@ -101,8 +99,13 @@ const amenitiesList = [
   'Alarm',
   'Garden',
 ];
+type FilterComponentScreenNavigationProp = StackNavigationProp<RootStackParamList, 'FilterComponent'>;
 
-const FilterComponent: React.FC<FilterComponentProps> = ({ onFilter ,navigation }) => {
+type Props = {
+  navigation: FilterComponentScreenNavigationProp;
+};
+
+const FilterComponent: React.FC<FilterComponentProps> = ({ properties, onFilter, navigation }) => {
   const [category, setCategory] = useState('Select Category');
   const [location, setLocation] = useState('Select State');
   const [subLocation, setSubLocation] = useState('');
@@ -127,59 +130,39 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ onFilter ,navigation 
     try {
       const filteredProperties = fetchFilteredData();
       onFilter(filteredProperties);
-      navigation.navigate('');
+      navigation.navigate('FilteringData');
     } catch (error) {
       console.error(error);
     }
   };
-      const fetchFilteredData = (): Property[] => {
-  try {
-    const allProperties = properties || []; // Assuming properties is passed as prop
 
-    const filteredProperties = allProperties.filter(property => {
-      const meetsCategory = category === 'Select Category' || property.category === category;
-      const meetsLocation = location === 'Select State' || property.location === location;
-      const meetsSubLocation = !subLocation || property.subLocation === subLocation;
-      const meetsPrice = (!priceMin || property.price >= priceMin) && (!priceMax || property.price <= priceMax);
-      const meetsCondition = !condition || property.condition === condition;
-      const meetsAmenities = Object.keys(selectedAmenities)
-        .filter(amenity => selectedAmenities[amenity])
-        .every(amenity => property.amenities.includes(amenity));
-      const meetsOperation = !operation || property.operation === operation;
+  const fetchFilteredData = (): Property[] => {
+    try {
+      const filteredProperties = properties.filter(property => {
+        const meetsCategory = category === 'Select Category' || property.category === category;
+        const meetsLocation = location === 'Select State' || property.location === location;
+        const meetsSubLocation = !subLocation || property.subLocation === subLocation;
+        const meetsPrice = (!priceMin || property.price >= priceMin) && (!priceMax || property.price <= priceMax);
+        const meetsCondition = !condition || property.condition === condition;
+        const meetsAmenities = Object.keys(selectedAmenities)
+          .filter(amenity => selectedAmenities[amenity])
+          .every(amenity => property.amenities.includes(amenity));
+        const meetsOperation = !operation || property.operation === operation;
 
-      return meetsCategory && meetsLocation && meetsSubLocation && meetsPrice && meetsCondition && meetsAmenities && meetsOperation;
-      
-    });
+        return meetsCategory && meetsLocation && meetsSubLocation && meetsPrice && meetsCondition && meetsAmenities && meetsOperation;
+      });
 
-    return filteredProperties;
-    
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
-};
-
-  
-  const fetchAllProperties = async (): Promise<Property[]> => {
-    const response = await fetch('http://localhost:5000/api/gethouse', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-  
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
+      return filteredProperties;
+    } catch (error) {
+      console.error(error);
+      return [];
     }
-  
-    const data: Property[] = await response.json();
-    return data;
   };
-  
-  
-
   return (
-    <ScrollView style={styles.container} >
+    <ScrollView style={styles.container}>
+      <Text>Filter Component</Text>
+      {/* Add your UI components here */}
+      <Button title="Search" onPress={handleSearch} />
       <Text style={styles.title}>Looking for... </Text>
       <Picker
         selectedValue={category}
@@ -191,8 +174,6 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ onFilter ,navigation 
         ))}
       </Picker>
 
-     
-
       <Picker
         selectedValue={location}
         onValueChange={(itemValue) => setLocation(itemValue)}
@@ -202,12 +183,6 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ onFilter ,navigation 
           <Picker.Item key={index} label={state} value={state} />
         ))}
       </Picker>
-
-
-
-
-
-
 
       {subLocations[location] && (
         <Picker
@@ -222,9 +197,7 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ onFilter ,navigation 
         </Picker>
       )}
 
-
-{/* Operation (Rent or Sale) Selection */}
-<Text style={styles.operationLabel}>Operation:</Text>
+      <Text style={styles.operationLabel}>Operation:</Text>
       <Picker
         selectedValue={operation}
         onValueChange={(itemValue) => setOperation(itemValue)}
@@ -291,51 +264,48 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ onFilter ,navigation 
         ))}
       </View>
 
-      
-
-      <Button
-        title="Find Your Sweet Home"
-        onPress={handleSearch}
-      />
+      <Button title="Search" onPress={handleSearch} />
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom:30,
     flex: 1,
     padding: 20,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: 20,
   },
   input: {
     height: 50,
-    marginBottom: 10,
-    borderWidth: 1,
-    borderColor: '#ccc',
+    marginBottom: 20,
+    backgroundColor: '#f0f0f0',
     borderRadius: 5,
-    paddingLeft: 10,
+    paddingHorizontal: 10,
+  },
+  operationLabel: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
   },
   priceRangeContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: 20,
   },
   priceRangeLabel: {
     fontSize: 18,
     fontWeight: 'bold',
+    marginBottom: 10,
   },
   priceRangeText: {
     fontSize: 16,
+    marginBottom: 10,
   },
   slider: {
-    height: 40,
     width: '100%',
+    height: 40,
     marginBottom: 20,
   },
   conditionLabel: {
@@ -346,12 +316,11 @@ const styles = StyleSheet.create({
   switchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
     marginBottom: 20,
   },
   conditionText: {
     fontSize: 16,
-    marginRight: 30,
-    marginLeft: 30,
   },
   amenitiesLabel: {
     fontSize: 18,
@@ -359,24 +328,16 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   amenitiesContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
     marginBottom: 20,
   },
   amenityItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginRight: 20,
+    justifyContent: 'space-between',
     marginBottom: 10,
   },
   amenityText: {
     fontSize: 16,
-    marginRight: 10,
-  },
-  operationLabel: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10,
   },
 });
 
