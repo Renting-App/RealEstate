@@ -12,6 +12,15 @@ const addHouse = async (req, res) => {
       images,
       iduser,
       operation,
+      size,
+      date_of_creation,
+      rooms,
+      bathrooms,
+      visits,
+      amenities,// Include amenities here
+      location,
+      subLocation,
+      favourite
     } = req.body;
     const newHouse = await House.create({
       address,
@@ -22,6 +31,15 @@ const addHouse = async (req, res) => {
       images,
       iduser,
       operation,
+      size,
+      date_of_creation,
+      rooms,
+      bathrooms,
+      visits,
+      amenities,
+      location,
+      subLocation,
+      favourite
     });
     res.status(201).json(newHouse);
   } catch (err) {
@@ -84,6 +102,14 @@ const updateHouseById = async (req, res) => {
     category,
     images,
     operation,
+    size,
+    date_of_creation,
+    rooms,
+    bathrooms,
+    amenities,
+    location,
+    subLocation,
+    favourite
   } = req.body;
 
   try {
@@ -102,6 +128,15 @@ const updateHouseById = async (req, res) => {
     house.category = category;
     house.images = images;
     house.operation = operation;
+    house.size = size;
+    house.date_of_creation = date_of_creation;
+    house.rooms = rooms;
+    house.bathrooms = bathrooms;
+    house.amenities = amenities;
+    house.location = location;
+    house.subLocation = subLocation;
+    house.favourite=favourite
+
     await house.save();
 
     res.json(house);
