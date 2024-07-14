@@ -18,7 +18,9 @@ const addHouse = async (req, res) => {
       rooms,
       bathrooms,
       visits,
-      amenities // Include amenities here
+      amenities,// Include amenities here
+      location,
+      subLocation
     } = req.body;
 
     const newHouse = await House.create({
@@ -36,9 +38,10 @@ const addHouse = async (req, res) => {
       rooms,
       bathrooms,
       visits,
-      amenities // Assign amenities to the database field
+      amenities,
+      location,
+      subLocation// Assign amenities to the database field
     });
-
     res.status(201).json(newHouse);
   } catch (err) {
     console.error(err);
@@ -105,7 +108,9 @@ const updateHouseById = async (req, res) => {
     date_of_creation,
     rooms,
     bathrooms,
-    amenities // Include amenities here
+    amenities,
+    location,
+    subLocation
   } = req.body;
 
   try {
@@ -129,7 +134,9 @@ const updateHouseById = async (req, res) => {
     house.date_of_creation = date_of_creation;
     house.rooms = rooms;
     house.bathrooms = bathrooms;
-    house.amenities = amenities; // Assign amenities to the database field
+    house.amenities = amenities;
+    house.location = location;
+    house.subLocation = subLocation;
 
     await house.save();
 
@@ -147,13 +154,15 @@ const updateHouseById = async (req, res) => {
 const searchHouses = async (req, res) => {
   const {
     category,
+    type,
     location,
     subLocation,
     priceMin,
     priceMax,
-    state,
+    condition,
     amenities,
-    operation
+    operation,
+    // Add operation to the request body
   } = req.body;
 
   try {
@@ -162,15 +171,14 @@ const searchHouses = async (req, res) => {
     if (category) {
       searchCriteria.category = category;
     }
-    
+    if (type) {
+      searchCriteria.type = type;
+    }
     if (location) {
       searchCriteria.address = { [Op.like]: `%${location}%` };
     }
     if (subLocation) {
-      searchCriteria.address = {
-        ...searchCriteria.address,
-        [Op.like]: `%${subLocation}%`
-      };
+      searchCriteria.address = { [Op.like]: `%${subLocation}%` };
     }
     if (priceMin !== undefined) {
       searchCriteria.price = { ...searchCriteria.price, [Op.gte]: priceMin };
@@ -178,11 +186,11 @@ const searchHouses = async (req, res) => {
     if (priceMax !== undefined) {
       searchCriteria.price = { ...searchCriteria.price, [Op.lte]: priceMax };
     }
-    if (state) {
-      searchCriteria.state = state;
+    if (condition) {
+      searchCriteria.condition = condition;
     }
     if (amenities && amenities.length > 0) {
-      searchCriteria.amenities = {  [Op.like]: `%${amenities.join('%')}%`  };
+      searchCriteria.amenities = { [Op.contains]: amenities };
     }
     if (operation) {
       searchCriteria.operation = operation;
