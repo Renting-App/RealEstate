@@ -35,7 +35,7 @@ const House = sequelize.define('houses', {
     allowNull: false
   },
   location: {
-    type: DataTypes.STRING(' Ariana',
+    type: DataTypes.ENUM(' Ariana',
       ' Beja',
       ' Ben Arous',
       ' Bizerte',

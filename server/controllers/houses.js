@@ -162,7 +162,7 @@ const searchHouses = async (req, res) => {
     condition,
     amenities,
     operation,
-    // Add operation to the request body
+    
   } = req.body;
 
   try {
