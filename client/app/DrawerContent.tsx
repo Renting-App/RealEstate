@@ -34,6 +34,9 @@ const DrawerContent: React.FC<SidebarProps> = ({ isVisible, onClose }) => {
         <Link href={'/Maps'} style={styles.link}>
           <ThemedText type="subtitle">Map</ThemedText>
         </Link>
+        <Link href={'/Favorite'} style={styles.link}>
+          <ThemedText type="subtitle">Favourite</ThemedText>
+        </Link>
       </View>
     </View>
   );

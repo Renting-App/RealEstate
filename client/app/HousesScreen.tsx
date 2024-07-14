@@ -15,6 +15,7 @@ import { Link } from "expo-router";
 import DrawerContent from "@/app/DrawerContent";
 import Search from "./Search";
 import styles from "./styles"; // Importing styles
+import Favourite from "./Favorite";
 
 
 const itemsPerPage = 3;
@@ -44,8 +45,7 @@ const HousesScreen = () => {
   useEffect(() => {
     fetchResidences();
   }, []);
-
-  const fetchResidences = () => {
+ const fetchResidences = () => {
     fetch("http:///192.168.1.105:5000/api/gethouse")
       .then((response) => response.json())
       .then((data) => {
@@ -65,7 +65,8 @@ const HousesScreen = () => {
           amenities:residence.amenities,
           location:residence.location,
           subLocation:residence.subLocation,
-          condition : residence.condition
+          condition : residence.condition,
+          Favourite:residence.favourite
 
         }));
         setResidences(mappedResidences);
