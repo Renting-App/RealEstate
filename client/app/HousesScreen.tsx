@@ -47,7 +47,7 @@ const HousesScreen = () => {
 
   const fetchResidences = () => {
     setLoading(true);
-    fetch("http://192.168.1.105:5000/api/gethouse")
+    fetch("http://192.168.1.13:5000/api/gethouse")
       .then((response) => response.json())
       .then((data) => {
         const limitedResidences = data.slice(start, limit).map((residence: any) => ({
