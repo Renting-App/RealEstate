@@ -145,8 +145,8 @@ const PropertyDetails: React.FC = () => {
               initialRegion={{
                 latitude: residenceData.map.latitude,
                 longitude: residenceData.map.longitude,
-                latitudeDelta: 0.005,
-                longitudeDelta: 0.005,
+                latitudeDelta: 0.5,
+                longitudeDelta: 0.5,
               }}
             >
               <Marker
