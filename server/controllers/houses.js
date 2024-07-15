@@ -20,7 +20,8 @@ const addHouse = async (req, res) => {
       amenities,// Include amenities here
       location,
       subLocation,
-      favourite
+      favourite,
+      map
     } = req.body;
     const newHouse = await House.create({
       address,
@@ -39,7 +40,8 @@ const addHouse = async (req, res) => {
       amenities,
       location,
       subLocation,
-      favourite
+      favourite,
+      map
     });
     res.status(201).json(newHouse);
   } catch (err) {
@@ -109,7 +111,8 @@ const updateHouseById = async (req, res) => {
     amenities,
     location,
     subLocation,
-    favourite
+    favourite,
+    map
   } = req.body;
 
   try {
@@ -135,7 +138,8 @@ const updateHouseById = async (req, res) => {
     house.amenities = amenities;
     house.location = location;
     house.subLocation = subLocation;
-    house.favourite=favourite
+    house.favourite=favourite;
+    house.map=map
 
     await house.save();
 

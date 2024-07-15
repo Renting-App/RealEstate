@@ -46,7 +46,7 @@ const HousesScreen = () => {
     fetchResidences();
   }, []);
  const fetchResidences = () => {
-    fetch("http:///192.168.1.13:5000/api/gethouse")
+    fetch("http://192.168.1.105:5000/api/gethouse")
       .then((response) => response.json())
       .then((data) => {
         const mappedResidences = data.map((residence: any) => ({
@@ -62,11 +62,13 @@ const HousesScreen = () => {
           images: residence.images,
           visits: residence.visits,
           operation: residence.operation,
-          amenities: residence.amenities,
-          location: residence.location,
-          subLocation: residence.subLocation,
-          condition: residence.condition,
-          Favourite: residence.favourite,
+          amenities:residence.amenities,
+          location:residence.location,
+          subLocation:residence.subLocation,
+          condition : residence.condition,
+          Favourite:residence.favourite,
+          map:residence.map
+
         }));
         setResidences(mappedResidences);
         setFilteredResidences(mappedResidences);
@@ -80,7 +82,7 @@ const HousesScreen = () => {
 
   const handleSearch = () => {
     const filteredData = residences.filter((residence) =>
-      residence.address.toLowerCase().includes(searchQuery.toLowerCase())
+      residence.title.toLowerCase().includes(searchQuery.toLowerCase())
     );
     setFilteredResidences(filteredData);
     setStart(0); // Reset the pagination start index
@@ -117,16 +119,14 @@ const HousesScreen = () => {
         resizeMode="contain"
       />
       <ThemedText type="subtitle" style={styles.title}>
-        {item.address}
+        {item.title}
       </ThemedText>
-      <ThemedText type="default" style={styles.description}>
-        {item.description}
-      </ThemedText>
+      
       <ThemedText type="default" style={styles.price}>
-        Price: {item.price}
+        Price: {item.price}DT
       </ThemedText>
       <ThemedText type="default" style={styles.contact}>
-        Contact: {item.contact_info}
+        Address: {item.address}
       </ThemedText>
       <Link
         href={{

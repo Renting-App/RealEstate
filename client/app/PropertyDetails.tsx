@@ -5,6 +5,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { HomeButton } from './HomeButton';
 import { Link } from 'expo-router';
+import MapView, { Marker } from 'react-native-maps'; // Import MapView
 
 
 interface Property {
@@ -13,14 +14,38 @@ interface Property {
   images: string[];
   price: number;
   description: string;
-  contact_info: string;
+  images: string[];
+  operation: "rent" | "sale";
+  price: string;
+  date_of_creation: string;
+  rooms: string;
+  bathrooms: string;
+  visits: string[];
+  amenities: {
+    parking: boolean;
+    ac: boolean;
+    furnished: boolean;
+    pool: boolean;
+    microwave: boolean;
+    near_subway: boolean;
+    beach_view: boolean;
+    alarm: boolean;
+    garden: boolean;
+  };
+  map?: {
+    title: string;
+    description: string;
+    latitude: number;
+    longitude: number;
+  };
 }
+
 
 const PropertyDetails = () => {
   const { residence } = useLocalSearchParams();
   const residenceData: Property = JSON.parse(residence as string);
   const [isFavourite, setIsFavourite] = useState(residenceData.favourite);
-
+   
   if (!residenceData) {
     return <Text>Loading...</Text>;
   }
@@ -41,7 +66,7 @@ const PropertyDetails = () => {
     alarm: "alert",
     garden: "flower",
   };
-
+  
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>
@@ -110,6 +135,31 @@ const PropertyDetails = () => {
             ))}
           </View>
         </View>
+
+        {residenceData.map && (
+          <View style={styles.mapContainer}>
+            <MapView
+              style={styles.map}
+              initialRegion={{
+                latitude: residenceData.map.latitude,
+                longitude: residenceData.map.longitude,
+                latitudeDelta: 0.005,
+                longitudeDelta: 0.005,
+              }}
+            >
+              <Marker
+                coordinate={{
+                  latitude: residenceData.map.latitude,
+                  longitude: residenceData.map.longitude,
+                }}
+                title={residenceData.map.title}
+                description={residenceData.map.description}
+              />
+            </MapView>
+          </View>
+        )}
+
+
         <Link
           href={{
             pathname: "/RequestTour",
@@ -208,6 +258,14 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     fontSize: 16,
     color: '#666',
+  },
+  mapContainer: {
+    height: 300,
+    marginVertical: 20,
+ 
+  },
+  map: {
+    ...StyleSheet.absoluteFillObject,
   },
 });
 

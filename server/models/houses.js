@@ -35,13 +35,12 @@ const House = sequelize.define('houses', {
     type: DataTypes.INTEGER,
     allowNull: true
   },
-  images: {
-    type: DataTypes.ARRAY(DataTypes.STRING)
+  condition: {
+    type: DataTypes.ENUM('new', 'occasion'),
+    defaultValue: 'new',
   },
-    operation: {
-    type: DataTypes.ENUM('rent', 'sale'),
-    defaultValue: 'sale',
-    allowNull: false
+  map :{
+    type: DataTypes.JSONB
   }
 }, {
   tableName: 'houses',

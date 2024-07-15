@@ -120,7 +120,7 @@ const PostProperty = () => {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/addhouse", {
+      const response = await fetch("http:///192.168.1.105:5000/api/addhouse", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -281,7 +281,35 @@ const PostProperty = () => {
           placeholder="Enter contact info"
         />
 
-        <Text style={styles.amenitiesTitle}>Amenities:</Text>
+        <Text style={styles.label}>Date of Creation:</Text>
+        <TextInput
+          style={styles.input}
+          value={propertyData.date_of_creation}
+          onChangeText={(text) => handleInputChange("date_of_creation", text)}
+          placeholder="Enter date of creation"
+        />
+
+        <Text style={styles.label}>Status:</Text>
+        <TextInput
+          style={styles.input}
+          value={propertyData.status}
+          onChangeText={(text) => handleInputChange("status", text)}
+          placeholder="Enter status"
+        />
+
+        <Text style={styles.label}>Operation:</Text>
+        <Picker
+          style={styles.input}
+          selectedValue={propertyData.operation}
+          onValueChange={(itemValue) =>
+            handleInputChange("operation", itemValue)
+          }
+        >
+          <Picker.Item label="Rent" value="rent" />
+          <Picker.Item label="Sell" value="sale" />
+        </Picker>
+
+        <Text style={styles.label}>Amenities:</Text>
         <View style={styles.amenitiesContainer}>
           {Object.keys(propertyData.amenities).map((key) => (
             <View key={key} style={styles.amenityCheckbox}>
