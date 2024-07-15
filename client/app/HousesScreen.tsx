@@ -46,7 +46,7 @@ const HousesScreen = () => {
     fetchResidences();
   }, []);
  const fetchResidences = () => {
-    fetch("http:///192.168.1.105:5000/api/gethouse")
+    fetch("http:///192.168.1.13:5000/api/gethouse")
       .then((response) => response.json())
       .then((data) => {
         const mappedResidences = data.map((residence: any) => ({
@@ -62,12 +62,11 @@ const HousesScreen = () => {
           images: residence.images,
           visits: residence.visits,
           operation: residence.operation,
-          amenities:residence.amenities,
-          location:residence.location,
-          subLocation:residence.subLocation,
-          condition : residence.condition,
-          Favourite:residence.favourite
-
+          amenities: residence.amenities,
+          location: residence.location,
+          subLocation: residence.subLocation,
+          condition: residence.condition,
+          Favourite: residence.favourite,
         }));
         setResidences(mappedResidences);
         setFilteredResidences(mappedResidences);
