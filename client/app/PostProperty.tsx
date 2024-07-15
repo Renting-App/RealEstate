@@ -180,7 +180,7 @@ const PostProperty = () => {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch("http:///192.168.1.105:5000/api/addhouse", {
+      const response = await fetch("http:///192.168.1.22:5000/api/addhouse", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -253,29 +253,29 @@ const PostProperty = () => {
   };
   const [showCalendar, setShowCalendar] = useState(false);
   const [selectedDates, setSelectedDates] = useState<string[]>([]);
-const handleDayPress = (day: DateObject) => {
-  const date = day.dateString;
-  const isSelected = selectedDates.includes(date);
+  const handleDayPress = (day: DateObject) => {
+    const date = day.dateString;
+    const isSelected = selectedDates.includes(date);
 
-  if (isSelected) {
-    setSelectedDates(selectedDates.filter((d) => d !== date));
-  } else {
-    setSelectedDates([...selectedDates, date]);
-  }
-};
+    if (isSelected) {
+      setSelectedDates(selectedDates.filter((d) => d !== date));
+    } else {
+      setSelectedDates([...selectedDates, date]);
+    }
+  };
 
-const getMarkedDates = () => {
-  const markedDates: { [date: string]: { selected: boolean } } = {};
-  selectedDates.forEach((date) => {
-    markedDates[date] = { selected: true };
-  });
-  return markedDates;
-};
+  const getMarkedDates = () => {
+    const markedDates: { [date: string]: { selected: boolean } } = {};
+    selectedDates.forEach((date) => {
+      markedDates[date] = { selected: true };
+    });
+    return markedDates;
+  };
 
 
   return (
     <ScrollView style={styles.container}>
-      <HomeButton/>
+      <HomeButton />
       <Text style={styles.heading}>Post Your Property</Text>
       <View style={styles.formContainer}>
         <Text style={styles.label}>Address:</Text>

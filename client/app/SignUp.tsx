@@ -1,7 +1,5 @@
-
-
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Input, Button } from 'react-native-elements';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -22,6 +20,7 @@ const Signup: React.FC<Props> = ({ navigation }) => {
         password: '',
         error: ''
     })
+
     async function signUp() {
         if (value.email === '' || value.password === '') {
             setValue({
@@ -30,20 +29,10 @@ const Signup: React.FC<Props> = ({ navigation }) => {
             })
             return;
         }
+
         try {
             await createUserWithEmailAndPassword(auth, value.email, value.password);
-            // const userCredential = await createUserWithEmailAndPassword(auth, value.email, value.password);
-            // const user = userCredential.user;
-            // await setDoc(doc(firestore, 'users', user.uid), {
-            //     email: value.email,
-            //     // userName: value.username,
-            //     // phoneNumber: value.phoneNumber,
-            //     role: 'user'
-            // });
-
-            // navigation.navigate('AdditionalInfo', { userId: user.uid });
             navigation.navigate('Signin');
-
         } catch (error) {
             if (error instanceof Error) {
                 setValue({
@@ -59,35 +48,27 @@ const Signup: React.FC<Props> = ({ navigation }) => {
         }
     }
 
-
     return (
         <View style={styles.container}>
-            <Text>Signup Page</Text>
-            <View style={styles.controls}>
+            <Text style={styles.title}>Sign up </Text>
+            <View style={styles.inputContainer}>
                 <Input
                     placeholder='Email'
-                    containerStyle={styles.control}
+                    containerStyle={styles.input}
                     value={value.email}
                     onChangeText={(text) => setValue({ ...value, email: text })}
-                    leftIcon={<Icon
-                        name='envelope'
-                        size={16}
-                    />}
+                    leftIcon={<Icon name='envelope' size={16} />}
                 />
                 <Input
                     placeholder='Password'
-                    containerStyle={styles.control}
+                    containerStyle={styles.input}
                     value={value.password}
                     onChangeText={(text) => setValue({ ...value, password: text })}
                     secureTextEntry={true}
-                    leftIcon={<Icon
-                        name='key'
-                        size={16}
-                    />}
+                    leftIcon={<Icon name='key' size={16} />}
                 />
-
-                <Button title="Submit" buttonStyle={styles.control} onPress={signUp} />
-
+                {value.error ? <Text style={styles.errorText}>{value.error}</Text> : null}
+                <Button title="Submit" buttonStyle={styles.button} onPress={signUp} />
             </View>
         </View>
     );
@@ -96,26 +77,32 @@ const Signup: React.FC<Props> = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingTop: 20,
-        backgroundColor: '#fff',
+        paddingTop: 50,
+        backgroundColor: '#f5f5f5',
         alignItems: 'center',
         justifyContent: 'center',
     },
-
-    controls: {
-        flex: 1,
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 20,
     },
-
-    control: {
-        marginTop: 10
+    inputContainer: {
+        width: '80%',
     },
-
-    error: {
-        marginTop: 10,
-        padding: 10,
-        color: '#fff',
-        backgroundColor: '#D54826FF',
-    }
+    input: {
+        marginBottom: 20,
+    },
+    button: {
+        backgroundColor: '#007BFF',
+        borderRadius: 5,
+        paddingVertical: 15,
+        marginTop: 20,
+    },
+    errorText: {
+        color: '#ff0000',
+        marginBottom: 10,
+    },
 });
 
 export default Signup;
