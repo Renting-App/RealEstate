@@ -56,6 +56,10 @@ CREATE TABLE IF NOT EXISTS `realestate`.`houses` (
   `contact_info` VARCHAR(45) NULL DEFAULT NULL,
   `status` ENUM('pending', 'approved', 'declined') NULL DEFAULT 'pending',
   `notification` VARCHAR(45) NULL DEFAULT NULL,
+  `location`  VARCHAR(100) NULL DEFAULT 'Ariana',
+  `subLocation`  VARCHAR(100) NULL DEFAULT 'Ariana Essoughra',
+  `condition`  VARCHAR(100) NULL DEFAULT 'New',
+   `map` JSON NULL DEFAULT NULL,
   `iduser` INT NULL DEFAULT NULL,
   PRIMARY KEY (`idhouses`),
   INDEX `fk_user` (`iduser` ASC) VISIBLE,
@@ -104,17 +108,17 @@ INSERT INTO `houses`
 (`address`, `size`, `category`, `title`, `favourite`,
  `description`, `images`, `operation`,
   `date_of_creation`, `rooms`, `bathrooms`,
-   `visits`, `amenities`, `contact_info`, `status`, `iduser`)
+   `visits`, `amenities`, `contact_info`, `status`, `location`,` sublocation`,`iduser`)
 VALUES
-  ('123 Maple St', '150', 'house', 'Cozy Family Home',
+  ('123 Maple St', '150','Ariana', 'house', 'Cozy Family Home',
    true, 'A beautiful home perfect for families.', '["https://example.com/image1.jpg", "https://example.com/image2.jpg"]', 
    'sale', '2024-07-09', '3', '2', 
    '{"dates": ["2024-07-01", "2024-07-05"]}',
     '{"parking": true, "ac": true, "furnished": false, "pool": false, "microwave": true, "near_subway": false, "beach_view": false, "alarm": true, "garden": true}', 
-    'contact@example.com', 'pending', '1'),
-  ('456 Oak Ave', '200', 'house', 'Modern Family Home', false,
+    'contact@example.com', 'pending','Ariana','Ariana Essoughra','New' ,'1'),
+  ('456 Oak Ave', '200','Ariana', 'house', 'Modern Family Home', false,
    'A spacious modern home with great amenities.', '["https://example.com/image3.jpg", "https://example.com/image4.jpg"]', 
    'rent', '2024-07-09', '4', '3', '{"dates": ["2024-06-30", "2024-07-03", "2024-07-07"]}',
     '{"parking": true, "ac": true, "furnished": true, "pool": false, "microwave": true,
      "near_subway": true, "beach_view": false, "alarm": false, "garden": true}', 
-     'contact@example.com', 'approved', '2');
+     'contact@example.com', 'approved','Ariana','Ariana Essoughra','New' '2');

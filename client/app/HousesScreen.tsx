@@ -15,6 +15,8 @@ import { Link } from "expo-router";
 import DrawerContent from "@/app/DrawerContent";
 import Search from "./Search";
 import styles from "./styles"; // Importing styles
+import Favourite from "./Favorite";
+
 
 const itemsPerPage = 3;
 
@@ -43,8 +45,7 @@ const HousesScreen = () => {
   useEffect(() => {
     fetchResidences();
   }, []);
-
-  const fetchResidences = () => {
+ const fetchResidences = () => {
     fetch("http://192.168.1.105:5000/api/gethouse")
       .then((response) => response.json())
       .then((data) => {
@@ -61,7 +62,13 @@ const HousesScreen = () => {
           images: residence.images,
           visits: residence.visits,
           operation: residence.operation,
-          amenities:residence.amenities
+          amenities:residence.amenities,
+          location:residence.location,
+          subLocation:residence.subLocation,
+          condition : residence.condition,
+          Favourite:residence.favourite,
+          map:residence.map
+
         }));
         setResidences(mappedResidences);
         setFilteredResidences(mappedResidences);
@@ -75,7 +82,7 @@ const HousesScreen = () => {
 
   const handleSearch = () => {
     const filteredData = residences.filter((residence) =>
-      residence.address.toLowerCase().includes(searchQuery.toLowerCase())
+      residence.title.toLowerCase().includes(searchQuery.toLowerCase())
     );
     setFilteredResidences(filteredData);
     setStart(0); // Reset the pagination start index
@@ -109,19 +116,17 @@ const HousesScreen = () => {
       <Image
         source={{ uri: item.images[0] }}
         style={styles.image}
-        resizeMode="center"
+        resizeMode="contain"
       />
       <ThemedText type="subtitle" style={styles.title}>
-        {item.address}
+        {item.title}
       </ThemedText>
-      <ThemedText type="default" style={styles.description}>
-        {item.description}
-      </ThemedText>
+      
       <ThemedText type="default" style={styles.price}>
-        Price: {item.price}
+        Price: {item.price}DT
       </ThemedText>
       <ThemedText type="default" style={styles.contact}>
-        Contact: {item.contact_info}
+        Address: {item.address}
       </ThemedText>
       <Link
         href={{

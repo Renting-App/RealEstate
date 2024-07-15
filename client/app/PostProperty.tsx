@@ -14,6 +14,7 @@ import axios from "axios";
 import Icon from "react-native-vector-icons/FontAwesome";
 import * as ImagePicker from "expo-image-picker";
 import { Calendar, DateObject } from "react-native-calendars";
+import { HomeButton } from './HomeButton';
 
 const CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/dw1sxdmac/upload";
 const CLOUDINARY_PRESET = "hotel_preset";
@@ -141,7 +142,7 @@ const PostProperty = () => {
   };
 
   const handleImageResult = (result: ImagePicker.ImagePickerResult) => {
-    if (!result.cancelled) {
+    if (!result.canceled) {
       const file = {
         uri: result.assets[0].uri,
         type: "image/jpeg",
@@ -179,7 +180,7 @@ const PostProperty = () => {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch("http:///192.168.1.13:5000/api/addhouse", {
+      const response = await fetch("http:///192.168.1.105:5000/api/addhouse", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -274,6 +275,7 @@ const getMarkedDates = () => {
 
   return (
     <ScrollView style={styles.container}>
+      <HomeButton/>
       <Text style={styles.heading}>Post Your Property</Text>
       <View style={styles.formContainer}>
         <Text style={styles.label}>Address:</Text>
@@ -398,7 +400,7 @@ const getMarkedDates = () => {
           }
         >
           <Picker.Item label="Rent" value="rent" />
-          <Picker.Item label="Sell" value="sell" />
+          <Picker.Item label="Sell" value="sale" />
         </Picker>
 
         <Text style={styles.label}>Amenities:</Text>
