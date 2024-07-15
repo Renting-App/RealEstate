@@ -27,7 +27,7 @@ const FilterComponentWrapper: React.FC<{ navigation: any }> = ({ navigation }) =
       } catch (error) {
         console.error('Error fetching properties:', error);
       } finally {
-        setLoading(false); // Set loading to false after fetch completes
+        setLoading(false); 
       }
     };
 
@@ -36,11 +36,11 @@ const FilterComponentWrapper: React.FC<{ navigation: any }> = ({ navigation }) =
 
   const handleFilter = (filteredProperties: Property[]) => {
     console.log('Filtered properties:', filteredProperties);
-    // You can perform additional actions here with the filtered properties
+
   };
 
   if (loading) {
-    return <Text>Loading...</Text>; // Add a loading state
+    return <Text>Loading...</Text>; 
   }
 
   return (

@@ -18,7 +18,7 @@ export interface Property {
   description: string;
   images: string[];
   price: number;
-  operation: string; // Updated to include operation
+  operation: string; 
   dateOfCreation: string;
   rooms: number;
   bathrooms: number;
@@ -29,7 +29,7 @@ export interface Property {
 export interface FilterComponentProps {
   properties: Property[];
   onFilter: (filteredProperties: Property[]) => void;
-  navigation: any; // add navigation prop
+  navigation: any; 
 }
 
 
@@ -116,7 +116,7 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ properties, onFilter,
   const [operation, setOperation] = useState('sale'); // Default to 'sale'
 
   useEffect(() => {
-    setSubLocation(''); // Reset sub-location when location changes
+    setSubLocation(''); 
   }, [location]);
 
   const toggleAmenity = (amenity: string) => {
@@ -161,7 +161,7 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ properties, onFilter,
   return (
     <ScrollView style={styles.container}>
       <Text>Filter Component</Text>
-      {/* Add your UI components here */}
+      {/*  UI components here */}
       <Button title="Search" onPress={handleSearch} />
       <Text style={styles.title}>Looking for... </Text>
       <Picker
