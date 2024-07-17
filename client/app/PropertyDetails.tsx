@@ -11,8 +11,10 @@ import MapView, { Marker } from 'react-native-maps'; // Import MapView
 interface Property {
   _id: number;
   address: string;
-  images: string[];
-  price: number;
+  size: string;
+  category: "apartment" | "house" | "office" | "studio" | "penthouse";
+  title: string;
+  favourite: boolean;
   description: string;
   images: string[];
   operation: "rent" | "sale";
@@ -41,7 +43,7 @@ interface Property {
 }
 
 
-const PropertyDetails = () => {
+const PropertyDetails: React.FC = () => {
   const { residence } = useLocalSearchParams();
   const residenceData: Property = JSON.parse(residence as string);
   const [isFavourite, setIsFavourite] = useState(residenceData.favourite);
@@ -169,15 +171,20 @@ const PropertyDetails = () => {
         >
           <Button title="Request a Tour" />
         </Link>
-       
       </View>
     </ScrollView>
   );
 };
 
-const { width: screenWidth } = Dimensions.get('window');
+const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
+  scrollContainer: {
+    flexGrow: 1,
+    paddingVertical: 20,
+    paddingHorizontal: 16,
+    backgroundColor: '#f7f7f7',
+  },
   container: {
     padding: 14,
     backgroundColor: '#fff',
@@ -200,18 +207,21 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 16,
-    textAlign: 'center',
+    color: '#333',
+  },
+  price: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#4CAF50',
   },
   imageWrapper: {
-    width: screenWidth,
-    height: 300,
-    marginBottom: 16,
+    height: screenHeight * 0.4,
+    marginBottom: 20,
   },
   imageContainer: {
-    display:'flex',
-    justifyContent: 'center',
+    flexGrow: 1,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   image: {
     width: screenWidth * 0.9,
@@ -219,23 +229,37 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     margin: 4,
   },
-  price: {
-    fontSize: 18,
+  details: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#4CAF50',
+    padding: 12,
+    borderRadius: 10,
     marginBottom: 20,
-    textAlign: 'center',
+  },
+  detailItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  detailText: {
+    marginLeft: 8,
+    fontSize: 16,
+    color: '#fff',
   },
   description: {
-    fontSize: 14,
+    fontSize: 16,
+    lineHeight: 24,
     marginBottom: 20,
-    textAlign: 'center',
+    color: '#333',
   },
-  contact: {
-    fontSize: 14,
+  address: {
+    fontSize: 16,
+    fontStyle: 'italic',
     marginBottom: 20,
-    textAlign: 'center',
+    color: '#666',
   },
-  buttonContainer: {
-    alignItems: 'center',
+  amenities: {
     marginBottom: 20,
   },
   amenitiesTitle: {
