@@ -1,0 +1,82 @@
+.post-property-container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  overflow-y: auto; /* Enable vertical scrolling */
+  max-height: 600px; /* Limit height to ensure scrollability */
+}
+
+.property-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-label {
+  margin-bottom: 8px;
+}
+
+.form-input,
+.form-textarea,
+.form-select{
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.form-checkbox {
+  margin-bottom: 6px;
+  width: 30;
+  padding: 8px;
+  margin-bottom: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.submit-button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 12px; /* Add margin top for separation */
+}
+
+.submit-button:hover {
+  background-color: #45a049;
+}
+
+/* Styles for Amenities section */
+.amenities-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.amenities-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.amenity-checkbox {
+  display: flex;
+  align-items: center;
+  justify-content : space-between;
+}
+
+.amenity-checkbox input {
+  margin-right: 12px; /* Adjust margin as needed */
+}
+
+.amenity-label {
+  font-size: 16px;
+}
+

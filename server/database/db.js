@@ -5,7 +5,6 @@ const sequelize = new Sequelize("realestate", "root", "dali1234", {
   dialect: "mysql",
 });
 
-
 async function testConnection() {
   try {
     await sequelize.authenticate();
