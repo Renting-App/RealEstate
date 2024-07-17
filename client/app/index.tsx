@@ -1,44 +1,103 @@
-// index.tsx
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Welcome from './Welcome';
 import Signin from './SignIn';
 import Signup from './SignUp';
-import HousesScreen from './HousesScreen'; // Assuming Index is HousesScreen
+import HousesScreen from './HousesScreen';
 import AdminPage from './adminPage';
-import FilterComponentWrapper from './FilterComponentWrapper'; // Use the wrapper component
-import FilteringData from './FilteringData';
+import PostProperty from './PostProperty';
+import FAQ from './FAQ';
+import Maps from './Maps';
+import Favourite from './Favorite';
+import FilterComponent from './FilterComponent';
+import RequestTour from './RequestTour';
+import AboutUs from './AboutUs';
+import PropertyDetails from './PropertyDetails';
 
-const Stack = createStackNavigator();
+
+
+
+const Stack = createStackNavigator<RootStackParamList>();
 
 export type RootStackParamList = {
   Welcome: undefined;
   Signin: undefined;
   Signup: undefined;
   HousesScreen: undefined;
+  AboutUs: undefined;
+  FAQ: undefined;
+  Maps: undefined;
+  FilterComponent: undefined;
   AdminPage: undefined;
   PropertyDetails: undefined;
-  RequestaTour: undefined;
+  RequestTour: undefined;
   PostProperty: undefined;
-  FilterComponent: undefined;
-  FilteringData: undefined;
+  Favorite : undefined;
+  // AdditionalInfo: { userId: string };
 };
 
-const App: React.FC = () => {
+
+export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Welcome">
-        <Stack.Screen name="Welcome" component={Welcome} />
-        <Stack.Screen name="Signin" component={Signin} />
-        <Stack.Screen name="Signup" component={Signup} />
-        <Stack.Screen name="HousesScreen" component={HousesScreen} />
-        <Stack.Screen name="AdminPage" component={AdminPage} />
-        <Stack.Screen name="FilterComponent" component={FilterComponentWrapper} /> {/* Use the wrapper component */}
-        <Stack.Screen name="FilteringData" component={FilteringData} />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
-};
+   
+    <Stack.Navigator
+      initialRouteName="Welcome"
+      screenOptions={{ headerShown: false }}>
+      <Stack.Screen
+        name="Welcome"
+        component={Welcome}
+      />
+      <Stack.Screen
+        name="Signin"
+        component={Signin}
+      />
+      <Stack.Screen
+        name="Signup"
+        component={Signup}
+      />
+      <Stack.Screen
+        name="HousesScreen"
+        component={HousesScreen}
 
-export default App;
+      />
+      <Stack.Screen
+        name="AboutUs"
+        component={AboutUs}
+
+      />
+      <Stack.Screen
+        name="FAQ"
+        component={FAQ}
+
+      />
+
+      <Stack.Screen
+        name="PostProperty"
+        component={PostProperty}
+      />
+
+      <Stack.Screen
+        name="PropertyDetails"
+        component={PropertyDetails}
+      />
+
+      <Stack.Screen
+        name="Maps"
+        component={Maps}
+
+      />
+
+      <Stack.Screen
+        name="RequestTour"
+        component={RequestTour}
+      />
+      <Stack.Screen
+        name="AdminPage"
+        component={AdminPage}
+      />
+      {/* <Stack.Screen name="AdditionalInfo" component={AdditionalInfo} /> */}
+    </Stack.Navigator>
+
+  );
+}
+

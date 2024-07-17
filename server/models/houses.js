@@ -35,7 +35,7 @@ const House = sequelize.define('houses', {
     allowNull: false
   },
   location: {
-    type: DataTypes.ENUM(' Ariana',
+    type: DataTypes.STRING(' Ariana',
       ' Beja',
       ' Ben Arous',
       ' Bizerte',
@@ -123,6 +123,9 @@ const House = sequelize.define('houses', {
   condition: {
     type: DataTypes.ENUM('new', 'occasion'),
     defaultValue: 'new',
+  },
+  map :{
+    type: DataTypes.JSONB
   }
 }, {
   tableName: 'houses',

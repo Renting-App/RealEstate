@@ -20,7 +20,9 @@ const addHouse = async (req, res) => {
       visits,
       amenities,// Include amenities here
       location,
-      subLocation
+      subLocation,
+      favourite,
+      map
     } = req.body;
 
     const newHouse = await House.create({
@@ -40,7 +42,9 @@ const addHouse = async (req, res) => {
       visits,
       amenities,
       location,
-      subLocation// Assign amenities to the database field
+      subLocation,
+      favourite,
+      map
     });
     res.status(201).json(newHouse);
   } catch (err) {
@@ -110,7 +114,9 @@ const updateHouseById = async (req, res) => {
     bathrooms,
     amenities,
     location,
-    subLocation
+    subLocation,
+    favourite,
+    map
   } = req.body;
 
   try {
@@ -137,6 +143,8 @@ const updateHouseById = async (req, res) => {
     house.amenities = amenities;
     house.location = location;
     house.subLocation = subLocation;
+    house.favourite=favourite;
+    house.map=map
 
     await house.save();
 
@@ -149,20 +157,19 @@ const updateHouseById = async (req, res) => {
 
 ///search
 ///search
-
-
-// const searchHouses = async (req, res) => {
-//   const {
-//     category,
-//     location,
-//     subLocation,
-//     priceMin,
-//     priceMax,
-//     condition,
-//     amenities,
-//     operation,
-    
-//   } = req.body;
+const searchHouses = async (req, res) => {
+  const {
+    category,
+    type,
+    location,
+    subLocation,
+    priceMin,
+    priceMax,
+    condition,
+    amenities,
+    operation,
+    // Add operation to the request body
+  } = req.body;
 
 //   try {
 //     const searchCriteria = {};

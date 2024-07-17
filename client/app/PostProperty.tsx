@@ -6,11 +6,15 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
+  Alert,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { StyleSheet } from "react-native";
 import axios from "axios";
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from "react-native-vector-icons/FontAwesome";
+import * as ImagePicker from "expo-image-picker";
+import { Calendar, DateObject } from "react-native-calendars";
+import { HomeButton } from './HomeButton';
 
 const CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/dw1sxdmac/upload";
 const CLOUDINARY_PRESET = "hotel_preset";
@@ -86,37 +90,78 @@ const PostProperty = () => {
   });
 
   const amenityIcons: { [key: string]: string } = {
-    parking: 'car',
-    ac: 'snowflake-o',
-    furnished: 'bed',
-    pool: 'tint',
-    microwave: 'cutlery',
-    near_subway: 'subway',
-    beach_view: 'umbrella',
-    alarm: 'bell',
-    garden: 'tree',
+    parking: "car",
+    ac: "snowflake-o",
+    furnished: "bed",
+    pool: "tint",
+    microwave: "cutlery",
+    near_subway: "subway",
+    beach_view: "umbrella",
+    alarm: "bell",
+    garden: "tree",
   };
 
-  const handleImageSelection = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const file = event.target.files?.[0];
-
-    if (!file) {
-      console.error("No file selected");
+  const handleImageSelection = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== "granted") {
+      Alert.alert("Sorry, we need camera roll permissions to make this work!");
       return;
     }
 
+    const options = {
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    };
+
+    const choice = await Alert.alert(
+      "Select Image",
+      "Would you like to take a photo or select from the library?",
+      [
+        { text: "Take Photo", onPress: () => launchCamera(options) },
+        {
+          text: "Select from Library",
+          onPress: () => launchImageLibrary(options),
+        },
+        { text: "Cancel", style: "cancel" },
+      ]
+    );
+  };
+
+  const launchCamera = async (options: ImagePicker.ImagePickerOptions) => {
+    let result = await ImagePicker.launchCameraAsync(options);
+    handleImageResult(result);
+  };
+
+  const launchImageLibrary = async (
+    options: ImagePicker.ImagePickerOptions
+  ) => {
+    let result = await ImagePicker.launchImageLibraryAsync(options);
+    handleImageResult(result);
+  };
+
+  const handleImageResult = (result: ImagePicker.ImagePickerResult) => {
+    if (!result.canceled) {
+      const file = {
+        uri: result.assets[0].uri,
+        type: "image/jpeg",
+        name: `photo-${propertyData.images.length}.jpg`,
+      };
+
+      uploadToCloudinary(file);
+    }
+  };
+
+  const uploadToCloudinary = async (file: any) => {
     try {
       const formData = new FormData();
       formData.append("file", file);
+      formData.append("upload_preset", CLOUDINARY_PRESET);
 
       const response = await axios.post(CLOUDINARY_URL, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
-        },
-        params: {
-          upload_preset: CLOUDINARY_PRESET,
         },
       });
 
@@ -135,7 +180,7 @@ const PostProperty = () => {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch("http://192.168.1.13:5000/api/addhouse", {
+      const response = await fetch("http:///192.168.1.105:5000/api/addhouse", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -161,7 +206,7 @@ const PostProperty = () => {
           price: "",
           bathrooms: "",
           visits: {
-            dates: [],
+            dates: selectedDates,
           },
           amenities: {
             parking: false,
@@ -206,9 +251,31 @@ const PostProperty = () => {
       },
     }));
   };
+  const [showCalendar, setShowCalendar] = useState(false);
+  const [selectedDates, setSelectedDates] = useState<string[]>([]);
+const handleDayPress = (day: DateObject) => {
+  const date = day.dateString;
+  const isSelected = selectedDates.includes(date);
+
+  if (isSelected) {
+    setSelectedDates(selectedDates.filter((d) => d !== date));
+  } else {
+    setSelectedDates([...selectedDates, date]);
+  }
+};
+
+const getMarkedDates = () => {
+  const markedDates: { [date: string]: { selected: boolean } } = {};
+  selectedDates.forEach((date) => {
+    markedDates[date] = { selected: true };
+  });
+  return markedDates;
+};
+
 
   return (
     <ScrollView style={styles.container}>
+      <HomeButton/>
       <Text style={styles.heading}>Post Your Property</Text>
       <View style={styles.formContainer}>
         <Text style={styles.label}>Address:</Text>
@@ -288,6 +355,18 @@ const PostProperty = () => {
           keyboardType="numeric"
         />
 
+        <Text style={styles.label}>Visit Dates:</Text>
+        <TextInput
+          style={styles.input}
+          value={propertyData.visits.dates.join(", ")}
+          onChangeText={(text) =>
+            handleInputChange("visits", {
+              dates: text.split(",").map((date) => date.trim()),
+            })
+          }
+          placeholder="Enter visit dates (comma separated)"
+        />
+
         <Text style={styles.label}>Contact Info:</Text>
         <TextInput
           style={styles.input}
@@ -296,40 +375,91 @@ const PostProperty = () => {
           placeholder="Enter contact info"
         />
 
-        <Text style={styles.amenitiesTitle}>Amenities:</Text>
+        <Text style={styles.label}>Date of Creation:</Text>
+        <TextInput
+          style={styles.input}
+          value={propertyData.date_of_creation}
+          onChangeText={(text) => handleInputChange("date_of_creation", text)}
+          placeholder="Enter date of creation"
+        />
+
+        <Text style={styles.label}>Status:</Text>
+        <TextInput
+          style={styles.input}
+          value={propertyData.status}
+          onChangeText={(text) => handleInputChange("status", text)}
+          placeholder="Enter status"
+        />
+
+        <Text style={styles.label}>Operation:</Text>
+        <Picker
+          style={styles.input}
+          selectedValue={propertyData.operation}
+          onValueChange={(itemValue) =>
+            handleInputChange("operation", itemValue)
+          }
+        >
+          <Picker.Item label="Rent" value="rent" />
+          <Picker.Item label="Sell" value="sale" />
+        </Picker>
+
+        <Text style={styles.label}>Amenities:</Text>
         <View style={styles.amenitiesContainer}>
-          {Object.keys(propertyData.amenities).map((key) => (
-            <View key={key} style={styles.amenityCheckbox}>
-              <TouchableOpacity
-                style={styles.checkbox}
-                onPress={() => toggleCheckbox(key as keyof typeof propertyData.amenities)}
+          {Object.keys(amenityIcons).map((amenity) => (
+            <TouchableOpacity
+              key={amenity}
+              style={[
+                styles.amenityButton,
+                propertyData.amenities[
+                  amenity as keyof typeof propertyData.amenities
+                ]
+                  ? styles.amenityButtonActive
+                  : {},
+              ]}
+              onPress={() =>
+                toggleCheckbox(amenity as keyof typeof propertyData.amenities)
+              }
+            >
+              <Icon
+                name={amenityIcons[amenity]}
+                size={20}
+                color={
+                  propertyData.amenities[
+                    amenity as keyof typeof propertyData.amenities
+                  ]
+                    ? "white"
+                    : "black"
+                }
+              />
+              <Text
+                style={[
+                  styles.amenityText,
+                  propertyData.amenities[
+                    amenity as keyof typeof propertyData.amenities
+                  ]
+                    ? styles.amenityTextActive
+                    : {},
+                ]}
               >
-                {propertyData.amenities[key as keyof typeof propertyData.amenities] && (
-                  <View style={styles.checkboxInner} />
-                )}
-              </TouchableOpacity>
-              <Icon name={amenityIcons[key]} size={20} color="#007bff" style={styles.amenityIcon} />
-              <Text style={styles.amenityLabel}>{key.replace(/_/g, ' ')}</Text>
-            </View>
+                {amenity}
+              </Text>
+            </TouchableOpacity>
           ))}
         </View>
-        
-        <Text>Select Images</Text>
-       
-          <input
-            type="file"
-            onChange={handleImageSelection}
-            accept="image/*"
-            multiple
-          />
-      
 
-        <View style={styles.selectedImagesContainer}>
-          {propertyData.images.map((image, index) => (
+        <TouchableOpacity
+          style={styles.imagePickerButton}
+          onPress={handleImageSelection}
+        >
+          <Text style={styles.imagePickerButtonText}>Select Images</Text>
+        </TouchableOpacity>
+
+        <View style={styles.imagePreviewContainer}>
+          {propertyData.images.map((imageUri, index) => (
             <Image
               key={index}
-              source={{ uri: image }}
-              style={styles.selectedImage}
+              source={{ uri: imageUri }}
+              style={styles.imagePreview}
             />
           ))}
         </View>
@@ -345,134 +475,97 @@ const PostProperty = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f5f5f5",
-    paddingHorizontal: 20,
-    paddingTop: 20,
+    padding: 16,
+    backgroundColor: "#f8f8f8",
   },
   heading: {
     fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 20,
     textAlign: "center",
-    color: "#333",
+    marginBottom: 16,
   },
   formContainer: {
-    backgroundColor: "#fff",
-    padding: 20,
-    borderRadius: 10,
+    backgroundColor: "#ffffff",
+    padding: 16,
+    borderRadius: 8,
     shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
   },
   label: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginTop: 10,
-    color: "#333",
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 5,
-    padding: 10,
-    marginTop: 5,
-    marginBottom: 15,
-    color: "#333",
-  },
-  textArea: {
-    height: 100,
-    textAlignVertical: "top",
-  },
-  amenitiesTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginTop: 20,
-    marginBottom: 10,
-    color: "#333",
-  },
-  amenitiesContainer: {
-    flexDirection: "column",
-    flexWrap: "wrap",
-    marginBottom: 20,
-    justifyContent: "space-between"
-  },
-  amenityCheckbox: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 10,
-    marginRight: 20,
-
-  },
-  amenityIcon: {
-    marginRight: 10,
-    color: "#007bff",
-  },
-  amenityLabel: {
-    color: "#333",
-  },
-  checkbox: {
-    width: 20,
-    height: 20,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 3,
-    marginRight: 10,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  checkboxInner: {
-    width: 14,
-    height: 14,
-    backgroundColor: "#007bff",
-    borderRadius: 2,
-  },
-
-  imageButton: {
-    borderWidth: 1,
-    flexDirection: "column",
-    borderColor: "#007bff",
-    borderRadius: 5,
-    padding: 10,
-    alignItems: "center",
-    marginBottom: 15,
-
-  },
-  imageButtonText: {
-    color: "#fff",
     fontSize: 16,
     fontWeight: "bold",
+    marginBottom: 8,
   },
-  selectedImagesContainer: {
+  input: {
+    backgroundColor: "#f0f0f0",
+    borderRadius: 4,
+    padding: 8,
+    marginBottom: 16,
+  },
+  textArea: {
+    height: 80,
+  },
+  amenitiesContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
-    marginBottom: 20,
+    justifyContent: "space-between",
+    marginBottom: 16,
   },
-  selectedImage: {
+  amenityButton: {
+    width: "48%",
+    backgroundColor: "#f0f0f0",
+    borderRadius: 4,
+    padding: 8,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 8,
+  },
+  amenityButtonActive: {
+    backgroundColor: "#007bff",
+  },
+  amenityText: {
+    marginLeft: 8,
+    color: "black",
+  },
+  amenityTextActive: {
+    color: "white",
+  },
+  imagePickerButton: {
+    backgroundColor: "#007bff",
+    borderRadius: 4,
+    padding: 12,
+    alignItems: "center",
+    marginBottom: 16,
+  },
+  imagePickerButtonText: {
+    color: "white",
+    fontWeight: "bold",
+  },
+  imagePreviewContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+  },
+  imagePreview: {
     width: 100,
     height: 100,
-    marginHorizontal: 10,
-    marginBottom: 10,
-    borderRadius: 5,
+    borderRadius: 8,
+    margin: 4,
   },
   submitButton: {
-    backgroundColor: "#007bff",
-    paddingVertical: 15,
-    paddingHorizontal: 20,
-    borderRadius: 5,
+    backgroundColor: "#28a745",
+    borderRadius: 4,
+    padding: 12,
     alignItems: "center",
-    marginTop: 20,
+    marginTop: 16,
   },
   submitButtonText: {
-    color: "#fff",
-    fontSize: 18,
+    color: "white",
     fontWeight: "bold",
   },
 });
-
 
 export default PostProperty;
