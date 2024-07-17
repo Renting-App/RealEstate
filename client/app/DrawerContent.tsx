@@ -1,3 +1,5 @@
+//hetha el sidebar
+
 import React from "react";
 import { View, StyleSheet, Pressable } from "react-native";
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -8,9 +10,6 @@ interface SidebarProps {
   isVisible: boolean;
   onClose: () => void;
 }
-
-
-
 
 const DrawerContent: React.FC<SidebarProps> = ({ isVisible, onClose }) => {
   return (

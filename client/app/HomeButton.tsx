@@ -1,16 +1,16 @@
-import React from 'react';
-import { Pressable } from 'react-native';
-import { useNavigation, NavigationProp } from '@react-navigation/native';
-import { Ionicons } from '@expo/vector-icons';
-import { StyleSheet } from 'react-native';
-import { RootStackParamList } from '.';
+import React from "react";
+import { Pressable } from "react-native";
+import { useNavigation, NavigationProp } from "@react-navigation/native";
+import { Ionicons } from "@expo/vector-icons";
+import { StyleSheet } from "react-native";
+import { RootStackParamList } from ".";
 
 export function HomeButton() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   return (
     <Pressable
       onPress={() => {
-        navigation.navigate('HousesScreen');
+        navigation.navigate("HousesScreen");
       }}
       style={({ pressed }) => [
         buttonstyles.homeButton,
@@ -22,12 +22,9 @@ export function HomeButton() {
   );
 }
 
-
-
-
 const buttonstyles = StyleSheet.create({
   homeButton: {
-    position: 'absolute',
+    position: "absolute",
     top: 10,
     left: 10,
     zIndex: 1, // Ensure it stays on top of other elements
