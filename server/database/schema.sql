@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS `realestate`.`user` (
   `password` VARCHAR(45) NULL DEFAULT NULL,
   `email` VARCHAR(45) NULL DEFAULT NULL,
   `phone_number` VARCHAR(45) NULL DEFAULT NULL,
+  `role` VARCHAR(45) NULL DEFAULT 'user'
   PRIMARY KEY (`iduser`))
 ENGINE = InnoDB
 AUTO_INCREMENT = 7
@@ -38,25 +39,39 @@ COLLATE = utf8mb4_0900_ai_ci;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `realestate`.`houses` (
   `idhouses` INT NOT NULL AUTO_INCREMENT,
-  `address` VARCHAR(45) NULL DEFAULT NULL,
-  `price` VARCHAR(45) NULL DEFAULT NULL,
+  `address` VARCHAR(100) NULL DEFAULT NULL,
+  `size`  VARCHAR(100) NULL DEFAULT NULL,
+  `price` INT NULL,
+  `category` ENUM('apartment', 'house', 'office', 'studio', 'penthouse') NULL DEFAULT NULL,
+  `title` VARCHAR(100) NULL DEFAULT NULL,
+  `favourite` BOOLEAN NULL,
   `description` TEXT NULL DEFAULT NULL,
+  `images` JSON NULL DEFAULT NULL,
+  `operation` ENUM('rent', 'sale') NOT NULL DEFAULT 'rent',
+  `date_of_creation` DATE NULL DEFAULT NULL,
+  `rooms`  VARCHAR(100) NULL DEFAULT NULL,
+  `bathrooms`  VARCHAR(100) NULL DEFAULT NULL,
+  `visits` JSON NULL DEFAULT NULL,
+  `amenities` JSON NULL DEFAULT NULL,
   `contact_info` VARCHAR(45) NULL DEFAULT NULL,
   `status` ENUM('pending', 'approved', 'declined') NULL DEFAULT 'pending',
   `notification` VARCHAR(45) NULL DEFAULT NULL,
-  `category` VARCHAR(20) NULL DEFAULT NULL,
+  `location`  VARCHAR(100) NULL DEFAULT 'Ariana',
+  `subLocation`  VARCHAR(100) NULL DEFAULT 'Ariana Essoughra',
+  `condition`  VARCHAR(100) NULL DEFAULT 'New',
+   `map` JSON NULL DEFAULT NULL,
   `iduser` INT NULL DEFAULT NULL,
-  `images` JSON NULL DEFAULT NULL,
-  `operation` ENUM('rent', 'sale') NOT NULL DEFAULT 'rent',
   PRIMARY KEY (`idhouses`),
   INDEX `fk_user` (`iduser` ASC) VISIBLE,
   CONSTRAINT `fk_user`
     FOREIGN KEY (`iduser`)
-    REFERENCES `realestate`.`user` (`iduser`))
+    REFERENCES `user` (`iduser`)
+)
 ENGINE = InnoDB
 AUTO_INCREMENT = 10
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
+
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
@@ -67,13 +82,13 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 -- Insert data into `user` table
 INSERT INTO user (iduser, username, password, email, phone_number)
-VALUES (1, 'john_doe', 'password123', 'john@example.com', 111-222-3333 );
+VALUES (1, 'john_doe', 'password123', 'john@example.com', '111-222-3333' );
 
 INSERT INTO user (iduser, username, password, email, phone_number)
-VALUES (2, 'jane_smith', 'securepass', 'jane@example.com', 34 454 214);
+VALUES (2, 'jane_smith', 'securepass', 'jane@example.com', '34 454 214');
 
 INSERT INTO user (iduser, username, password, email, phone_number)
-VALUES (3, 'alice_jones', 'alicepassword', 'alice@example.com', 67 321 684);
+VALUES (3, 'alice_jones', 'alicepassword', 'alice@example.com', '67 321 684');
 
 INSERT INTO user (iduser, username, password, email, phone_number)
 VALUES (4, 'john_doe', 'password123', 'john@example.com', '123-456-7890');
@@ -87,47 +102,23 @@ VALUES (6, 'alice_jones', 'alicepassword', 'alice@example.com', '555-123-4567');
 
 -- Insert data into `houses` table
 
-INSERT INTO houses (address, price, description, contact_info, status, notification, category, iduser, images)
-VALUES (
-  '123 Maple St',
-  '250000',
-  '3 bed, 2 bath house',
-  'contact@example.com',
-  'pending',
-  'N/A',
-  'Residential',
-  1,
-  '["https://newhomes-nz.s3.ap-southeast-2.amazonaws.com/public/files/79b230a5e9eaffa35014d9972e17edcb.jpeg", "https://th.bing.com/th/id/OIP.Mwnxp62F4kjTUrv7nKcdtAHaEL?w=600&h=338&rs=1&pid=ImgDetMain"]'
-);
 
-INSERT INTO houses (address, price, description, contact_info, status, notification, category, iduser, images)
-VALUES (
-  '456 Oak Ave',
-  '300000',
-  '4 bed, 3 bath house',
-  'contact2@example.com',
-  'approved',
-  'N/A',
-  'Residential',
-  5,
-  '["https://th.bing.com/th/id/OIP.WEeTNsgeuPwdrw5lbyT9yQHaE8?w=600&h=400&rs=1&pid=ImgDetMain", "https://th.bing.com/th/id/OIP.WEeTNsgeuPwdrw5lbyT9yQHaE8?w=600&h=400&rs=1&pid=ImgDetMain"]'
-);
-
-INSERT INTO houses (address, price, description, contact_info, status, notification, category, iduser, images)
-VALUES (
-  '789 Pine Rd',
-  '200000',
-  '2 bed, 1 bath house',
-  'contact3@example.com',
-  'declined',
-  'N/A',
-  'house',
-  1,
-  '["https://example.com/image5.jpg", "https://example.com/image6.jpg"]'
-);
-
-INSERT INTO houses (address, price, description, contact_info, status, notification, category, iduser, images)
-VALUES ('101 Birch Blvd','350000','5 bed, 4 bath house','contact4@example.com','approved','N/A','house',6,
-  '["https://th.bing.com/th/id/OIP.qOhLUJ0bLLTCEk0aOI5IPwHaFj?rs=1&pid=ImgDetMain", "https://www.homestratosphere.com/wp-content/uploads/2015/08/27-home-exteriors-870x869.jpg"]'
-);
-
+-- Insert data into `houses` table
+INSERT INTO `houses` 
+(`address`, `size`, `category`, `title`, `favourite`,
+ `description`, `images`, `operation`,
+  `date_of_creation`, `rooms`, `bathrooms`,
+   `visits`, `amenities`, `contact_info`, `status`, `location`,` sublocation`,`iduser`)
+VALUES
+  ('123 Maple St', '150','Ariana', 'house', 'Cozy Family Home',
+   true, 'A beautiful home perfect for families.', '["https://example.com/image1.jpg", "https://example.com/image2.jpg"]', 
+   'sale', '2024-07-09', '3', '2', 
+   '{"dates": ["2024-07-01", "2024-07-05"]}',
+    '{"parking": true, "ac": true, "furnished": false, "pool": false, "microwave": true, "near_subway": false, "beach_view": false, "alarm": true, "garden": true}', 
+    'contact@example.com', 'pending','Ariana','Ariana Essoughra','New' ,'1'),
+  ('456 Oak Ave', '200','Ariana', 'house', 'Modern Family Home', false,
+   'A spacious modern home with great amenities.', '["https://example.com/image3.jpg", "https://example.com/image4.jpg"]', 
+   'rent', '2024-07-09', '4', '3', '{"dates": ["2024-06-30", "2024-07-03", "2024-07-07"]}',
+    '{"parking": true, "ac": true, "furnished": true, "pool": false, "microwave": true,
+     "near_subway": true, "beach_view": false, "alarm": false, "garden": true}', 
+     'contact@example.com', 'approved','Ariana','Ariana Essoughra','New' '2');

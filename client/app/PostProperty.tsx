@@ -6,24 +6,60 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
+  Alert,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { StyleSheet } from "react-native";
 import axios from "axios";
+import Icon from "react-native-vector-icons/FontAwesome";
+import * as ImagePicker from "expo-image-picker";
+import { Calendar, DateObject } from "react-native-calendars";
+import { HomeButton } from "./HomeButton";
+import PropertyForm from "./PropertyForm";
+
+const CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/dw1sxdmac/upload";
+const CLOUDINARY_PRESET = "hotel_preset";
+
 interface PropertyData {
   _id: string;
   address: string;
-  size: string;
-  category: string;
+  size: number;
+  category: "apartment" | "house" | "office" | "studio" | "penthouse";
   title: string;
   favourite: boolean;
   description: string;
   images: string[];
-  operation: string;
+  operation: "rent" | "sale";
+  location:
+    | "Ariana"
+    | "Beja"
+    | "Ben Arous"
+    | "Bizerte"
+    | "Gabes"
+    | "Gafsa"
+    | "Jendouba"
+    | "Kairouan"
+    | "Kasserine"
+    | "Kebili"
+    | "La Manouba"
+    | "Le Kef"
+    | "Mahdia"
+    | "Medenine"
+    | "Monastir"
+    | "Nabeul"
+    | "Sfax"
+    | "Sidi Bouzid"
+    | "Siliana"
+    | "Sousse"
+    | "Tataouine"
+    | "Tozeur"
+    | "Tunis"
+    | "Zaghouan";
+  subLocation: string;
   date_of_creation: string;
-  rooms: string;
-  price: string;
-  bathrooms: string;
+  rooms: number;
+  price: number;
+  bathrooms: number;
   visits: {
     dates: string[];
   };
@@ -39,12 +75,45 @@ interface PropertyData {
     garden: boolean;
   };
   contact_info: string;
-  status: string;
+  status: "pending" | "approved" | "declined";
   notification: string;
   iduser: string;
+  condition: "new" | "occasion";
+  map?: any;
 }
-//not functioning on mobile
+
 const PostProperty = () => {
+  const [selectedDates, setSelectedDates] = useState<string[]>([]);
+  const [showCalendar, setShowCalendar] = useState(false);
+  const [loading, setLoading] = useState(false); 
+  const handleDayPress = (day: DateObject) => {
+    const date = day.dateString;
+    const isSelected = selectedDates.includes(date);
+
+    if (isSelected) {
+      setSelectedDates(selectedDates.filter((d) => d !== date));
+    } else {
+      setSelectedDates([...selectedDates, date]);
+    }
+
+    setPropertyData((prevData) => ({
+      ...prevData,
+      visits: {
+        ...prevData.visits,
+        dates: isSelected
+          ? prevData.visits.dates.filter((d) => d !== date)
+          : [...prevData.visits.dates, date],
+      },
+    }));
+  };
+
+  const getMarkedDates = () => {
+    const markedDates: { [date: string]: { selected: boolean } } = {};
+    selectedDates.forEach((date) => {
+      markedDates[date] = { selected: true };
+    });
+    return markedDates;
+  };
   const [propertyData, setPropertyData] = useState<PropertyData>({
     _id: "1",
     address: "123 Main Street, Cityville, State",
@@ -61,7 +130,7 @@ const PostProperty = () => {
     price: "1000",
     bathrooms: "1",
     visits: {
-      dates: ["2024-07-10", "2024-07-15", "2024-07-22"],
+      dates: [],
     },
     amenities: {
       parking: false,
@@ -80,30 +149,82 @@ const PostProperty = () => {
     iduser: "1",
   });
 
-  const handleImageSelection = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const file = event.target.files?.[0];
+  const amenityIcons: { [key: string]: string } = {
+    parking: "car",
+    ac: "snowflake-o",
+    furnished: "bed",
+    pool: "tint",
+    microwave: "cutlery",
+    near_subway: "subway",
+    beach_view: "umbrella",
+    alarm: "bell",
+    garden: "tree",
+  };
 
-    if (!file) {
-      console.error("No file selected");
+  const handleImageSelection = async () => {
+    setLoading(true);
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== "granted") {
+      Alert.alert("Sorry, we need camera roll permissions to make this work!");
       return;
     }
 
+    const options = {
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [9, 12],
+      quality: 1,
+    };
+
+    const choice =  Alert.alert(
+      "Select Image",
+      "Would you like to take a photo or select from the library?",
+      [
+        { text: "Take Photo", onPress: () => launchCamera(options) },
+        {
+          text: "Select from Library",
+          onPress: () => launchImageLibrary(options),
+        },
+        { text: "Cancel", style: "cancel" },
+      ]
+    );
+  };
+
+  const launchCamera = async (options: ImagePicker.ImagePickerOptions) => {
+    let result = await ImagePicker.launchCameraAsync(options);
+    handleImageResult(result);
+  };
+
+  const launchImageLibrary = async (
+    options: ImagePicker.ImagePickerOptions
+  ) => {
+    let result = await ImagePicker.launchImageLibraryAsync(options);
+    handleImageResult(result);
+  };
+
+  const handleImageResult = (result: ImagePicker.ImagePickerResult) => {
+    if (!result.canceled) {
+      const file = {
+        uri: result.assets[0].uri,
+        type: "image/jpeg",
+        name: `photo-${propertyData.images.length}.jpg`,
+      };
+
+      uploadToCloudinary(file);
+    }
+  };
+
+  const uploadToCloudinary = async (file: any) => {
     try {
       const formData = new FormData();
       formData.append("file", file);
+      formData.append("upload_preset", CLOUDINARY_PRESET);
 
-      const response = await axios.post(
-        "https://api.cloudinary.com/v1_1/dw1sxdmac/upload",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-          params: { upload_preset: "hotel_preset" },
-        }
-      );
+      const response = await axios.post(CLOUDINARY_URL, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       if (response.data && response.data.secure_url) {
         setPropertyData((prevData) => ({
@@ -120,7 +241,7 @@ const PostProperty = () => {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/addhouse", {
+      const response = await fetch("http:///192.168.1.13:5000/api/addhouse", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -146,7 +267,7 @@ const PostProperty = () => {
           price: "",
           bathrooms: "",
           visits: {
-            dates: [],
+            dates: selectedDates,
           },
           amenities: {
             parking: false,
@@ -194,136 +315,22 @@ const PostProperty = () => {
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.heading}>Post Your Property</Text>
-      <View style={styles.formContainer}>
-        <Text style={styles.label}>Address:</Text>
-        <TextInput
-          style={styles.input}
-          value={propertyData.address}
-          onChangeText={(text) => handleInputChange("address", text)}
-          placeholder="Enter address"
-        />
+      <HomeButton />
+      
+      <PropertyForm
+        propertyData={propertyData}
+        handleInputChange={handleInputChange}
+        toggleCheckbox={toggleCheckbox}
+        handleImageSelection={handleImageSelection}
+        getMarkedDates={getMarkedDates}
+        handleDayPress={handleDayPress}
+        showCalendar={showCalendar}
+        setShowCalendar={setShowCalendar}
+      />
 
-        <Text style={styles.label}>Size (sqm):</Text>
-        <TextInput
-          style={styles.input}
-          value={propertyData.size}
-          onChangeText={(text) => handleInputChange("size", text)}
-          placeholder="Enter size"
-          keyboardType="numeric"
-        />
-
-        <Text style={styles.label}>Category:</Text>
-        <Picker
-          style={styles.input}
-          selectedValue={propertyData.category}
-          onValueChange={(itemValue) =>
-            handleInputChange("category", itemValue)
-          }
-        >
-          <Picker.Item label="Apartment" value="apartment" />
-          <Picker.Item label="House" value="house" />
-          <Picker.Item label="Office" value="office" />
-          <Picker.Item label="Studio" value="studio" />
-          <Picker.Item label="Penthouse" value="penthouse" />
-        </Picker>
-
-        <Text style={styles.label}>Title:</Text>
-        <TextInput
-          style={styles.input}
-          value={propertyData.title}
-          onChangeText={(text) => handleInputChange("title", text)}
-          placeholder="Enter title"
-        />
-
-        <Text style={styles.label}>Description:</Text>
-        <TextInput
-          style={[styles.input, styles.textArea]}
-          value={propertyData.description}
-          onChangeText={(text) => handleInputChange("description", text)}
-          placeholder="Enter description"
-          multiline
-          numberOfLines={4}
-        />
-
-        <Text style={styles.label}>Price:</Text>
-        <TextInput
-          style={styles.input}
-          value={propertyData.price}
-          onChangeText={(text) => handleInputChange("price", text)}
-          placeholder="Enter price"
-          keyboardType="numeric"
-        />
-
-        <Text style={styles.label}>Rooms:</Text>
-        <TextInput
-          style={styles.input}
-          value={propertyData.rooms}
-          onChangeText={(text) => handleInputChange("rooms", text)}
-          placeholder="Enter number of rooms"
-          keyboardType="numeric"
-        />
-
-        <Text style={styles.label}>Bathrooms:</Text>
-        <TextInput
-          style={styles.input}
-          value={propertyData.bathrooms}
-          onChangeText={(text) => handleInputChange("bathrooms", text)}
-          placeholder="Enter number of bathrooms"
-          keyboardType="numeric"
-        />
-
-        <Text style={styles.label}>Contact Info:</Text>
-        <TextInput
-          style={styles.input}
-          value={propertyData.contact_info}
-          onChangeText={(text) => handleInputChange("contact_info", text)}
-          placeholder="Enter contact info"
-        />
-
-        <Text style={styles.amenitiesTitle}>Amenities:</Text>
-        <View style={styles.amenitiesContainer}>
-          {Object.keys(propertyData.amenities).map((key) => (
-            <View key={key} style={styles.amenityCheckbox}>
-              <Text style={styles.amenityLabel}>{key.replace(/_/g, " ")}</Text>
-              <TouchableOpacity
-                style={styles.checkbox}
-                onPress={() =>
-                  toggleCheckbox(key as keyof typeof propertyData.amenities)
-                }
-              >
-                {propertyData.amenities[
-                  key as keyof typeof propertyData.amenities
-                ] && <View style={styles.checkboxInner} />}
-              </TouchableOpacity>
-            </View>
-          ))}
-        </View>
-
-        <TouchableOpacity style={styles.imageButton}>
-          <Text>Select Images</Text>
-          <input
-            type="file"
-            onChange={handleImageSelection}
-            accept="image/*"
-            multiple
-          />
-        </TouchableOpacity>
-
-        <View style={styles.selectedImagesContainer}>
-          {propertyData.images.map((image, index) => (
-            <Image
-              key={index}
-              source={{ uri: image }}
-              style={styles.selectedImage}
-            />
-          ))}
-        </View>
-
-        <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-          <Text style={styles.submitButtonText}>Submit</Text>
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+        <Text style={styles.submitButtonText}>Submit Property</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 };
@@ -331,97 +338,18 @@ const PostProperty = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: "#ffffff",
-  },
-  heading: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
-    textAlign: "center",
-  },
-  formContainer: {
-    marginBottom: 20,
-  },
-  label: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginTop: 10,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 5,
-    padding: 10,
-    marginTop: 5,
-    marginBottom: 15,
-  },
-  textArea: {
-    height: 100,
-    textAlignVertical: "top",
-  },
-  amenitiesTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginTop: 20,
-    marginBottom: 10,
-  },
-  amenitiesContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    marginBottom: 20,
-  },
-  amenityCheckbox: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginRight: 20,
-    marginBottom: 10,
-  },
-  amenityLabel: {
-    marginRight: 10,
-  },
-  checkbox: {
-    width: 20,
-    height: 20,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  checkboxInner: {
-    width: 14,
-    height: 14,
-    backgroundColor: "#007bff",
-  },
-  imageButton: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 5,
-    padding: 10,
-    alignItems: "center",
-    marginBottom: 15,
-  },
-  selectedImagesContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    marginBottom: 20,
-  },
-  selectedImage: {
-    width: 100,
-    height: 100,
-    marginHorizontal: 10,
-    marginBottom: 10,
-    resizeMode: "cover",
+    backgroundColor: "#f0f0f0",
+    padding: 16,
   },
   submitButton: {
-    backgroundColor: "#007bff",
-    paddingVertical: 15,
-    paddingHorizontal: 20,
-    borderRadius: 5,
+    backgroundColor: "#3498db",
+    padding: 16,
     alignItems: "center",
+    borderRadius: 8,
+    marginTop: 20,
   },
   submitButtonText: {
-    color: "#ffffff",
+    color: "white",
     fontSize: 18,
     fontWeight: "bold",
   },

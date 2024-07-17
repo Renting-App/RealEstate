@@ -1,7 +1,6 @@
 {
   "dependencies": {
-    "react-native-elements": "^3.4.3",
-    "react-native-image-picker": "^7.1.2",
-    "sequelize": "^6.37.3"
+    "axios": "^1.7.2",
+    "expo-image-picker": "~15.0.7"
   }
 }

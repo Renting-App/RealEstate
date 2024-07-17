@@ -1,5 +1,3 @@
-//hetha el sidebar
-
 import React from "react";
 import { View, StyleSheet, Pressable } from "react-native";
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -10,6 +8,9 @@ interface SidebarProps {
   isVisible: boolean;
   onClose: () => void;
 }
+
+
+
 
 const DrawerContent: React.FC<SidebarProps> = ({ isVisible, onClose }) => {
   return (
@@ -26,6 +27,15 @@ const DrawerContent: React.FC<SidebarProps> = ({ isVisible, onClose }) => {
         </Link>
         <Link href={'/PostProperty'} style={styles.link}>
           <ThemedText type="subtitle">Post a Property</ThemedText>
+        </Link>
+        <Link href={'/FilterComponent'} style={styles.link}>
+          <ThemedText type="subtitle">Filter</ThemedText>
+        </Link>
+        <Link href={'/Maps'} style={styles.link}>
+          <ThemedText type="subtitle">Map</ThemedText>
+        </Link>
+        <Link href={'/Favorite'} style={styles.link}>
+          <ThemedText type="subtitle">Favourite</ThemedText>
         </Link>
       </View>
     </View>
