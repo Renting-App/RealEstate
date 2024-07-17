@@ -1,67 +1,51 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
-import { Input } from "react-native-elements";
-import Ionicons from "@expo/vector-icons/Ionicons";
+import { TextInput, StyleSheet } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { ThemedView } from "@/components/ThemedView";
 
-interface SearchProps {
+interface Props {
   searchQuery: string;
-  setSearchQuery: (query: string) => void;
+  setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
   onSearch: () => void;
 }
 
-const Search: React.FC<SearchProps> = ({ searchQuery, setSearchQuery, onSearch }) => {
+const Search: React.FC<Props> = ({ searchQuery, setSearchQuery, onSearch }) => {
+  const handleSearch = (query: string) => {
+    setSearchQuery(query); 
+    onSearch(); 
+  };
+
   return (
-    <View style={styles.searchContainer}>
-      <Input
-        style={styles.inputValue}
-        placeholder="Search by address"
-        placeholderTextColor="black" // Set placeholder text color to black
-        leftIcon={
-          <Ionicons
-            name="search"
-            size={20}
-            color="black"
-            onPress={onSearch}
-          />
-        }
-        inputContainerStyle={styles.inputContainer}
-        containerStyle={styles.input}
+    <ThemedView style={styles.container}>
+      <Ionicons name="search" size={24} color="gray" style={styles.icon} />
+      <TextInput
+        style={styles.input}
+        placeholder="Search for properties"
         value={searchQuery}
-        onChangeText={setSearchQuery}
-        onSubmitEditing={onSearch} // Trigger search when 'Enter' key is pressed
+        onChangeText={handleSearch}
       />
-    </View>
+    </ThemedView>
   );
 };
 
 const styles = StyleSheet.create({
-  searchContainer: {
+  container: {
     flexDirection: "row",
-    marginTop: 15,
-    width: "70%",
-    textAlign: "center",
     alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: "#fff",
+    borderRadius: 6,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    marginBottom: 10,
+    width: "65%"
   },
-  inputContainer: {
-    borderBottomWidth: 0,
-  },
-  inputValue: {
-    textAlign: "center",
-    alignItems: "center",
-    justifyContent: "center",
-    color: "black",
-    paddingTop:4
+  icon: {
+    marginRight: 10,
   },
   input: {
     flex: 1,
-    padding:0,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 4,
-    backgroundColor: "#cccccccc",
-    justifyContent:"center",
-    alignItems:"center"
+    padding: 8,
+    fontSize: 16,
   },
 });
 
