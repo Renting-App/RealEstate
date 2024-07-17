@@ -10,7 +10,8 @@ import FilterComponentWrapper from './FilterComponentWrapper';
 import FilteringData from './FilteringData';
 import { Property } from './FilterComponent';
 
-const Stack = createStackNavigator();
+
+const Stack = createStackNavigator<RootStackParamList>();
 
 export type RootStackParamList = {
   Welcome: undefined;
@@ -22,6 +23,7 @@ export type RootStackParamList = {
   RequestaTour: undefined;
   PostProperty: undefined;
   FilterComponent: undefined;
+  FilterComponentWrapper: undefined;
   FilteringData: { filteredProperties: Property[] };
 };
 

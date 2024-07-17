@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Property, FilterComponentProps } from './FilterComponent';
+import { Property } from './FilterComponent';
 import FilterComponent from './FilterComponent';
-import {Text} from 'react-native';
+import { Text } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from './index';
 
 type FilterComponentWrapperScreenNavigationProp = StackNavigationProp<RootStackParamList, 'FilterComponentWrapper'>;
-
+type FilterComponentScreenNavigationProp = StackNavigationProp<RootStackParamList, 'FilterComponent'>;
 type Props = {
-  navigation: FilterComponentWrapperScreenNavigationProp;
+  navigation: FilterComponentScreenNavigationProp;
 };
 
 const FilterComponentWrapper: React.FC<Props> = ({ navigation }) => {
   const [properties, setProperties] = useState<Property[]>([]);
-  // const [loading, setLoading] = useState<boolean>(true); // Add loading state
 
   useEffect(() => {
     const fetchAllProperties = async () => {
@@ -33,9 +32,6 @@ const FilterComponentWrapper: React.FC<Props> = ({ navigation }) => {
         setProperties(data);
       } catch (error) {
         console.error('Error fetching properties:', error);
-      // } finally {
-      //   setLoading(false); 
-      // 
       }
     };
 
@@ -44,12 +40,8 @@ const FilterComponentWrapper: React.FC<Props> = ({ navigation }) => {
 
   const handleFilter = (filteredProperties: Property[]) => {
     console.log('Filtered properties:', filteredProperties);
-
+    navigation.navigate('FilteringData', { filteredProperties });
   };
-
-  // if (loading) {
-  //   return <Text>Loading...</Text>; 
-  // }
 
   return (
     <FilterComponent
