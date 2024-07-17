@@ -29,7 +29,7 @@ export type RootStackParamList = {
 
 const App: React.FC = () => {
   return (
-    <NavigationContainer>
+    // <NavigationContainer>
       <Stack.Navigator initialRouteName="Welcome">
         <Stack.Screen name="Welcome" component={Welcome} />
         <Stack.Screen name="Signin" component={Signin} />
@@ -43,7 +43,7 @@ const App: React.FC = () => {
           initialParams={{ filteredProperties: [] }} 
         />
       </Stack.Navigator>
-    </NavigationContainer>
+    // </NavigationContainer>
   );
 };
 
