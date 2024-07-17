@@ -41,7 +41,7 @@ export default function App() {
   return (
    
     <Stack.Navigator
-      initialRouteName="HousesScreen"
+      initialRouteName="Welcome"
       screenOptions={{ headerShown: false }}>
       <Stack.Screen
         name="Welcome"

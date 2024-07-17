@@ -7,6 +7,7 @@ import {
   ScrollView,
   Image,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { StyleSheet } from "react-native";
@@ -16,7 +17,7 @@ import * as ImagePicker from "expo-image-picker";
 import { Calendar, DateObject } from "react-native-calendars";
 import { HomeButton } from "./HomeButton";
 import PropertyForm from "./PropertyForm";
-
+import Loader from "./Loader"; 
 const CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/dw1sxdmac/upload";
 const CLOUDINARY_PRESET = "hotel_preset";
 
@@ -30,31 +31,7 @@ interface PropertyData {
   description: string;
   images: string[];
   operation: "rent" | "sale";
-  location:
-    | "Ariana"
-    | "Beja"
-    | "Ben Arous"
-    | "Bizerte"
-    | "Gabes"
-    | "Gafsa"
-    | "Jendouba"
-    | "Kairouan"
-    | "Kasserine"
-    | "Kebili"
-    | "La Manouba"
-    | "Le Kef"
-    | "Mahdia"
-    | "Medenine"
-    | "Monastir"
-    | "Nabeul"
-    | "Sfax"
-    | "Sidi Bouzid"
-    | "Siliana"
-    | "Sousse"
-    | "Tataouine"
-    | "Tozeur"
-    | "Tunis"
-    | "Zaghouan";
+  location: string;
   subLocation: string;
   date_of_creation: string;
   rooms: number;
@@ -81,11 +58,14 @@ interface PropertyData {
   condition: "new" | "occasion";
   map?: any;
 }
-
+const getCurrentDate = () => {
+  const currentDate = new Date().toISOString().split("T")[0];
+  return currentDate;
+};
 const PostProperty = () => {
   const [selectedDates, setSelectedDates] = useState<string[]>([]);
   const [showCalendar, setShowCalendar] = useState(false);
-  const [loading, setLoading] = useState(false); 
+  const [loading, setLoading] = useState(false);
   const handleDayPress = (day: DateObject) => {
     const date = day.dateString;
     const isSelected = selectedDates.includes(date);
@@ -125,7 +105,7 @@ const PostProperty = () => {
       "Spacious and modern apartment located in the heart of the city. Close to amenities and public transportation.",
     images: [],
     operation: "rent",
-    date_of_creation: "2024-07-07",
+    date_of_creation: getCurrentDate(),
     rooms: "2",
     price: "1000",
     bathrooms: "1",
@@ -149,23 +129,14 @@ const PostProperty = () => {
     iduser: "1",
   });
 
-  const amenityIcons: { [key: string]: string } = {
-    parking: "car",
-    ac: "snowflake-o",
-    furnished: "bed",
-    pool: "tint",
-    microwave: "cutlery",
-    near_subway: "subway",
-    beach_view: "umbrella",
-    alarm: "bell",
-    garden: "tree",
-  };
+ 
 
   const handleImageSelection = async () => {
-    setLoading(true);
+    
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
       Alert.alert("Sorry, we need camera roll permissions to make this work!");
+     
       return;
     }
 
@@ -176,7 +147,7 @@ const PostProperty = () => {
       quality: 1,
     };
 
-    const choice =  Alert.alert(
+    const choice = Alert.alert(
       "Select Image",
       "Would you like to take a photo or select from the library?",
       [
@@ -203,19 +174,20 @@ const PostProperty = () => {
   };
 
   const handleImageResult = (result: ImagePicker.ImagePickerResult) => {
-    if (!result.canceled) {
-      const file = {
-        uri: result.assets[0].uri,
-        type: "image/jpeg",
-        name: `photo-${propertyData.images.length}.jpg`,
-      };
+    
+     if (!result.canceled) {
+       const file = {
+         uri: result.assets[0].uri,
+         type: "image/jpeg",
+         name: `photo-${propertyData.images.length}.jpg`,
+       };
 
-      uploadToCloudinary(file);
-    }
-  };
+       uploadToCloudinary(file);
+     } 
+   };
 
   const uploadToCloudinary = async (file: any) => {
-    try {
+    try {setLoading(true);
       const formData = new FormData();
       formData.append("file", file);
       formData.append("upload_preset", CLOUDINARY_PRESET);
@@ -236,6 +208,8 @@ const PostProperty = () => {
       }
     } catch (error) {
       console.error("Error uploading image:", error);
+    } finally {
+       setLoading(false);
     }
   };
 
@@ -316,7 +290,7 @@ const PostProperty = () => {
   return (
     <ScrollView style={styles.container}>
       <HomeButton />
-      
+
       <PropertyForm
         propertyData={propertyData}
         handleInputChange={handleInputChange}
@@ -326,8 +300,9 @@ const PostProperty = () => {
         handleDayPress={handleDayPress}
         showCalendar={showCalendar}
         setShowCalendar={setShowCalendar}
+      
       />
-
+      <Loader loading={loading} />
       <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
         <Text style={styles.submitButtonText}>Submit Property</Text>
       </TouchableOpacity>
@@ -342,15 +317,15 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   submitButton: {
-    backgroundColor: "#3498db",
-    padding: 16,
+    backgroundColor: "#2196F3",
+    padding: 10,
+    borderRadius: 5,
     alignItems: "center",
-    borderRadius: 8,
-    marginTop: 20,
+    marginBottom: 10,
   },
   submitButtonText: {
     color: "white",
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "bold",
   },
 });

@@ -25,9 +25,9 @@ interface Residence {
   title: string;
   address: string;
   price: string;
-  rooms:string;
-  bathrooms:string;
-  size:string;
+  rooms: string;
+  bathrooms: string;
+  size: string;
   description: string;
   contact_info: string;
   images: string[];
@@ -110,7 +110,7 @@ const HousesScreen = () => {
         <ThemedText type="subtitle" style={styles.typeText}>
           {item.operation === "rent" ? "Rent" : "Sale"}
         </ThemedText>
-        
+
       </View>
       <Image
         source={{ uri: item.images[0] }}
@@ -120,7 +120,7 @@ const HousesScreen = () => {
       <ThemedText type="subtitle" style={styles.title}>
         {item.title}
       </ThemedText>
-      
+
       <ThemedText type="default" style={styles.price}>
         Price: {item.price}DT
       </ThemedText>
@@ -169,7 +169,7 @@ const HousesScreen = () => {
               color: "#333",
               textTransform: "uppercase",
               letterSpacing: 1,
-             
+
             },
           ]}
         >

@@ -10,6 +10,7 @@ import {
 import { Picker } from "@react-native-picker/picker";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Calendar, DateObject } from "react-native-calendars";
+import { subLocations } from "./FilterComponent";
 
 interface PropertyData {
   _id: string;
@@ -21,31 +22,7 @@ interface PropertyData {
   description: string;
   images: string[];
   operation: "rent" | "sale";
-  location:
-    | "Ariana"
-    | "Beja"
-    | "Ben Arous"
-    | "Bizerte"
-    | "Gabes"
-    | "Gafsa"
-    | "Jendouba"
-    | "Kairouan"
-    | "Kasserine"
-    | "Kebili"
-    | "La Manouba"
-    | "Le Kef"
-    | "Mahdia"
-    | "Medenine"
-    | "Monastir"
-    | "Nabeul"
-    | "Sfax"
-    | "Sidi Bouzid"
-    | "Siliana"
-    | "Sousse"
-    | "Tataouine"
-    | "Tozeur"
-    | "Tunis"
-    | "Zaghouan";
+  location:string;
   subLocation: string;
   date_of_creation: string;
   rooms: number;
@@ -118,7 +95,29 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
         onChangeText={(text) => handleInputChange("address", text)}
         placeholder="Enter address"
       />
-
+      <Text style={styles.label}>Location:</Text>
+      <Picker
+        style={styles.input}
+        selectedValue={propertyData.location}
+        onValueChange={(itemValue) => handleInputChange("location", itemValue)}
+      >
+        {Object.keys(subLocations).map((location, index) => (
+          <Picker.Item key={index} label={location} value={location} />
+        ))}
+      </Picker>
+      <Text style={styles.label}>Sublocation:</Text>
+      <Picker
+        style={styles.input}
+        selectedValue={propertyData.subLocation}
+        onValueChange={(itemValue) =>
+          handleInputChange("subLocation", itemValue)
+        }
+      >
+        {propertyData.location &&
+          subLocations[propertyData.location].map((subLocation, index) => (
+            <Picker.Item key={index} label={subLocation} value={subLocation} />
+          ))}
+      </Picker>
       <Text style={styles.label}>Size (sqm):</Text>
       <TextInput
         style={styles.input}
@@ -206,13 +205,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
         placeholder="Enter contact info"
       />
 
-      <Text style={styles.label}>Date of Creation:</Text>
-      <TextInput
-        style={styles.input}
-        value={propertyData.date_of_creation}
-        onChangeText={(text) => handleInputChange("date_of_creation", text)}
-        placeholder="Enter date of creation"
-      />
+    
 
       <Text style={styles.label}>Status:</Text>
       <TextInput
@@ -280,92 +273,78 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
         style={styles.imagePickerButton}
         onPress={handleImageSelection}
       >
-        <Text style={styles.imagePickerButtonText}>Select Images</Text>
+        <Text style={styles.buttonText}>Pick Images</Text>
       </TouchableOpacity>
 
-      <View style={styles.imagePreviewContainer}>
-        {propertyData.images.map((imageUri, index) => (
-          <Image
-            key={index}
-            source={{ uri: imageUri }}
-            style={styles.imagePreview}
-          />
-        ))}
-      </View>
+      {propertyData.images.map((image, index) => (
+        <Image key={index} source={{ uri: image }} style={styles.image} />
+      ))}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   formContainer: {
-    backgroundColor: "#ffffff",
-    padding: 16,
-    borderRadius: 8,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 1,
+    paddingHorizontal: 20,
+    paddingBottom: 20,
   },
   label: {
     fontSize: 16,
-    marginVertical: 8,
-    fontWeight: "bold",
+    marginTop: 10,
+    marginBottom: 5,
   },
   input: {
-    height: 40,
-    borderColor: "#ccc",
     borderWidth: 1,
-    borderRadius: 4,
-    paddingHorizontal: 8,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    padding: 10,
     marginBottom: 10,
   },
   textArea: {
-    height: 80,
+    height: 100,
+    textAlignVertical: "top",
   },
   amenitiesContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
+    marginBottom: 10,
   },
   amenityButton: {
     flexDirection: "row",
     alignItems: "center",
-    padding: 8,
-    borderRadius: 4,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    margin: 4,
+    justifyContent: "center",
+    backgroundColor: "#e0e0e0",
+    borderRadius: 20,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    margin: 5,
   },
   amenityButtonActive: {
-    backgroundColor: "#007BFF",
-    borderColor: "#007BFF",
+    backgroundColor: "#4CAF50",
   },
   amenityText: {
-    marginLeft: 4,
+    marginLeft: 5,
+    color: "black",
   },
   amenityTextActive: {
     color: "white",
   },
   imagePickerButton: {
-    backgroundColor: "#007BFF",
+    backgroundColor: "#2196F3",
     padding: 10,
-    borderRadius: 4,
+    borderRadius: 5,
     alignItems: "center",
-    marginVertical: 10,
+    marginBottom: 10,
   },
-  imagePickerButtonText: {
+  buttonText: {
     color: "white",
-    fontWeight: "bold",
+    fontSize: 16,
   },
-  imagePreviewContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-  },
-  imagePreview: {
-    width: 100,
-    height: 100,
-    margin: 4,
-    borderRadius: 4,
+  image: {
+    width: "100%",
+    height: 200,
+    resizeMode: "cover",
+    marginBottom: 10,
   },
 });
 
