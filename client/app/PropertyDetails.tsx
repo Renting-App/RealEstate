@@ -293,4 +293,4 @@
 //   },
 // });
 
-// export default PropertyDetails;
+export default PropertyDetails;

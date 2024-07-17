@@ -25,6 +25,7 @@ const AdminPage: React.FC<Props> = ({ navigation }) => {
                     setIsAdmin(true);
                 }
             }
+            
             setLoading(false);
         };
 
