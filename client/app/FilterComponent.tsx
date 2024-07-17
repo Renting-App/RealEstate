@@ -153,11 +153,14 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ properties, onFilter,
   };
 
 
+
   return (
     <ScrollView style={styles.container}>
       <Text>Filter Component</Text>
       {/*  UI components here */}
       <Button title="Search" onPress={handleSearch} />
+
+      
       <Text style={styles.title}>Looking for... </Text>
       <Picker
         selectedValue={category}

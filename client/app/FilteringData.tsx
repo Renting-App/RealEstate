@@ -21,17 +21,29 @@ const FilteringData: React.FC<Props> = ({ route }) => {
       <Text style={styles.title}>{item.title}</Text>
       <Text>{item.address}</Text>
       <Text>{item.price} USD</Text>
-      {/* Render other property details as needed */}
+      <Text>{item.category} USD</Text>
+      <Text>{item.location} USD</Text>
+      <Text>{item.subLocation} USD</Text>
+      <Text>{item.description} USD</Text>
+      <Text>{item.operation} USD</Text>
+      <Text>{item.amenities} USD</Text>
+      <Text>{item.images} USD</Text>
+      <Text>{item.dateOfCreation} USD</Text>
+
     </View>
   );
 
   return (
     <View style={styles.container}>
-      <FlatList
-        data={filteredProperties}
-        keyExtractor={item => item._id}
-        renderItem={renderItem}
-      />
+      {filteredProperties.length === 0 ? (
+        <Text>No properties found</Text>
+      ) : (
+        <FlatList
+          data={filteredProperties}
+          keyExtractor={item => item._id}
+          renderItem={renderItem}
+        />
+      )}
     </View>
   );
 };
