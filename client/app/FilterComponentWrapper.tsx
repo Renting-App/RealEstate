@@ -2,14 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { Property, FilterComponentProps } from './FilterComponent';
 import FilterComponent from './FilterComponent';
 import {Text} from 'react-native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from './index';
 
+type FilterComponentWrapperScreenNavigationProp = StackNavigationProp<RootStackParamList, 'FilterComponentWrapper'>;
 
-const FilterComponentWrapper: React.FC<{ navigation: any }> = ({ navigation }) => {
+type Props = {
+  navigation: FilterComponentWrapperScreenNavigationProp;
+};
+
+const FilterComponentWrapper: React.FC<Props> = ({ navigation }) => {
   const [properties, setProperties] = useState<Property[]>([]);
-  const [loading, setLoading] = useState<boolean>(true); // Add loading state
+  // const [loading, setLoading] = useState<boolean>(true); // Add loading state
 
   useEffect(() => {
-    const fetchAllProperties = async (): Promise<void> => {
+    const fetchAllProperties = async () => {
       try {
         const response = await fetch('http://localhost:5000/api/gethouse', {
           method: 'GET',
@@ -26,8 +33,9 @@ const FilterComponentWrapper: React.FC<{ navigation: any }> = ({ navigation }) =
         setProperties(data);
       } catch (error) {
         console.error('Error fetching properties:', error);
-      } finally {
-        setLoading(false); 
+      // } finally {
+      //   setLoading(false); 
+      // 
       }
     };
 
@@ -39,9 +47,9 @@ const FilterComponentWrapper: React.FC<{ navigation: any }> = ({ navigation }) =
 
   };
 
-  if (loading) {
-    return <Text>Loading...</Text>; 
-  }
+  // if (loading) {
+  //   return <Text>Loading...</Text>; 
+  // }
 
   return (
     <FilterComponent

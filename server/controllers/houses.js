@@ -157,19 +157,19 @@ const updateHouseById = async (req, res) => {
 
 ///search
 ///search
-const searchHouses = async (req, res) => {
-  const {
-    category,
-    type,
-    location,
-    subLocation,
-    priceMin,
-    priceMax,
-    condition,
-    amenities,
-    operation,
+// const searchHouses = async (req, res) => {
+//   const {
+    // category,
+    // type,
+    // location,
+    // subLocation,
+    // priceMin,
+    // priceMax,
+    // condition,
+    // amenities,
+    // operation,
     // Add operation to the request body
-  } = req.body;
+  // } = req.body;
 
 //   try {
 //     const searchCriteria = {};

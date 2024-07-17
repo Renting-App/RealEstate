@@ -36,7 +36,6 @@ interface Residence {
 
 const HousesScreen = () => {
   const [residences, setResidences] = useState<Residence[]>([]);
-  const [filteredResidences, setFilteredResidences] = useState<Residence[]>([]);
   const [loading, setLoading] = useState(true);
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
   const [start, setStart] = useState(0);
@@ -47,7 +46,7 @@ const HousesScreen = () => {
     fetchResidences();
   }, []);
  const fetchResidences = () => {
-    fetch("http://192.168.1.105:5000/api/gethouse")
+    fetch("http://192.168.1.13:5000/api/gethouse")
       .then((response) => response.json())
       .then((data) => {
         const mappedResidences = data.map((residence: any) => ({

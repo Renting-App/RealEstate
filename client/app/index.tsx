@@ -1,103 +1,48 @@
 import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Welcome from './Welcome';
 import Signin from './SignIn';
 import Signup from './SignUp';
 import HousesScreen from './HousesScreen';
 import AdminPage from './adminPage';
-import PostProperty from './PostProperty';
-import FAQ from './FAQ';
-import Maps from './Maps';
-import Favourite from './Favorite';
-import FilterComponent from './FilterComponent';
-import RequestTour from './RequestTour';
-import AboutUs from './AboutUs';
-import PropertyDetails from './PropertyDetails';
+import FilterComponentWrapper from './FilterComponentWrapper';
+import FilteringData from './FilteringData';
+import { Property } from './FilterComponent';
 
-
-
-
-const Stack = createStackNavigator<RootStackParamList>();
+const Stack = createStackNavigator();
 
 export type RootStackParamList = {
   Welcome: undefined;
   Signin: undefined;
   Signup: undefined;
   HousesScreen: undefined;
-  AboutUs: undefined;
-  FAQ: undefined;
-  Maps: undefined;
-  FilterComponent: undefined;
   AdminPage: undefined;
   PropertyDetails: undefined;
-  RequestTour: undefined;
+  RequestaTour: undefined;
   PostProperty: undefined;
-  Favorite : undefined;
-  // AdditionalInfo: { userId: string };
+  FilterComponent: undefined;
+  FilteringData: { filteredProperties: Property[] };
 };
 
-
-export default function App() {
+const App: React.FC = () => {
   return (
-   
-    <Stack.Navigator
-      initialRouteName="Welcome"
-      screenOptions={{ headerShown: false }}>
-      <Stack.Screen
-        name="Welcome"
-        component={Welcome}
-      />
-      <Stack.Screen
-        name="Signin"
-        component={Signin}
-      />
-      <Stack.Screen
-        name="Signup"
-        component={Signup}
-      />
-      <Stack.Screen
-        name="HousesScreen"
-        component={HousesScreen}
-
-      />
-      <Stack.Screen
-        name="AboutUs"
-        component={AboutUs}
-
-      />
-      <Stack.Screen
-        name="FAQ"
-        component={FAQ}
-
-      />
-
-      <Stack.Screen
-        name="PostProperty"
-        component={PostProperty}
-      />
-
-      <Stack.Screen
-        name="PropertyDetails"
-        component={PropertyDetails}
-      />
-
-      <Stack.Screen
-        name="Maps"
-        component={Maps}
-
-      />
-
-      <Stack.Screen
-        name="RequestTour"
-        component={RequestTour}
-      />
-      <Stack.Screen
-        name="AdminPage"
-        component={AdminPage}
-      />
-      {/* <Stack.Screen name="AdditionalInfo" component={AdditionalInfo} /> */}
-    </Stack.Navigator>
-
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Welcome">
+        <Stack.Screen name="Welcome" component={Welcome} />
+        <Stack.Screen name="Signin" component={Signin} />
+        <Stack.Screen name="Signup" component={Signup} />
+        <Stack.Screen name="HousesScreen" component={HousesScreen} />
+        <Stack.Screen name="AdminPage" component={AdminPage} />
+        <Stack.Screen name="FilterComponent" component={FilterComponentWrapper} />
+        <Stack.Screen 
+          name="FilteringData" 
+          component={FilteringData} 
+          initialParams={{ filteredProperties: [] }} 
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
-}
+};
 
+export default App;

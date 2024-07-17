@@ -29,7 +29,7 @@ export interface Property {
 export interface FilterComponentProps {
   properties: Property[];
   onFilter: (filteredProperties: Property[]) => void;
-  navigation: any; 
+  navigation: StackNavigationProp<RootStackParamList, 'FilterComponent'>; 
 }
 
 
@@ -113,8 +113,7 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ properties, onFilter,
   const [priceMax, setPriceMax] = useState(1000000);
   const [condition, setCondition] = useState('New');
   const [selectedAmenities, setSelectedAmenities] = useState<Record<string, boolean>>({});
-  const [operation, setOperation] = useState('sale'); // Default to 'sale'
-
+  const [operation, setOperation] = useState('sale');
   useEffect(() => {
     setSubLocation(''); 
   }, [location]);
@@ -130,34 +129,30 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ properties, onFilter,
     try {
       const filteredProperties = fetchFilteredData();
       onFilter(filteredProperties);
-      navigation.navigate('FilteringData');
     } catch (error) {
       console.error(error);
     }
   };
 
   const fetchFilteredData = (): Property[] => {
-    try {
-      const filteredProperties = properties.filter(property => {
-        const meetsCategory = category === 'Select Category' || property.category === category;
-        const meetsLocation = location === 'Select State' || property.location === location;
-        const meetsSubLocation = !subLocation || property.subLocation === subLocation;
-        const meetsPrice = (!priceMin || property.price >= priceMin) && (!priceMax || property.price <= priceMax);
-        const meetsCondition = !condition || property.condition === condition;
-        const meetsAmenities = Object.keys(selectedAmenities)
-          .filter(amenity => selectedAmenities[amenity])
-          .every(amenity => property.amenities.includes(amenity));
-        const meetsOperation = !operation || property.operation === operation;
+    const filteredProperties = properties.filter(property => {
+      const meetsCategory = category === 'Select Category' || property.category === category;
+      const meetsLocation = location === 'Select State' || property.location === location;
+      const meetsSubLocation = !subLocation || property.subLocation === subLocation;
+      const meetsPrice = (!priceMin || property.price >= priceMin) && (!priceMax || property.price <= priceMax);
+      const meetsCondition = !condition || property.condition === condition;
+      const meetsAmenities = Object.keys(selectedAmenities)
+        .filter(amenity => selectedAmenities[amenity])
+        .every(amenity => property.amenities.includes(amenity));
+      const meetsOperation = !operation || property.operation === operation;
 
-        return meetsCategory && meetsLocation && meetsSubLocation && meetsPrice && meetsCondition && meetsAmenities && meetsOperation;
-      });
+      return meetsCategory && meetsLocation && meetsSubLocation && meetsPrice && meetsCondition && meetsAmenities && meetsOperation;
+    });
 
-      return filteredProperties;
-    } catch (error) {
-      console.error(error);
-      return [];
-    }
+    return filteredProperties;
   };
+
+
   return (
     <ScrollView style={styles.container}>
       <Text>Filter Component</Text>
@@ -273,13 +268,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-  
-  },
-  homeButton: {
-    position: 'absolute',
-    top: 10,
-    left: 10,
-    zIndex: 1, // Ensure it stays on top of other elements
   },
   title: {
     fontSize: 24,
