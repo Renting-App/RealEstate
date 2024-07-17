@@ -45,8 +45,8 @@ const HousesScreen = () => {
   useEffect(() => {
     fetchResidences();
   }, []);
-  const fetchResidences = () => {
-    fetch("http://192.168.1.22:5000/api/gethouse")
+ const fetchResidences = () => {
+    fetch("http://192.168.1.13:5000/api/gethouse")
       .then((response) => response.json())
       .then((data) => {
         const mappedResidences = data.map((residence: any) => ({
@@ -67,8 +67,7 @@ const HousesScreen = () => {
           subLocation: residence.subLocation,
           condition: residence.condition,
           Favourite: residence.favourite,
-          map: residence.map
-
+          map: residence.map,
         }));
         setResidences(mappedResidences);
         setFilteredResidences(mappedResidences);
