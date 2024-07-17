@@ -71,12 +71,7 @@ export const subLocations: { [key: string]: string[] } = {
   ],
   "🗺️ Beja": ["Beja Nord", "Beja Sud", "Nefza", "Teboursouk"],
   "🗺️ Ben Arous": ["Hammam Lif", "Radès", "Ben Arous Ville", "Ezzahra"],
-  "🗺️ Bizerte": [
-    "Bizerte Nord",
-    "Bizerte Sud",
-    "Menzel Jemil",
-    "Menzel Bourguiba",
-  ],
+  "🗺️ Bizerte": ["Bizerte Nord","Bizerte Sud","Menzel Jemil","Menzel Bourguiba",],
   "🗺️ Gabes": ["Gabes Ville", "Gabes Sud", "Mareth", "Metouia"],
   "🗺️ Gafsa": ["Gafsa Ville", "El Guettar", "Moulares", "Metlaoui"],
   "🗺️ Jendouba": ["Jendouba Ville", "Bousalem", "Tabarka", "Fernana"],
