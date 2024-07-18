@@ -17,7 +17,7 @@ const Search: React.FC<Props> = ({ searchQuery, setSearchQuery, onSearch }) => {
 
   return (
     <ThemedView style={styles.container}>
-      <Ionicons name="search" size={24} color="gray" style={styles.icon} />
+      <Ionicons name="search" size={24} color="black" style={styles.icon} />
       <TextInput
         style={styles.input}
         placeholder="Search for properties"
@@ -32,11 +32,11 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#fff",
+    backgroundColor: "#cccccccc",
     borderRadius: 6,
     paddingVertical: 8,
     paddingHorizontal: 16,
-    marginBottom: 10,
+    margin: 10,
     width: "65%"
   },
   icon: {

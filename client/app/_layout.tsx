@@ -1,5 +1,4 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Welcome from './Welcome';
 import Signin from './SignIn';
@@ -9,21 +8,26 @@ import AdminPage from './adminPage';
 import PostProperty from './PostProperty';
 import FAQ from './FAQ';
 import Maps from './Maps';
-import Favourite from './Favorite';
-import FilterComponent from './FilterComponent';
+// import Favourite from './Favorite';
 import RequestTour from './RequestTour';
 import AboutUs from './AboutUs';
 import PropertyDetails from './PropertyDetails';
 // import FilteredDataComponent from './FilteredData';
+// import FilterComponent from './FilterComponent';
+
 
 export type RootStackParamList = {
   Welcome: undefined;
   Signin: undefined;
   Signup: undefined;
   HousesScreen: undefined;
+  AboutUs: undefined;
+  FAQ: undefined;
+  Maps: undefined;
+  FilterComponent: undefined;
   AdminPage: undefined;
   PropertyDetails: undefined;
-  RequestaTour: undefined;
+  RequestTour: undefined;
   PostProperty: undefined;
   Favorite: undefined;
   FilteredData: { criteria: any };
@@ -76,15 +80,17 @@ export default function App() {
         {/* <Stack.Screen
           name="FilterComponent"
           component={FilterComponent}
+          options={{ headerShown: true }}
         />
         <Stack.Screen
           name="FilteredData"
           component={FilteredDataComponent}
+          options={{ headerShown: true }}
         /> */}
         <Stack.Screen
           name="Maps"
           component={Maps}
-          options={{ headerShown: false }}
+          options={{ headerShown: true }}
         />
         <Stack.Screen
           name="RequestTour"
