@@ -29,7 +29,7 @@ export type RootStackParamList = {
   RequestTour: undefined;
   PostProperty: undefined;
   Favorite: undefined;
-  FilteredData: { criteria: any };
+  FilteredDataComponent: { criteria: any };
   // AdditionalInfo: { userId: string };
 };
 
@@ -84,7 +84,7 @@ export default function App() {
           options={{ headerShown: true }}
         />
         <Stack.Screen
-          name="FilteredData"
+          name="FilteredDataComponent"
           component={FilteredDataComponent}
           options={{ headerShown: true }}
         />
