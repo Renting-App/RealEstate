@@ -161,17 +161,17 @@ const PostProperty = () => {
     );
   };
 
-//   const launchCamera = async (options: ImagePicker.ImagePickerOptions) => {
-//     let result = await ImagePicker.launchCameraAsync(options);
-//     handleImageResult(result);
-//   };
+  const launchCamera = async (options: ImagePicker.ImagePickerOptions) => {
+    let result = await ImagePicker.launchCameraAsync(options);
+    handleImageResult(result);
+  };
 
-//   const launchImageLibrary = async (
-//     options: ImagePicker.ImagePickerOptions
-//   ) => {
-//     let result = await ImagePicker.launchImageLibraryAsync(options);
-//     handleImageResult(result);
-//   };
+  const launchImageLibrary = async (
+    options: ImagePicker.ImagePickerOptions
+  ) => {
+    let result = await ImagePicker.launchImageLibraryAsync(options);
+    handleImageResult(result);
+  };
 
   const handleImageResult = (result: ImagePicker.ImagePickerResult) => {
     
@@ -192,11 +192,11 @@ const PostProperty = () => {
       formData.append("file", file);
       formData.append("upload_preset", CLOUDINARY_PRESET);
 
-//       const response = await axios.post(CLOUDINARY_URL, formData, {
-//         headers: {
-//           "Content-Type": "multipart/form-data",
-//         },
-//       });
+      const response = await axios.post(CLOUDINARY_URL, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       if (response.data && response.data.secure_url) {
         setPropertyData((prevData) => ({
@@ -223,59 +223,59 @@ const PostProperty = () => {
         body: JSON.stringify(propertyData),
       });
 
-//       if (response.ok) {
-//         const result = await response.json();
-//         console.log("Property posted successfully:", result);
-//         setPropertyData({
-//           _id: "",
-//           address: "",
-//           size: "",
-//           category: "apartment",
-//           title: "",
-//           favourite: false,
-//           description: "",
-//           images: [],
-//           operation: "rent",
-//           date_of_creation: "",
-//           rooms: "",
-//           price: "",
-//           bathrooms: "",
-//           visits: {
-//             dates: selectedDates,
-//           },
-//           amenities: {
-//             parking: false,
-//             ac: false,
-//             furnished: false,
-//             pool: false,
-//             microwave: false,
-//             near_subway: false,
-//             beach_view: false,
-//             alarm: false,
-//             garden: false,
-//           },
-//           contact_info: "",
-//           status: "pending",
-//           notification: "",
-//           iduser: "",
-//         });
-//       } else {
-//         console.error("Failed to post property:", response.statusText);
-//       }
-//     } catch (error) {
-//       console.error("Error posting property:", error);
-//     }
-//   };
+      if (response.ok) {
+        const result = await response.json();
+        console.log("Property posted successfully:", result);
+        setPropertyData({
+          _id: "",
+          address: "",
+          size: "",
+          category: "apartment",
+          title: "",
+          favourite: false,
+          description: "",
+          images: [],
+          operation: "rent",
+          date_of_creation: "",
+          rooms: "",
+          price: "",
+          bathrooms: "",
+          visits: {
+            dates: selectedDates,
+          },
+          amenities: {
+            parking: false,
+            ac: false,
+            furnished: false,
+            pool: false,
+            microwave: false,
+            near_subway: false,
+            beach_view: false,
+            alarm: false,
+            garden: false,
+          },
+          contact_info: "",
+          status: "pending",
+          notification: "",
+          iduser: "",
+        });
+      } else {
+        console.error("Failed to post property:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error posting property:", error);
+    }
+  };
 
-//   const handleInputChange = (
-//     name: keyof PropertyData,
-//     value: string | boolean
-//   ) => {
-//     setPropertyData((prevData) => ({
-//       ...prevData,
-//       [name]: value,
-//     }));
-//   };
+  const handleInputChange = (
+    name: keyof PropertyData,
+    value: string | boolean
+  ) => {
+    setPropertyData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
 
   const toggleCheckbox = (name: keyof typeof propertyData.amenities) => {
     setPropertyData((prevData) => ({
@@ -330,4 +330,4 @@ const styles = StyleSheet.create({
   },
 });
 
-// export default PostProperty;
+export default PostProperty;

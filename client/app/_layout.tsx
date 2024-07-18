@@ -1,20 +1,19 @@
 import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Welcome from './Welcome';
 import Signin from './SignIn';
 import Signup from './SignUp';
 import HousesScreen from './HousesScreen';
 import AdminPage from './adminPage';
-import PostProperty from './PostProperty';
 import FAQ from './FAQ';
 import Maps from './Maps';
-// import Favourite from './Favorite';
+import Favourite from './Favorite';
+import FilterComponent from './FilterComponent';
 import RequestTour from './RequestTour';
 import AboutUs from './AboutUs';
 import PropertyDetails from './PropertyDetails';
-// import FilteredDataComponent from './FilteredData';
-// import FilterComponent from './FilterComponent';
-
+import FilteredDataComponent from './FilteredDataComponent';
 
 export type RootStackParamList = {
   Welcome: undefined;
@@ -34,7 +33,9 @@ export type RootStackParamList = {
   // AdditionalInfo: { userId: string };
 };
 
+
 const Stack = createStackNavigator<RootStackParamList>();
+
 
 export default function App() {
   return (
@@ -69,15 +70,15 @@ export default function App() {
           component={FAQ}
           options={{ headerShown: true }}
         />
-        <Stack.Screen
+        {/* <Stack.Screen
           name="PostProperty"
           component={PostProperty}
-        />
+        /> */}
         <Stack.Screen
           name="PropertyDetails"
           component={PropertyDetails}
         />
-        {/* <Stack.Screen
+        <Stack.Screen
           name="FilterComponent"
           component={FilterComponent}
           options={{ headerShown: true }}
@@ -86,7 +87,7 @@ export default function App() {
           name="FilteredData"
           component={FilteredDataComponent}
           options={{ headerShown: true }}
-        /> */}
+        />
         <Stack.Screen
           name="Maps"
           component={Maps}
