@@ -46,7 +46,11 @@ const HousesScreen = () => {
     fetchResidences();
   }, []);
  const fetchResidences = () => {
+<<<<<<< HEAD
     fetch("http://192.168.1.14:5000/api/gethouse")
+=======
+    fetch("http://192.168.1.105:5000/api/gethouse")
+>>>>>>> 8ec8a4021d732ae3e9d7a7815baca38dfcfe9f4e
       .then((response) => response.json())
       .then((data) => {
         const mappedResidences = data.map((residence: any) => ({
