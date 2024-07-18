@@ -108,7 +108,7 @@ INSERT INTO `houses`
 (`address`, `size`, `category`, `title`, `favourite`,
  `description`, `images`, `operation`,
   `date_of_creation`, `rooms`, `bathrooms`,
-   `visits`, `amenities`, `contact_info`, `status`, `location`,` sublocation`,`iduser`)
+   `visits`, `amenities`, `contact_info`, `status`, `location`,`subLocation`,`iduser`)
 VALUES
   ('123 Maple St', '150','Ariana', 'house', 'Cozy Family Home',
    true, 'A beautiful home perfect for families.', '["https://example.com/image1.jpg", "https://example.com/image2.jpg"]', 
