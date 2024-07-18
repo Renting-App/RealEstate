@@ -95,7 +95,7 @@ const places = [
   },
 ];
 
-  // Add more places as needed
+//   // Add more places as needed
 
 
 const Maps = () => {

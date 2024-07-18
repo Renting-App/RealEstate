@@ -105,7 +105,7 @@ VALUES (6, 'alice_jones', 'alicepassword', 'alice@example.com', '555-123-4567');
 
 -- Insert data into `houses` table
 INSERT INTO `houses` 
-(`address`, `size`, `category`, `title`, `favourite`,
+(`address`, `size`,`price`, `category`, `title`, `favourite`,
  `description`, `images`, `operation`,
   `date_of_creation`, `rooms`, `bathrooms`,
    `visits`, `amenities`, `contact_info`, `status`, `location`,`subLocation`,`iduser`)
