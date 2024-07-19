@@ -175,7 +175,9 @@ const HousesScreen:React.FC<HousesScreenProps> = ({route}) => {
   }
 
   return (
+ 
     <ThemedView style={styles.container}>
+      
       <DrawerContent
         isVisible={isSidebarVisible}
         onClose={() => setIsSidebarVisible(false)}
@@ -226,6 +228,9 @@ const HousesScreen:React.FC<HousesScreenProps> = ({route}) => {
         keyExtractor={(item) => item._id.toString()}
         contentContainerStyle={styles.cardsContainer}
       />
+       
+
+
       <Pressable style={styles.prevButton} onPress={handlePrev}>
         <Ionicons name="arrow-back" size={24} color="#000" />
       </Pressable>
