@@ -3,7 +3,7 @@ import { Pressable } from "react-native";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet } from "react-native";
-import { RootStackParamList } from ".";
+import { RootStackParamList } from "./_layout";
 
 export function HomeButton() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
