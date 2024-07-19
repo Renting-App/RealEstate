@@ -14,6 +14,7 @@ import RequestTour from './RequestTour';
 import AboutUs from './AboutUs';
 import PropertyDetails from './PropertyDetails';
 import FilteredDataComponent from './FilteredDataComponent';
+import PostProperty from './PostProperty';
 
 export type RootStackParamList = {
   Welcome: undefined;
@@ -29,7 +30,7 @@ export type RootStackParamList = {
   RequestTour: undefined;
   PostProperty: undefined;
   Favorite: undefined;
-  FilteredData: { criteria: any };
+  FilteredDataComponent: { criteria: any };
   // AdditionalInfo: { userId: string };
 };
 
@@ -70,10 +71,10 @@ export default function App() {
           component={FAQ}
           options={{ headerShown: true }}
         />
-        {/* <Stack.Screen
+         <Stack.Screen
           name="PostProperty"
           component={PostProperty}
-        /> */}
+        /> 
         <Stack.Screen
           name="PropertyDetails"
           component={PropertyDetails}
@@ -84,7 +85,7 @@ export default function App() {
           options={{ headerShown: true }}
         />
         <Stack.Screen
-          name="FilteredData"
+          name="FilteredDataComponent"
           component={FilteredDataComponent}
           options={{ headerShown: true }}
         />
