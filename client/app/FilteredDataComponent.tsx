@@ -39,39 +39,39 @@ const FilteredDataComponent: React.FC<FilteredDataComponentProps> = ({ route }) 
   const [filteredResidences, setFilteredResidences] = useState<Residence[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // useEffect(() => {
-  //   fetchResidences();
-  // }, []);
+  useEffect(() => {
+    fetchResidences();
+  }, []);
 
-  // const fetchResidences = () => {
-  //   fetch("http://192.168.1.13:5000/api/gethouse")
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       const mappedResidences: Residence[] = data.map((residence: any) => ({
-  //         _id: residence.idhouses,
-  //         title: residence.title,
-  //         address: residence.address,
-  //         size: residence.size,
-  //         price: residence.price,
-  //         rooms: residence.rooms,
-  //         bathrooms: residence.bathrooms,
-  //         description: residence.description,
-  //         contact_info: residence.contact_info,
-  //         images: residence.images,
-  //         operation: residence.operation,
-  //         category: residence.category,
-  //         location: residence.location,
-  //         subLocation: residence.subLocation,
-  //         amenities: residence.amenities,
-  //       }));
-  //        filterResidences(mappedResidences);
-  //       setLoading(false);
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error fetching residences:", error);
-  //       setLoading(false);
-  //     });
-  // };
+  const fetchResidences = () => {
+    fetch("http://192.168.1.13:5000/api/gethouse")
+      .then((response) => response.json())
+      .then((data) => {
+        const mappedResidences: Residence[] = data.map((residence: any) => ({
+          _id: residence.idhouses,
+          title: residence.title,
+          address: residence.address,
+          size: residence.size,
+          price: residence.price,
+          rooms: residence.rooms,
+          bathrooms: residence.bathrooms,
+          description: residence.description,
+          contact_info: residence.contact_info,
+          images: residence.images,
+          operation: residence.operation,
+          category: residence.category,
+          location: residence.location,
+          subLocation: residence.subLocation,
+          amenities: residence.amenities,
+        }));
+        // filterResidences(mappedResidences);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching residences:", error);
+        setLoading(false);
+      });
+  };
 
   // const filterResidences = (residences: Residence[], criteria: any) => {
   //   const filtered = residences.filter((residence) => {

@@ -60,6 +60,7 @@ export default function App() {
         <Stack.Screen
           name="HousesScreen"
           component={HousesScreen}
+          options={{ headerShown: true }}
         />
         <Stack.Screen
           name="AboutUs"
@@ -87,7 +88,7 @@ export default function App() {
         <Stack.Screen
           name="FilteredDataComponent"
           component={FilteredDataComponent}
-          options={{ headerShown: true }}
+          
         />
         <Stack.Screen
           name="Maps"
