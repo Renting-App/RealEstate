@@ -116,6 +116,7 @@ const updateHouseById = async (req, res) => {
     location,
     subLocation,
     favourite,
+    visits,
     map
   } = req.body;
 
@@ -144,6 +145,7 @@ const updateHouseById = async (req, res) => {
     house.location = location;
     house.subLocation = subLocation;
     house.favourite=favourite;
+    house.visits=visits;
     house.map=map
 
     await house.save();

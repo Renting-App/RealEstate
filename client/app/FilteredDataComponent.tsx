@@ -4,7 +4,7 @@ import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from './_layout'; // Adjust the path as necessary
 
 type FilteredDataComponentProps = {
-  route: RouteProp<RootStackParamList, 'FilteredData'>;
+  route: RouteProp<RootStackParamList, 'FilteredDataComponent'>;
 };
 export type Residence = {
   _id: number;

@@ -3,7 +3,7 @@ import React from 'react';
 import { View, Text, StyleSheet, Dimensions ,Image} from 'react-native';
 import { Button } from 'react-native-elements';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from './index'; // Update the path if necessary
+import { RootStackParamList } from './_layout'; // Update the path if necessary
 
 type WelcomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Welcome'>;
 

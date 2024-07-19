@@ -2,22 +2,21 @@ import React, { useState } from "react";
 import {
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   ScrollView,
   Image,
   Alert,
   ActivityIndicator,
 } from "react-native";
-import { Picker } from "@react-native-picker/picker";
 import { StyleSheet } from "react-native";
 import axios from "axios";
-import Icon from "react-native-vector-icons/FontAwesome";
 import * as ImagePicker from "expo-image-picker";
-import { Calendar, DateObject } from "react-native-calendars";
-import { HomeButton } from "./HomeButton";
+import { DateObject } from "react-native-calendars";
 import PropertyForm from "./PropertyForm";
-import Loader from "./Loader"; 
+import MapView, { Marker } from "react-native-maps";
+import { RootStackParamList } from './_layout';
+import { StackNavigationProp } from '@react-navigation/stack';
+
 const CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/dw1sxdmac/upload";
 const CLOUDINARY_PRESET = "hotel_preset";
 
@@ -31,15 +30,12 @@ interface PropertyData {
   description: string;
   images: string[];
   operation: "rent" | "sale";
-  location: string;
-  subLocation: string;
+  map: { latitude: number, longitude: number };
   date_of_creation: string;
   rooms: number;
   price: number;
   bathrooms: number;
-  visits: {
-    dates: string[];
-  };
+  visits: string[];
   amenities: {
     parking: boolean;
     ac: boolean;
@@ -56,16 +52,27 @@ interface PropertyData {
   notification: string;
   iduser: string;
   condition: "new" | "occasion";
-  map?: any;
+  location: string;
+  subLocation: string;
 }
+
 const getCurrentDate = () => {
   const currentDate = new Date().toISOString().split("T")[0];
   return currentDate;
 };
-const PostProperty = () => {
+type PostPropertyScreenNavigationProp = StackNavigationProp<RootStackParamList, 'PostProperty'>;
+
+type Props = {
+  navigation: PostPropertyScreenNavigationProp;
+};
+
+const PostProperty: React.FC<Props> = ({ navigation }) => {
+
   const [selectedDates, setSelectedDates] = useState<string[]>([]);
   const [showCalendar, setShowCalendar] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [map, setmap] = useState<{ latitude: number; longitude: number } | null>(null);
+
   const handleDayPress = (day: DateObject) => {
     const date = day.dateString;
     const isSelected = selectedDates.includes(date);
@@ -78,12 +85,9 @@ const PostProperty = () => {
 
     setPropertyData((prevData) => ({
       ...prevData,
-      visits: {
-        ...prevData.visits,
-        dates: isSelected
-          ? prevData.visits.dates.filter((d) => d !== date)
-          : [...prevData.visits.dates, date],
-      },
+      visits: isSelected
+        ? prevData.visits.filter((d) => d !== date)
+        : [...prevData.visits, date],
     }));
   };
 
@@ -94,10 +98,11 @@ const PostProperty = () => {
     });
     return markedDates;
   };
+
   const [propertyData, setPropertyData] = useState<PropertyData>({
     _id: "1",
     address: "123 Main Street, Cityville, State",
-    size: "120",
+    size: 120,
     category: "apartment",
     title: "Modern Apartment in City Center",
     favourite: false,
@@ -105,13 +110,14 @@ const PostProperty = () => {
       "Spacious and modern apartment located in the heart of the city. Close to amenities and public transportation.",
     images: [],
     operation: "rent",
+    condition: "new",
+    location: "Ariana",
+    subLocation: "Ariana Essoughra",
     date_of_creation: getCurrentDate(),
-    rooms: "2",
-    price: "1000",
-    bathrooms: "1",
-    visits: {
-      dates: [],
-    },
+    rooms: 2,
+    price: 1000,
+    bathrooms: 1,
+    visits: [],
     amenities: {
       parking: false,
       ac: false,
@@ -127,16 +133,13 @@ const PostProperty = () => {
     status: "pending",
     notification: "",
     iduser: "1",
+    map: { latitude: 33.8869, longitude: 9.5375 },
   });
 
- 
-
   const handleImageSelection = async () => {
-    
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
       Alert.alert("Sorry, we need camera roll permissions to make this work!");
-     
       return;
     }
 
@@ -147,15 +150,12 @@ const PostProperty = () => {
       quality: 1,
     };
 
-    const choice = Alert.alert(
+    Alert.alert(
       "Select Image",
       "Would you like to take a photo or select from the library?",
       [
         { text: "Take Photo", onPress: () => launchCamera(options) },
-        {
-          text: "Select from Library",
-          onPress: () => launchImageLibrary(options),
-        },
+        { text: "Select from Library", onPress: () => launchImageLibrary(options) },
         { text: "Cancel", style: "cancel" },
       ]
     );
@@ -166,28 +166,26 @@ const PostProperty = () => {
     handleImageResult(result);
   };
 
-  const launchImageLibrary = async (
-    options: ImagePicker.ImagePickerOptions
-  ) => {
+  const launchImageLibrary = async (options: ImagePicker.ImagePickerOptions) => {
     let result = await ImagePicker.launchImageLibraryAsync(options);
     handleImageResult(result);
   };
 
   const handleImageResult = (result: ImagePicker.ImagePickerResult) => {
-    
-     if (!result.canceled) {
-       const file = {
-         uri: result.assets[0].uri,
-         type: "image/jpeg",
-         name: `photo-${propertyData.images.length}.jpg`,
-       };
+    if (!result.canceled) {
+      const file = {
+        uri: result.assets[0].uri,
+        type: "image/jpeg",
+        name: `photo-${propertyData.images.length}.jpg`,
+      };
 
-       uploadToCloudinary(file);
-     } 
-   };
+      uploadToCloudinary(file);
+    }
+  };
 
   const uploadToCloudinary = async (file: any) => {
-    try {setLoading(true);
+    try {
+      setLoading(true);
       const formData = new FormData();
       formData.append("file", file);
       formData.append("upload_preset", CLOUDINARY_PRESET);
@@ -209,13 +207,13 @@ const PostProperty = () => {
     } catch (error) {
       console.error("Error uploading image:", error);
     } finally {
-       setLoading(false);
+      setLoading(false);
     }
   };
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch("http:///192.168.1.13:5000/api/addhouse", {
+      const response = await fetch("http://192.168.1.105:5000/api/addhouse", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -229,20 +227,18 @@ const PostProperty = () => {
         setPropertyData({
           _id: "",
           address: "",
-          size: "",
+          size: 0,
           category: "apartment",
           title: "",
           favourite: false,
           description: "",
           images: [],
           operation: "rent",
-          date_of_creation: "",
-          rooms: "",
-          price: "",
-          bathrooms: "",
-          visits: {
-            dates: selectedDates,
-          },
+          date_of_creation: getCurrentDate(),
+          rooms: 0,
+          price: 0,
+          bathrooms: 0,
+          visits: [],
           amenities: {
             parking: false,
             ac: false,
@@ -257,8 +253,13 @@ const PostProperty = () => {
           contact_info: "",
           status: "pending",
           notification: "",
-          iduser: "",
+          iduser: "1",
+          map: { latitude: 0, longitude: 0 },
+          condition: "new",
+          location: 'Ariana',
+          subLocation: 'Ariana Essoughra',
         });
+        navigation.navigate('HousesScreen')
       } else {
         console.error("Failed to post property:", response.statusText);
       }
@@ -267,10 +268,7 @@ const PostProperty = () => {
     }
   };
 
-  const handleInputChange = (
-    name: keyof PropertyData,
-    value: string | boolean
-  ) => {
+  const handleInputChange = (name: keyof PropertyData, value: string | boolean) => {
     setPropertyData((prevData) => ({
       ...prevData,
       [name]: value,
@@ -287,25 +285,71 @@ const PostProperty = () => {
     }));
   };
 
-  return (
-    <ScrollView style={styles.container}>
-      <HomeButton />
+  const handleMapPress = (event: any) => {
+    const { latitude, longitude } = event.nativeEvent.coordinate;
+    setmap({ latitude, longitude });
+    setPropertyData((prevData) => ({
+      ...prevData,
+      map: { latitude, longitude },
+    }));
+  };
 
-      <PropertyForm
-        propertyData={propertyData}
-        handleInputChange={handleInputChange}
-        toggleCheckbox={toggleCheckbox}
-        handleImageSelection={handleImageSelection}
-        getMarkedDates={getMarkedDates}
-        handleDayPress={handleDayPress}
-        showCalendar={showCalendar}
-        setShowCalendar={setShowCalendar}
-      
-      />
-      <Loader loading={loading} />
-      <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-        <Text style={styles.submitButtonText}>Submit Property</Text>
-      </TouchableOpacity>
+  return (
+    <ScrollView>
+      <View style={styles.container}>
+        <View style={styles.formContainer}>
+          <PropertyForm
+            propertyData={propertyData}
+            handleInputChange={handleInputChange}
+            toggleCheckbox={toggleCheckbox}
+            handleImageSelection={handleImageSelection}
+            getMarkedDates={getMarkedDates}
+            handleDayPress={handleDayPress}
+            showCalendar={showCalendar}
+            setShowCalendar={setShowCalendar}
+
+          />
+   
+
+          <TouchableOpacity onPress={handleImageSelection}>
+            <Text style={styles.imageButton}>Upload Images</Text>
+          </TouchableOpacity>
+
+          {propertyData.images.length > 0 && (
+            <View style={styles.imageContainer}>
+              {propertyData.images.map((image, index) => (
+                <Image key={index} source={{ uri: image }} style={styles.image} />
+              ))}
+            </View>
+          )}
+
+          <MapView
+            style={styles.map}
+            onPress={handleMapPress}
+            initialRegion={{
+              latitude: 33.8869,
+              longitude: 9.5375,
+              latitudeDelta: 5,
+              longitudeDelta: 5,
+            }}
+          >
+            {map && (
+              <Marker
+                coordinate={map}
+                title="Property Location"
+              />
+            )}
+          </MapView>
+
+          {loading ? (
+            <ActivityIndicator size="large" color="#0000ff" />
+          ) : (
+            <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+              <Text style={styles.submitButtonText}>Post Property</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+      </View>
     </ScrollView>
   );
 };
@@ -313,18 +357,48 @@ const PostProperty = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f0f0f0",
-    padding: 16,
+    padding: 20,
+  },
+  formContainer: {
+    marginBottom: 20,
+  },
+  calendarButton: {
+    color: "#007bff",
+    textAlign: "center",
+    marginVertical: 10,
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  imageButton: {
+    color: "#007bff",
+    textAlign: "center",
+    marginVertical: 10,
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  imageContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "center",
+  },
+  image: {
+    width: 100,
+    height: 100,
+    margin: 5,
   },
   submitButton: {
-    backgroundColor: "#2196F3",
-    padding: 10,
+    backgroundColor: "#007bff",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
     borderRadius: 5,
     alignItems: "center",
-    marginBottom: 10,
+    marginTop: 20,
+  },
+  map: {
+    height: 300,
   },
   submitButtonText: {
-    color: "white",
+    color: "#fff",
     fontSize: 16,
     fontWeight: "bold",
   },

@@ -21,7 +21,7 @@ const amenitiesList = [
   { label: 'Near Subway', value: 'near_subway' },
 ];
 
-const locations: { [key: string]: string[] } = {
+export const locations: { [key: string]: string[] } = {
   "Ariana": ['Ariana Essoughra', 'Raoued', 'Sokra', 'Ariana Ville', 'Ennasr'],
   "Beja": ['Beja Nord', 'Beja Sud', 'Nefza', 'Teboursouk'],
   "Ben Arous": ['Hammam Lif', 'Radès', 'Ben Arous Ville', 'Ezzahra'],
@@ -75,11 +75,11 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ navigation }) => {
 
   const handleSubmit = () => {
     const criteria = { category, location, subLocation, operation, priceMin,priceMax, amenities: selectedAmenities };
-    navigation.navigate('FilteredData', { criteria });
+    navigation.navigate('FilteredDataComponent', { criteria });
   };
 
   return (
-    <ScrollView style={styles.container} >
+    <ScrollView style={styles.container}>
       <Text style={styles.label}>Category</Text>
       <Picker
         selectedValue={category}
@@ -87,12 +87,12 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ navigation }) => {
         style={styles.picker}
       >
         <Picker.Item label="Select category" value="" />
-        <Picker.Item label="House" value="House" />
-        <Picker.Item label="Apartment" value="Apartment" />
-        <Picker.Item label="Studio" value="Studio" />
-        <Picker.Item label="Penthouse" value="Penthouse" />
+        <Picker.Item label="House" value="house" />
+        <Picker.Item label="Apartment" value="apartment" />
+        <Picker.Item label="Studio" value="studio" />
+        <Picker.Item label="Penthouse" value="penthouse" />
       </Picker>
-
+  
       <Text style={styles.label}>Location</Text>
       <Picker
         selectedValue={location}
@@ -104,7 +104,7 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ navigation }) => {
           <Picker.Item key={loc} label={loc} value={loc} />
         ))}
       </Picker>
-
+  
       {location && (
         <>
           <Text style={styles.label}>Sub-location</Text>
@@ -120,7 +120,7 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ navigation }) => {
           </Picker>
         </>
       )}
-
+  
       <Text style={styles.label}>Operation</Text>
       <Picker
         selectedValue={operation}
@@ -131,7 +131,7 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ navigation }) => {
         <Picker.Item label="Rent" value="rent" />
         <Picker.Item label="Sale" value="sale" />
       </Picker>
-
+  
       <Text style={styles.label}>Price Min</Text>
       <TextInput
         value={priceMin}
@@ -148,7 +148,7 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ navigation }) => {
         keyboardType="numeric"
         style={styles.input}
       />
-
+  
       <Text style={styles.label}>Amenities</Text>
       {amenitiesList.map((amenity) => (
         <View key={amenity.value} style={styles.checkboxContainer}>
@@ -158,13 +158,14 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ navigation }) => {
             containerStyle={styles.checkbox}
           />
           <Text style={styles.checkboxLabel}>{amenity.label}</Text>
-
         </View>
       ))}
-<View style={styles.Button}>
-      <Button  title="Submit" onPress={handleSubmit} /></View>
-    </ScrollView>
+      <View style={styles.buttonContainer}>
+      <Button title="Submit" onPress={handleSubmit} />
+    </View>
+  </ScrollView>
   );
+  
 };
 
 const styles = StyleSheet.create({
@@ -172,12 +173,12 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     backgroundColor: '#f8f8f8',
-    margin:20
   },
   label: {
     marginBottom: 8,
     fontSize: 16,
     fontWeight: 'bold',
+    color: '#333',
   },
   picker: {
     marginBottom: 16,
@@ -203,14 +204,21 @@ const styles = StyleSheet.create({
   checkbox: {
     margin: 0,
     padding: 0,
+    backgroundColor: 'transparent',
+    borderWidth: 0,
   },
   checkboxLabel: {
     marginLeft: 8,
     fontSize: 16,
+    color: '#333',
   },
-  Button:{
-    margin:3,
+  buttonContainer: {
+    marginVertical: 30,
+    marginHorizontal: 40,
+    
   },
 });
+
+
 
 export default FilterComponent;
