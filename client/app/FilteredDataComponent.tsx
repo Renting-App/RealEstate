@@ -35,7 +35,7 @@ export type Residence = {
 };
 
 const FilteredDataComponent: React.FC<FilteredDataComponentProps> = ({ route }) => {
-  const { criteria } = route.params;
+  
   const [filteredResidences, setFilteredResidences] = useState<Residence[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -64,7 +64,7 @@ const FilteredDataComponent: React.FC<FilteredDataComponentProps> = ({ route }) 
           subLocation: residence.subLocation,
           amenities: residence.amenities,
         }));
-        filterResidences(mappedResidences, criteria);
+        // filterResidences(mappedResidences);
         setLoading(false);
       })
       .catch((error) => {
@@ -73,20 +73,20 @@ const FilteredDataComponent: React.FC<FilteredDataComponentProps> = ({ route }) 
       });
   };
 
-  const filterResidences = (residences: Residence[], criteria: any) => {
-    const filtered = residences.filter((residence) => {
-      return (
-        (!criteria.category || residence.category === criteria.category) &&
-        (!criteria.location || residence.location === criteria.location) &&
-        (!criteria.subLocation || residence.subLocation === criteria.subLocation) &&
-        (!criteria.operation || residence.operation === criteria.operation) &&
-        (!criteria.priceMax  || parseFloat(residence.price) <= parseFloat(criteria.priceMax)) &&
-        (!criteria.priceMin  || parseFloat(residence.price) >= parseFloat(criteria.priceMin))
+  // const filterResidences = (residences: Residence[], criteria: any) => {
+  //   const filtered = residences.filter((residence) => {
+  //     return (
+  //       (!criteria.category || residence.category === criteria.category) &&
+  //       (!criteria.location || residence.location === criteria.location) &&
+  //       (!criteria.subLocation || residence.subLocation === criteria.subLocation) &&
+  //       (!criteria.operation || residence.operation === criteria.operation) &&
+  //       (!criteria.priceMax  || parseFloat(residence.price) <= parseFloat(criteria.priceMax)) &&
+  //       (!criteria.priceMin  || parseFloat(residence.price) >= parseFloat(criteria.priceMin))
 
-      );
-    });
-    setFilteredResidences(filtered);
-  };
+  //     );
+  //   });
+  //   setFilteredResidences(filtered);
+  // };
 
   if (loading) {
     return <Text>Loading...</Text>;

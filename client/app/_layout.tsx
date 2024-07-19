@@ -20,7 +20,7 @@ export type RootStackParamList = {
   Welcome: undefined;
   Signin: undefined;
   Signup: undefined;
-  HousesScreen: undefined;
+  HousesScreen: { criteria: any };
   AboutUs: undefined;
   FAQ: undefined;
   Maps: undefined;
@@ -30,7 +30,7 @@ export type RootStackParamList = {
   RequestTour: undefined;
   PostProperty: undefined;
   Favorite: undefined;
-  FilteredDataComponent: { criteria: any };
+  FilteredDataComponent:undefined ;
   // AdditionalInfo: { userId: string };
 };
 

@@ -16,8 +16,12 @@ import DrawerContent from "@/app/DrawerContent";
 import Search from "./Search";
 import styles from "./styles"; // Importing styles
 import Favourite from "./Favorite";
+import { RouteProp } from '@react-navigation/native';
+import { RootStackParamList } from './_layout'; // Adjust the path as necessary
 
-
+type HousesScreenProps = {
+  route: RouteProp<RootStackParamList, 'HousesScreen'>;
+};
 const itemsPerPage = 3;
 
 interface Residence {
@@ -28,13 +32,17 @@ interface Residence {
   rooms:string;
   bathrooms:string;
   size:string;
+  category: string;
+  location: string;
+  subLocation: string;
   description: string;
   contact_info: string;
   images: string[];
   operation: "rent" | "sale";
 }
 
-const HousesScreen = () => {
+const HousesScreen:React.FC<HousesScreenProps> = ({route}) => {
+  const { criteria } = route.params;
   const [residences, setResidences] = useState<Residence[]>([]);
   const [loading, setLoading] = useState(true);
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
@@ -63,6 +71,7 @@ const HousesScreen = () => {
           visits: residence.visits,
           operation: residence.operation,
           amenities:residence.amenities,
+          category:residence.category,
           location:residence.location,
           subLocation:residence.subLocation,
           condition : residence.condition,
@@ -70,6 +79,7 @@ const HousesScreen = () => {
           map:residence.map
 
         }));
+        filterResidences(mappedResidences, criteria);
         setResidences(mappedResidences);
         setFilteredResidences(mappedResidences);
         setLoading(false);
@@ -80,6 +90,20 @@ const HousesScreen = () => {
       });
   };
 
+  const filterResidences = (residences: Residence[], criteria: any) => {
+    const filtered = residences.filter((residence) => {
+      return (
+        (!criteria.category || residence.category === criteria.category) &&
+        (!criteria.location || residence.location === criteria.location) &&
+        (!criteria.subLocation || residence.subLocation === criteria.subLocation) &&
+        (!criteria.operation || residence.operation === criteria.operation) &&
+        (!criteria.priceMax  || parseFloat(residence.price) <= parseFloat(criteria.priceMax)) &&
+        (!criteria.priceMin  || parseFloat(residence.price) >= parseFloat(criteria.priceMin))
+
+      );
+    });
+    setFilteredResidences(filtered);
+  };
   const handleSearch = () => {
     const filteredData = residences.filter((residence) =>
       residence.title.toLowerCase().includes(searchQuery.toLowerCase())

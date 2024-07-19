@@ -75,7 +75,7 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ navigation }) => {
 
   const handleSubmit = () => {
     const criteria = { category, location, subLocation, operation, priceMin,priceMax, amenities: selectedAmenities };
-    navigation.navigate('FilteredDataComponent', { criteria });
+    navigation.navigate('HousesScreen', { criteria });
   };
 
   return (
