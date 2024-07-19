@@ -21,7 +21,7 @@ const amenitiesList = [
   { label: 'Near Subway', value: 'near_subway' },
 ];
 
-const locations: { [key: string]: string[] } = {
+export const locations: { [key: string]: string[] } = {
   "Ariana": ['Ariana Essoughra', 'Raoued', 'Sokra', 'Ariana Ville', 'Ennasr'],
   "Beja": ['Beja Nord', 'Beja Sud', 'Nefza', 'Teboursouk'],
   "Ben Arous": ['Hammam Lif', 'Radès', 'Ben Arous Ville', 'Ezzahra'],
