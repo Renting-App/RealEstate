@@ -15,6 +15,7 @@ import AboutUs from './AboutUs';
 import PropertyDetails from './PropertyDetails';
 import FilteredDataComponent from './FilteredDataComponent';
 import PostProperty from './PostProperty';
+
 export type RootStackParamList = {
   Welcome: undefined;
   Signin: undefined;

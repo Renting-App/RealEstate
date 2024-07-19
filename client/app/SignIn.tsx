@@ -4,7 +4,7 @@ import React from 'react';
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Input, Button } from 'react-native-elements';
-import { RootStackParamList } from './index'; // Update the path if necessary
+import { RootStackParamList } from './_layout'; // Update the path if necessary
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';

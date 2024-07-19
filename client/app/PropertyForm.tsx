@@ -4,7 +4,6 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  Image,
   StyleSheet,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
@@ -28,9 +27,7 @@ interface PropertyData {
   rooms: number;
   price: number;
   bathrooms: number;
-  visits: {
-    dates: string[];
-  };
+  visits: string[];
   amenities: {
     parking: boolean;
     ac: boolean;
@@ -95,6 +92,33 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
         </Text>
       </View>
 
+      <Text style={styles.label}>Title:</Text>
+      <TextInput
+        style={styles.input}
+        value={propertyData.title}
+        onChangeText={(text) => handleInputChange("title", text)}
+        placeholder="Enter title"
+      />
+
+      <Text style={styles.label}>Description:</Text>
+      <TextInput
+        style={[styles.input, styles.textArea]}
+        value={propertyData.description}
+        onChangeText={(text) => handleInputChange("description", text)}
+        placeholder="Enter description"
+        multiline
+        numberOfLines={4}
+      />
+
+      <Text style={styles.label}>Price:</Text>
+      <TextInput
+        style={styles.input}
+        value={propertyData.price.toString()}
+        onChangeText={(text) => handleInputChange("price", text)}
+        placeholder="Enter price"
+        keyboardType="numeric"
+      />
+
       <Text style={styles.label}>Address:</Text>
       <TextInput
         style={styles.input}
@@ -150,32 +174,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
         <Picker.Item label="Penthouse" value="penthouse" />
       </Picker>
 
-      <Text style={styles.label}>Title:</Text>
-      <TextInput
-        style={styles.input}
-        value={propertyData.title}
-        onChangeText={(text) => handleInputChange("title", text)}
-        placeholder="Enter title"
-      />
 
-      <Text style={styles.label}>Description:</Text>
-      <TextInput
-        style={[styles.input, styles.textArea]}
-        value={propertyData.description}
-        onChangeText={(text) => handleInputChange("description", text)}
-        placeholder="Enter description"
-        multiline
-        numberOfLines={4}
-      />
-
-      <Text style={styles.label}>Price:</Text>
-      <TextInput
-        style={styles.input}
-        value={propertyData.price.toString()}
-        onChangeText={(text) => handleInputChange("price", text)}
-        placeholder="Enter price"
-        keyboardType="numeric"
-      />
 
       <Text style={styles.label}>Number of Rooms:</Text>
       <TextInput
@@ -241,23 +240,15 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
             key={amenity}
             style={[
               styles.amenityButton,
-              propertyData.amenities[
-                amenity as keyof typeof propertyData.amenities
-              ]
-                ? styles.amenityButtonActive
-                : {},
+              propertyData.amenities[amenity as keyof typeof propertyData.amenities] && styles.amenityButtonSelected,
             ]}
-            onPress={() =>
-              toggleCheckbox(amenity as keyof typeof propertyData.amenities)
-            }
+            onPress={() => toggleCheckbox(amenity as keyof typeof propertyData.amenities)}
           >
             <Icon
               name={amenityIcons[amenity]}
-              size={20}
+              size={24}
               color={
-                propertyData.amenities[
-                  amenity as keyof typeof propertyData.amenities
-                ]
+                propertyData.amenities[amenity as keyof typeof propertyData.amenities]
                   ? "white"
                   : "black"
               }
@@ -265,54 +256,32 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
             <Text
               style={[
                 styles.amenityText,
-                propertyData.amenities[
-                  amenity as keyof typeof propertyData.amenities
-                ]
-                  ? styles.amenityTextActive
-                  : {},
+                propertyData.amenities[amenity as keyof typeof propertyData.amenities] && styles.amenityTextSelected,
               ]}
             >
-              {amenity}
+              {amenity.replace("_", " ")}
             </Text>
           </TouchableOpacity>
         ))}
       </View>
 
-      <TouchableOpacity
-        style={styles.imagePickerButton}
-        onPress={handleImageSelection}
-      >
-        <Text style={styles.buttonText}>Pick Images</Text>
-      </TouchableOpacity>
-
-      <View style={styles.imageContainer}>
-        {propertyData.images.map((image, index) => (
-          <Image key={index} source={{ uri: image }} style={styles.image} />
-        ))}
-      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   formContainer: {
-    padding: 16,
-    backgroundColor: "#f8f9fa",
-    borderRadius: 8,
-    margin: 16,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
+    flex: 1,
+    padding: 20,
+    backgroundColor: "#fff",
   },
   header: {
-    marginBottom: 16,
+    marginBottom: 20,
   },
   headerText: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#333",
+    marginBottom: 5,
   },
   headerSubText: {
     fontSize: 16,
@@ -320,93 +289,71 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    fontWeight: "600",
-    color: "#333",
-    marginBottom: 8,
-    marginTop: 16,
+    fontWeight: "bold",
+    marginBottom: 5,
   },
   input: {
     borderWidth: 1,
-    borderColor: "#ced4da",
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 12,
-    backgroundColor: "#fff",
+    borderColor: "#ccc",
+    padding: 10,
     fontSize: 16,
+    borderRadius: 5,
+    marginBottom: 15,
   },
   textArea: {
-    textAlignVertical: "top",
-    height: 120,
+    height: 100,
   },
   picker: {
     borderWidth: 1,
-    borderColor: "#ced4da",
-    borderRadius: 8,
-    marginBottom: 12,
-    backgroundColor: "#fff",
+    borderColor: "#ccc",
+    borderRadius: 5,
+    marginBottom: 15,
   },
   calendarLabel: {
-    fontSize: 16,
-    fontWeight: "600",
     color: "#007bff",
+    fontSize: 16,
+    textDecorationLine: "underline",
+    marginBottom: 15,
   },
   calendar: {
-    marginBottom: 16,
+    marginBottom: 15,
   },
   amenitiesContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
-    marginBottom: 16,
+    justifyContent: "space-between",
+    marginBottom: 20,
   },
   amenityButton: {
-    flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#e9ecef",
-    borderRadius: 8,
-    padding: 8,
-    margin: 4,
+    justifyContent: "center",
+    width: "30%",
+    padding: 10,
     borderWidth: 1,
-    borderColor: "#ced4da",
+    borderColor: "#ccc",
+    borderRadius: 5,
+    marginBottom: 10,
   },
-  amenityButtonActive: {
+  amenityButtonSelected: {
     backgroundColor: "#007bff",
-    borderColor: "#007bff",
   },
   amenityText: {
-    fontSize: 14,
-    marginLeft: 8,
-    color: "#333",
+    marginTop: 5,
+    textAlign: "center",
   },
-  amenityTextActive: {
-    color: "#fff",
-  },
-  imagePickerButton: {
-    backgroundColor: "#007bff",
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 16,
-    alignItems: "center",
+  amenityTextSelected: {
+    color: "white",
   },
   submitButton: {
-    backgroundColor: "#28a745",
-    borderRadius: 8,
-    padding: 12,
+    backgroundColor: "#007bff",
+    padding: 15,
     alignItems: "center",
+    borderRadius: 5,
   },
-  buttonText: {
+  submitButtonText: {
     color: "#fff",
     fontSize: 16,
     fontWeight: "bold",
-  },
-  imageContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-  },
-  image: {
-    width: 80,
-    height: 80,
-    margin: 4,
-    borderRadius: 8,
   },
 });
 
