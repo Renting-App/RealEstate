@@ -10,7 +10,7 @@ import {
 import { Picker } from "@react-native-picker/picker";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Calendar, DateObject } from "react-native-calendars";
-import { subLocations } from "./FilterComponent";
+import { locations } from "./FilterComponent";
 
 interface PropertyData {
   _id: string;
@@ -22,7 +22,7 @@ interface PropertyData {
   description: string;
   images: string[];
   operation: "rent" | "sale";
-  location:string;
+  location: string;
   subLocation: string;
   date_of_creation: string;
   rooms: number;
@@ -88,6 +88,13 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
 
   return (
     <View style={styles.formContainer}>
+      <View style={styles.header}>
+        <Text style={styles.headerText}>Post Your Property</Text>
+        <Text style={styles.headerSubText}>
+          Fill in the details below to add your property to our listings.
+        </Text>
+      </View>
+
       <Text style={styles.label}>Address:</Text>
       <TextInput
         style={styles.input}
@@ -95,30 +102,33 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
         onChangeText={(text) => handleInputChange("address", text)}
         placeholder="Enter address"
       />
+
       <Text style={styles.label}>Location:</Text>
       <Picker
-        style={styles.input}
+        style={styles.picker}
         selectedValue={propertyData.location}
         onValueChange={(itemValue) => handleInputChange("location", itemValue)}
       >
-        {Object.keys(subLocations).map((location, index) => (
+        {Object.keys(locations).map((location, index) => (
           <Picker.Item key={index} label={location} value={location} />
         ))}
       </Picker>
-      <Text style={styles.label}>Sublocation:</Text>
+
+      <Text style={styles.label}>Sub-location:</Text>
       <Picker
-        style={styles.input}
+        style={styles.picker}
         selectedValue={propertyData.subLocation}
         onValueChange={(itemValue) =>
           handleInputChange("subLocation", itemValue)
         }
       >
         {propertyData.location &&
-          subLocations[propertyData.location].map((subLocation, index) => (
+          locations[propertyData.location].map((subLocation, index) => (
             <Picker.Item key={index} label={subLocation} value={subLocation} />
           ))}
       </Picker>
-      <Text style={styles.label}>Size (sqm):</Text>
+
+      <Text style={styles.label}>Size (sq m):</Text>
       <TextInput
         style={styles.input}
         value={propertyData.size.toString()}
@@ -129,7 +139,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
 
       <Text style={styles.label}>Category:</Text>
       <Picker
-        style={styles.input}
+        style={styles.picker}
         selectedValue={propertyData.category}
         onValueChange={(itemValue) => handleInputChange("category", itemValue)}
       >
@@ -167,7 +177,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
         keyboardType="numeric"
       />
 
-      <Text style={styles.label}>Rooms:</Text>
+      <Text style={styles.label}>Number of Rooms:</Text>
       <TextInput
         style={styles.input}
         value={propertyData.rooms.toString()}
@@ -176,7 +186,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
         keyboardType="numeric"
       />
 
-      <Text style={styles.label}>Bathrooms:</Text>
+      <Text style={styles.label}>Number of Bathrooms:</Text>
       <TextInput
         style={styles.input}
         value={propertyData.bathrooms.toString()}
@@ -185,15 +195,16 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
         keyboardType="numeric"
       />
 
+      <Text style={styles.label}>Visit Dates:</Text>
       <TouchableOpacity onPress={() => setShowCalendar(true)}>
-        <Text style={styles.label}>Visit Dates:</Text>
+        <Text style={styles.calendarLabel}>Select Dates</Text>
       </TouchableOpacity>
-
       {showCalendar && (
         <Calendar
           current={new Date()}
           markedDates={getMarkedDates()}
           onDayPress={(day) => handleDayPress(day)}
+          style={styles.calendar}
         />
       )}
 
@@ -205,8 +216,6 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
         placeholder="Enter contact info"
       />
 
-    
-
       <Text style={styles.label}>Status:</Text>
       <TextInput
         style={styles.input}
@@ -217,7 +226,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
 
       <Text style={styles.label}>Operation:</Text>
       <Picker
-        style={styles.input}
+        style={styles.picker}
         selectedValue={propertyData.operation}
         onValueChange={(itemValue) => handleInputChange("operation", itemValue)}
       >
@@ -276,75 +285,128 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
         <Text style={styles.buttonText}>Pick Images</Text>
       </TouchableOpacity>
 
-      {propertyData.images.map((image, index) => (
-        <Image key={index} source={{ uri: image }} style={styles.image} />
-      ))}
+      <View style={styles.imageContainer}>
+        {propertyData.images.map((image, index) => (
+          <Image key={index} source={{ uri: image }} style={styles.image} />
+        ))}
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   formContainer: {
-    paddingHorizontal: 20,
-    paddingBottom: 20,
+    padding: 16,
+    backgroundColor: "#f8f9fa",
+    borderRadius: 8,
+    margin: 16,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  header: {
+    marginBottom: 16,
+  },
+  headerText: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#333",
+  },
+  headerSubText: {
+    fontSize: 16,
+    color: "#666",
   },
   label: {
     fontSize: 16,
-    marginTop: 10,
-    marginBottom: 5,
+    fontWeight: "600",
+    color: "#333",
+    marginBottom: 8,
+    marginTop: 16,
   },
   input: {
     borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 10,
+    borderColor: "#ced4da",
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 12,
+    backgroundColor: "#fff",
+    fontSize: 16,
   },
   textArea: {
-    height: 100,
     textAlignVertical: "top",
+    height: 120,
+  },
+  picker: {
+    borderWidth: 1,
+    borderColor: "#ced4da",
+    borderRadius: 8,
+    marginBottom: 12,
+    backgroundColor: "#fff",
+  },
+  calendarLabel: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#007bff",
+  },
+  calendar: {
+    marginBottom: 16,
   },
   amenitiesContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
-    marginBottom: 10,
+    marginBottom: 16,
   },
   amenityButton: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#e0e0e0",
-    borderRadius: 20,
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    margin: 5,
+    backgroundColor: "#e9ecef",
+    borderRadius: 8,
+    padding: 8,
+    margin: 4,
+    borderWidth: 1,
+    borderColor: "#ced4da",
   },
   amenityButtonActive: {
-    backgroundColor: "#4CAF50",
+    backgroundColor: "#007bff",
+    borderColor: "#007bff",
   },
   amenityText: {
-    marginLeft: 5,
-    color: "black",
+    fontSize: 14,
+    marginLeft: 8,
+    color: "#333",
   },
   amenityTextActive: {
-    color: "white",
+    color: "#fff",
   },
   imagePickerButton: {
-    backgroundColor: "#2196F3",
-    padding: 10,
-    borderRadius: 5,
+    backgroundColor: "#007bff",
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 16,
     alignItems: "center",
-    marginBottom: 10,
+  },
+  submitButton: {
+    backgroundColor: "#28a745",
+    borderRadius: 8,
+    padding: 12,
+    alignItems: "center",
   },
   buttonText: {
-    color: "white",
+    color: "#fff",
     fontSize: 16,
+    fontWeight: "bold",
+  },
+  imageContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
   },
   image: {
-    width: "100%",
-    height: 200,
-    resizeMode: "cover",
-    marginBottom: 10,
+    width: 80,
+    height: 80,
+    margin: 4,
+    borderRadius: 8,
   },
 });
 
