@@ -7,6 +7,8 @@ import {
   Button,
   Pressable,
   Text,
+  StyleSheet,
+  TouchableOpacity,
 } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
@@ -16,7 +18,7 @@ import DrawerContent from "@/app/DrawerContent";
 import Search from "./Search";
 import styles from "./styles"; // Importing styles
 import Favourite from "./Favorite";
-
+import Pagination from "./Pagination";
 
 const itemsPerPage = 3;
 
@@ -25,9 +27,9 @@ interface Residence {
   title: string;
   address: string;
   price: string;
-  rooms:string;
-  bathrooms:string;
-  size:string;
+  rooms: string;
+  bathrooms: string;
+  size: string;
   description: string;
   contact_info: string;
   images: string[];
@@ -38,15 +40,16 @@ const HousesScreen = () => {
   const [residences, setResidences] = useState<Residence[]>([]);
   const [loading, setLoading] = useState(true);
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
-  const [start, setStart] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredResidences, setFilteredResidences] = useState<Residence[]>([]);
 
   useEffect(() => {
     fetchResidences();
   }, []);
- const fetchResidences = () => {
-    fetch("http://192.168.1.105:5000/api/gethouse")
+
+  const fetchResidences = () => {
+    fetch("http://192.168.1.13:5000/api/gethouse")
       .then((response) => response.json())
       .then((data) => {
         const mappedResidences = data.map((residence: any) => ({
@@ -62,13 +65,12 @@ const HousesScreen = () => {
           images: residence.images,
           visits: residence.visits,
           operation: residence.operation,
-          amenities:residence.amenities,
-          location:residence.location,
-          subLocation:residence.subLocation,
-          condition : residence.condition,
-          Favourite:residence.favourite,
-          map:residence.map
-
+          amenities: residence.amenities,
+          location: residence.location,
+          subLocation: residence.subLocation,
+          condition: residence.condition,
+          Favourite: residence.favourite,
+          map: residence.map,
         }));
         setResidences(mappedResidences);
         setFilteredResidences(mappedResidences);
@@ -85,18 +87,14 @@ const HousesScreen = () => {
       residence.title.toLowerCase().includes(searchQuery.toLowerCase())
     );
     setFilteredResidences(filteredData);
-    setStart(0); // Reset the pagination start index
+    setCurrentPage(1); // Reset the pagination to the first page
   };
 
-  const handleNext = () => {
-    if (start + itemsPerPage < filteredResidences.length) {
-      setStart(start + itemsPerPage);
-    }
-  };
+  const totalPages = Math.ceil(filteredResidences.length / itemsPerPage);
 
-  const handlePrev = () => {
-    if (start - itemsPerPage >= 0) {
-      setStart(start - itemsPerPage);
+  const handlePageChange = (page: number) => {
+    if (page > 0 && page <= totalPages) {
+      setCurrentPage(page);
     }
   };
 
@@ -111,7 +109,6 @@ const HousesScreen = () => {
         <ThemedText type="subtitle" style={styles.typeText}>
           {item.operation === "rent" ? "Rent" : "Sale"}
         </ThemedText>
-        
       </View>
       <Image
         source={{ uri: item.images[0] }}
@@ -121,7 +118,7 @@ const HousesScreen = () => {
       <ThemedText type="subtitle" style={styles.title}>
         {item.title}
       </ThemedText>
-      
+
       <ThemedText type="default" style={styles.price}>
         Price: {item.price}DT
       </ThemedText>
@@ -170,7 +167,6 @@ const HousesScreen = () => {
               color: "#333",
               textTransform: "uppercase",
               letterSpacing: 1,
-             
             },
           ]}
         >
@@ -197,17 +193,19 @@ const HousesScreen = () => {
         </View>
       </View>
       <FlatList
-        data={filteredResidences.slice(start, start + itemsPerPage)}
+        data={filteredResidences.slice(
+          (currentPage - 1) * itemsPerPage,
+          currentPage * itemsPerPage
+        )}
         renderItem={renderItem}
         keyExtractor={(item) => item._id.toString()}
         contentContainerStyle={styles.cardsContainer}
       />
-      <Pressable style={styles.prevButton} onPress={handlePrev}>
-        <Ionicons name="arrow-back" size={24} color="#000" />
-      </Pressable>
-      <Pressable style={styles.nextButton} onPress={handleNext}>
-        <Ionicons name="arrow-forward" size={24} color="#000" />
-      </Pressable>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
     </ThemedView>
   );
 };
