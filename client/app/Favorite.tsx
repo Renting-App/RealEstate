@@ -1,14 +1,28 @@
 import React from 'react';
 import { View, Text, FlatList, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { useFavorites } from './FavoritesContext';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../constants/types'; 
+type FavoriteScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'PropertyDetails'
+>;
 
 const Favorite: React.FC = () => {
   const { favorites, removeFromFavorites } = useFavorites();
+  const navigation = useNavigation<FavoriteScreenNavigationProp>();
 
   const renderFavoriteItem = ({ item }: { item: any }) => {
+    const handleImagePress = () => {
+      navigation.navigate('PropertyDetails', { residence: JSON.stringify(item) });
+    };
+
     return (
       <View style={styles.itemContainer}>
-        <Image source={{ uri: item.images[0] }} style={styles.image} />
+        <TouchableOpacity onPress={handleImagePress}>
+          <Image source={{ uri: item.images[0] }} style={styles.image} />
+        </TouchableOpacity>
         <View style={styles.infoContainer}>
           <Text style={styles.title}>{item.title}</Text>
           <Text style={styles.price}>${item.price}</Text>
@@ -43,7 +57,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 8,
     marginBottom: 16,
-    padding: 80,
+    padding: 40,
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 2 },

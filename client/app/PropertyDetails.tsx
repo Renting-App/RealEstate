@@ -7,7 +7,7 @@ import { HomeButton } from './HomeButton';
 import MapView, { Marker } from 'react-native-maps';
 import { RootStackParamList } from '../constants/types';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { useFavorites } from './FavoritesContext'; // Ensure the correct import path
+import { useFavorites } from './FavoritesContext';
 
 interface Property {
   _id: number;
