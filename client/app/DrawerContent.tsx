@@ -1,8 +1,7 @@
-//hetha el sidebar
-
+// Sidebar.js
 import React from "react";
 import { View, StyleSheet, Pressable } from "react-native";
-import Ionicons from '@expo/vector-icons/Ionicons';
+import Ionicons from "@expo/vector-icons/Ionicons";
 import { ThemedText } from "@/components/ThemedText";
 import { Link } from "expo-router";
 
@@ -13,28 +12,36 @@ interface SidebarProps {
 
 const DrawerContent: React.FC<SidebarProps> = ({ isVisible, onClose }) => {
   return (
-    <View style={[styles.sidebar, isVisible ? styles.sidebarVisible : styles.sidebarHidden]}>
+    <View
+      style={[
+        styles.sidebar,
+        isVisible ? styles.sidebarVisible : styles.sidebarHidden,
+      ]}
+    >
       <Pressable style={styles.closeButton} onPress={onClose}>
         <Ionicons name="close-circle" size={32} color="#333" />
       </Pressable>
       <View style={styles.linksContainer}>
-        <Link href={'/AboutUs'} style={styles.link}>
+        <Link href={"/AboutUs"} style={styles.link}>
           <ThemedText type="subtitle">About Us</ThemedText>
         </Link>
-        <Link href={'/FAQ'} style={styles.link}>
+        <Link href={"/FAQ"} style={styles.link}>
           <ThemedText type="subtitle">FAQ</ThemedText>
         </Link>
-        <Link href={'/PostProperty'} style={styles.link}>
+        <Link href={"/PostProperty"} style={styles.link}>
           <ThemedText type="subtitle">Post a Property</ThemedText>
         </Link>
-        <Link href={'/FilterComponent'} style={styles.link}>
+        <Link href={"/FilterComponent"} style={styles.link}>
           <ThemedText type="subtitle">Filter</ThemedText>
         </Link>
-        <Link href={'/Maps'} style={styles.link}>
+        <Link href={"/Maps"} style={styles.link}>
           <ThemedText type="subtitle">Map</ThemedText>
         </Link>
-        <Link href={'/Favorite'} style={styles.link}>
+        <Link href={"/Favorite"} style={styles.link}>
           <ThemedText type="subtitle">Favourite</ThemedText>
+        </Link>
+        <Link href={"/MyAccount"} style={styles.link}>
+          <ThemedText type="subtitle">My Account</ThemedText>
         </Link>
       </View>
     </View>

@@ -1,23 +1,24 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, ScrollView, Button, Dimensions, TouchableOpacity } from 'react-native';
-import { useLocalSearchParams } from 'expo-router';
+import { useRoute, useNavigation, RouteProp } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { HomeButton } from './HomeButton';
-import { Link } from 'expo-router';
-import MapView, { Marker } from 'react-native-maps'; // Import MapView
-
+import MapView, { Marker } from 'react-native-maps';
+import { RootStackParamList } from '../constants/types';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { useFavorites } from './FavoritesContext'; // Ensure the correct import path
 
 interface Property {
   _id: number;
   address: string;
   size: string;
-  category: "apartment" | "house" | "office" | "studio" | "penthouse";
+  category: 'apartment' | 'house' | 'office' | 'studio' | 'penthouse';
   title: string;
   favourite: boolean;
   description: string;
   images: string[];
-  operation: "rent" | "sale";
+  operation: 'rent' | 'sale';
   price: string;
   date_of_creation: string;
   rooms: string;
@@ -42,33 +43,56 @@ interface Property {
   };
 }
 
+type PropertyDetailsScreenRouteProp = RouteProp<RootStackParamList, 'PropertyDetails'>;
+type PropertyDetailsNavigationProp = StackNavigationProp<RootStackParamList, 'PropertyDetails'>;
 
 const PropertyDetails: React.FC = () => {
-  const { residence } = useLocalSearchParams();
-  const residenceData: Property = JSON.parse(residence as string);
-  const [isFavourite, setIsFavourite] = useState(residenceData.favourite);
-   
+  const route = useRoute<PropertyDetailsScreenRouteProp>();
+  const navigation = useNavigation<PropertyDetailsNavigationProp>();
+  const { residence } = route.params;
+  const { addToFavorites, removeFromFavorites } = useFavorites();
+
+  let residenceData: Property | null = null;
+
+  if (residence) {
+    try {
+      residenceData = JSON.parse(residence);
+    } catch (error) {
+      console.error('Error parsing residence data:', error);
+    }
+  } else {
+    console.error('Residence data is undefined');
+  }
+
+  const [isFavourite, setIsFavourite] = useState(
+    residenceData ? residenceData.favourite : false
+  );
+
   if (!residenceData) {
     return <Text>Loading...</Text>;
   }
 
   const toggleFavourite = () => {
     setIsFavourite(!isFavourite);
-    // Update the favourite status in your data source (e.g., backend or local storage)
+    if (!isFavourite) {
+      addToFavorites(residenceData);
+    } else {
+      removeFromFavorites(residenceData._id);
+    }
   };
 
   const amenityIcons: { [key in keyof Property['amenities']]: string } = {
-    parking: "car",
-    ac: "snowflake",
-    furnished: "bed",
-    pool: "pool",
-    microwave: "microwave",
-    near_subway: "train",
-    beach_view: "beach",
-    alarm: "alert",
-    garden: "flower",
+    parking: 'car',
+    ac: 'snowflake',
+    furnished: 'bed',
+    pool: 'pool',
+    microwave: 'microwave',
+    near_subway: 'train',
+    beach_view: 'beach',
+    alarm: 'alert',
+    garden: 'flower',
   };
-  
+
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>
@@ -88,12 +112,7 @@ const PropertyDetails: React.FC = () => {
             contentContainerStyle={styles.imageContainer}
           >
             {residenceData.images.map((image, index) => (
-              <Image
-                key={index}
-                source={{ uri: image }}
-                style={styles.image}
-                resizeMode="contain"
-              />
+              <Image key={index} source={{ uri: image }} style={styles.image} resizeMode="contain" />
             ))}
           </ScrollView>
         </View>
@@ -122,9 +141,17 @@ const PropertyDetails: React.FC = () => {
             {Object.keys(residenceData.amenities).map((key) => (
               <View key={key} style={styles.amenity}>
                 <Ionicons
-                  name={residenceData.amenities[key as keyof Property['amenities']] ? "checkbox" : "square-outline"}
+                  name={
+                    residenceData.amenities[key as keyof Property['amenities']]
+                      ? 'checkbox'
+                      : 'square-outline'
+                  }
                   size={24}
-                  color={residenceData.amenities[key as keyof Property['amenities']] ? "#4CAF50" : "#ccc"}
+                  color={
+                    residenceData.amenities[key as keyof Property['amenities']]
+                      ? '#4CAF50'
+                      : '#ccc'
+                  }
                 />
                 <MaterialCommunityIcons
                   name={amenityIcons[key as keyof Property['amenities']]}
@@ -161,16 +188,14 @@ const PropertyDetails: React.FC = () => {
           </View>
         )}
 
-
-        <Link
-          href={{
-            pathname: "/RequestTour",
-            params: { residence: JSON.stringify(residenceData) },
+        <Button
+          title="Request a Tour"
+          onPress={() => {
+            navigation.navigate('RequestTour', {
+              residence: JSON.stringify(residenceData),
+            });
           }}
-          asChild
-        >
-          <Button title="Request a Tour" />
-        </Link>
+        />
       </View>
     </ScrollView>
   );
@@ -221,72 +246,73 @@ const styles = StyleSheet.create({
   imageContainer: {
     flexGrow: 1,
     alignItems: 'center',
-    justifyContent: 'center',
   },
   image: {
-    width: screenWidth * 0.9,
-    height: screenHeight,
+    width: screenWidth - 32,
+    height: screenHeight * 0.4,
+    marginBottom: 10,
     borderRadius: 10,
-    margin: 4,
   },
   details: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    backgroundColor: '#4CAF50',
-    padding: 12,
-    borderRadius: 10,
     marginBottom: 20,
+    marginTop: 20,
   },
   detailItem: {
     flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: '#4CAF50',
+    borderRadius: 5,
+    padding: 10,
   },
   detailText: {
-    marginLeft: 8,
     fontSize: 16,
-    color: '#fff',
+    color: 'white',
+    marginLeft: 5,
   },
   description: {
     fontSize: 16,
-    lineHeight: 24,
+    color: '#666',
     marginBottom: 20,
-    color: '#333',
   },
   address: {
     fontSize: 16,
-    fontStyle: 'italic',
+    fontWeight: 'bold',
+    color: '#333',
     marginBottom: 20,
-    color: '#666',
   },
   amenities: {
     marginBottom: 20,
   },
   amenitiesTitle: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 10,
     color: '#333',
+    marginBottom: 10,
   },
   amenitiesList: {
-    flexDirection: 'column',
+    flexDirection: 'row',
     flexWrap: 'wrap',
   },
   amenity: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginRight: 16,
-    marginBottom: 8,
+    marginRight: 15,
+    marginBottom: 10,
   },
   amenityText: {
-    marginLeft: 8,
-    fontSize: 16,
+    fontSize: 14,
     color: '#666',
+    marginLeft: 5,
+    textTransform: 'capitalize',
   },
   mapContainer: {
-    height: 300,
-    marginVertical: 20,
- 
+    height: 200,
+    borderRadius: 10,
+    overflow: 'hidden',
+    marginTop: 20,
+    marginBottom: 20,
   },
   map: {
     ...StyleSheet.absoluteFillObject,
