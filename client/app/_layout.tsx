@@ -14,7 +14,7 @@ import RequestTour from './RequestTour';
 import AboutUs from './AboutUs';
 import PropertyDetails from './PropertyDetails';
 import FilteredDataComponent from './FilteredDataComponent';
-
+import PostProperty from './PostProperty';
 export type RootStackParamList = {
   Welcome: undefined;
   Signin: undefined;
@@ -70,10 +70,10 @@ export default function App() {
           component={FAQ}
           options={{ headerShown: true }}
         />
-        {/* <Stack.Screen
+         <Stack.Screen
           name="PostProperty"
           component={PostProperty}
-        /> */}
+        /> 
         <Stack.Screen
           name="PropertyDetails"
           component={PropertyDetails}
