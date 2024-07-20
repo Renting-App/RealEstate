@@ -44,7 +44,7 @@ interface Residence {
 }
 
 const HousesScreen:React.FC<HousesScreenProps> = ({route}) => {
-  const { criteria } = route.params || {};
+  const { criteria } = route.params ;
   const [residences, setResidences] = useState<Residence[]>([]);
   const [loading, setLoading] = useState(true);
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
@@ -56,7 +56,7 @@ const HousesScreen:React.FC<HousesScreenProps> = ({route}) => {
     fetchResidences();
   }, []);
  const fetchResidences = () => {
-    fetch("http://192.168.1.13/:5000/api/gethouse")
+    fetch("http://192.168.1.13:5000/api/gethouse")
       .then((response) => response.json())
       .then((data) => {
         const mappedResidences = data.map((residence: any) => ({
@@ -172,7 +172,7 @@ const HousesScreen:React.FC<HousesScreenProps> = ({route}) => {
   }
 
   return (
- 
+  
     <ThemedView style={styles.container}>
       
       <DrawerContent
@@ -228,7 +228,21 @@ const HousesScreen:React.FC<HousesScreenProps> = ({route}) => {
         contentContainerStyle={styles.cardsContainer}
       />
        
-
+       <View>
+    <FlatList
+      data={filteredResidences}
+      keyExtractor={(item) => item._id.toString()}
+      renderItem={({ item }) => (
+        <View style={styles.card}>
+          <Image source={{ uri: item.images[0] }} style={styles.image} />
+          <Text style={styles.title}>{item.title}</Text>
+          <Text>{item.address}</Text>
+          <Text>{item.description}</Text>
+          <Text>Price: {item.price}</Text>
+        </View>
+      )}
+    />
+  </View>
 {/* 
       <Pressable style={styles.prevButton} onPress={handlePrev}>
         <Ionicons name="arrow-back" size={24} color="#000" />

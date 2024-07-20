@@ -93,21 +93,21 @@ const FilteredDataComponent: React.FC<FilteredDataComponentProps> = ({ route }) 
   }
 
   return (
-    <View>
-      <FlatList
+     <View>
+    //   <FlatList
         data={filteredResidences}
         keyExtractor={(item) => item._id.toString()}
         renderItem={({ item }) => (
           <View style={styles.card}>
             <Image source={{ uri: item.images[0] }} style={styles.image} />
             <Text style={styles.title}>{item.title}</Text>
-            <Text>{item.address}</Text>
-            <Text>{item.description}</Text>
-            <Text>Price: {item.price}</Text>
-          </View>
-        )}
-      />
-    </View>
+    //         <Text>{item.address}</Text>
+    //         <Text>{item.description}</Text>
+    //         <Text>Price: {item.price}</Text>
+    //       </View>
+         )}
+       />
+     </View>
   );
 };
 
