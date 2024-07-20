@@ -229,13 +229,13 @@ const HousesScreen:React.FC<HousesScreenProps> = ({route}) => {
       />
        
 
-
+{/* 
       <Pressable style={styles.prevButton} onPress={handlePrev}>
         <Ionicons name="arrow-back" size={24} color="#000" />
       </Pressable>
       <Pressable style={styles.nextButton} onPress={handleNext}>
         <Ionicons name="arrow-forward" size={24} color="#000" />
-      </Pressable>
+      </Pressable> */}
     </ThemedView>
   );
 };
