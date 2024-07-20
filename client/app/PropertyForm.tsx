@@ -202,7 +202,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
         <Calendar
           current={new Date()}
           markedDates={getMarkedDates()}
-          onDayPress={(day) => handleDayPress(day)}
+          onDayPress={(day: any) => handleDayPress(day)}
           style={styles.calendar}
         />
       )}
