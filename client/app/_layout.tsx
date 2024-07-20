@@ -8,7 +8,6 @@ import HousesScreen from "./HousesScreen";
 import AdminPage from "./adminPage";
 import FAQ from "./FAQ";
 import Maps from "./Maps";
-import Favourite from "./Favorite";
 import FilterComponent from "./FilterComponent";
 import RequestTour from "./RequestTour";
 import AboutUs from "./AboutUs";
@@ -17,6 +16,8 @@ import FilteredDataComponent from "./FilteredDataComponent";
 import PostProperty from "./PostProperty";
 import MyAccount from "./MyAccount";
 import MyProperties from "./MyProperties";
+import Favorite from "./Favorite";
+import { FavoritesProvider } from './FavoritesContext';
 //import UpdatePropertyForm from "./UpdatePropertyForm";
 export type RootStackParamList = {
   Welcome: undefined;
@@ -42,6 +43,7 @@ const Stack = createStackNavigator<RootStackParamList>();
 
 export default function App() {
   return (
+    <FavoritesProvider>
     <Stack.Navigator
       initialRouteName="HousesScreen"
       screenOptions={{ headerShown: false }}
@@ -62,6 +64,7 @@ export default function App() {
       />
       <Stack.Screen name="PostProperty" component={PostProperty} />
       <Stack.Screen name="PropertyDetails" component={PropertyDetails} />
+      <Stack.Screen name="Favorite" component={Favorite} />
       <Stack.Screen
         name="FilterComponent"
         component={FilterComponent}
@@ -86,5 +89,7 @@ export default function App() {
       <Stack.Screen name="MyProperties" component={MyProperties} />
       {/*<Stack.Screen name="UpdatePropertyForm" component={UpdatePropertyForm} />*/}
     </Stack.Navigator>
+    
+    </FavoritesProvider>
   );
 }
