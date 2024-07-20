@@ -1,21 +1,24 @@
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import Welcome from './Welcome';
-import Signin from './SignIn';
-import Signup from './SignUp';
-import HousesScreen from './HousesScreen';
-import AdminPage from './adminPage';
-import FAQ from './FAQ';
-import Maps from './Maps';
-import Favourite from './Favorite';
-import FilterComponent from './FilterComponent';
-import RequestTour from './RequestTour';
-import AboutUs from './AboutUs';
-import PropertyDetails from './PropertyDetails';
-import FilteredDataComponent from './FilteredDataComponent';
-import PostProperty from './PostProperty';
-
+import React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import Welcome from "./Welcome";
+import Signin from "./SignIn";
+import Signup from "./SignUp";
+import HousesScreen from "./HousesScreen";
+import AdminPage from "./adminPage";
+import FAQ from "./FAQ";
+import Maps from "./Maps";
+import FilterComponent from "./FilterComponent";
+import RequestTour from "./RequestTour";
+import AboutUs from "./AboutUs";
+import PropertyDetails from "./PropertyDetails";
+import FilteredDataComponent from "./FilteredDataComponent";
+import PostProperty from "./PostProperty";
+import MyAccount from "./MyAccount";
+import MyProperties from "./MyProperties";
+import Favorite from "./Favorite";
+import { FavoritesProvider } from './FavoritesContext';
+//import UpdatePropertyForm from "./UpdatePropertyForm";
 export type RootStackParamList = {
   Welcome: undefined;
   Signin: undefined;
@@ -34,9 +37,7 @@ export type RootStackParamList = {
   // AdditionalInfo: { userId: string };
 };
 
-
 const Stack = createStackNavigator<RootStackParamList>();
-
 
 export default function App() {
   return (
