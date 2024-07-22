@@ -20,8 +20,8 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     backgroundColor: "rgba(0, 0, 0, 0.5)",
     alignItems: "center",
-    justifyContent: "flex-end", // Align at the bottom
-    paddingBottom: 300, // Adjust the padding to move it up or down
+    justifyContent: "flex-end", 
+    paddingBottom: 300, 
   },
 });
 

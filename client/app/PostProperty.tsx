@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   View,
   Text,
@@ -11,11 +11,13 @@ import {
 import { StyleSheet } from "react-native";
 import axios from "axios";
 import * as ImagePicker from "expo-image-picker";
+import * as Location from "expo-location";
 import { DateObject } from "react-native-calendars";
 import PropertyForm from "./PropertyForm";
 import MapView, { Marker } from "react-native-maps";
 import { RootStackParamList } from "./_layout";
 import { StackNavigationProp } from "@react-navigation/stack";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 const CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/dw1sxdmac/upload";
 const CLOUDINARY_PRESET = "hotel_preset";
@@ -77,6 +79,7 @@ const PostProperty: React.FC<Props> = ({ navigation }) => {
     latitude: number;
     longitude: number;
   } | null>(null);
+  const mapRef = useRef(null);
 
   const handleDayPress = (day: DateObject) => {
     const date = day.dateString;
@@ -307,6 +310,36 @@ const PostProperty: React.FC<Props> = ({ navigation }) => {
     }));
   };
 
+  const handleUseCurrentLocation = async () => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== "granted") {
+      Alert.alert("Permission to access location was denied");
+      return;
+    }
+
+    let location = await Location.getCurrentPositionAsync({});
+    setmap({
+      latitude: location.coords.latitude,
+      longitude: location.coords.longitude,
+    });
+    setPropertyData((prevData) => ({
+      ...prevData,
+      map: {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      },
+    }));
+    mapRef.current.animateToRegion(
+      {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01,
+      },
+      1000
+    );
+  };
+
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -339,6 +372,7 @@ const PostProperty: React.FC<Props> = ({ navigation }) => {
           )}
 
           <MapView
+            ref={mapRef}
             style={styles.map}
             onPress={handleMapPress}
             initialRegion={{
@@ -350,6 +384,13 @@ const PostProperty: React.FC<Props> = ({ navigation }) => {
           >
             {map && <Marker coordinate={map} title="Property Location" />}
           </MapView>
+
+          <TouchableOpacity
+            style={styles.locationButton}
+            onPress={handleUseCurrentLocation}
+          >
+            <Ionicons name="locate" size={24} color="#fff" />
+          </TouchableOpacity>
 
           {loading ? (
             <ActivityIndicator size="large" color="#0000ff" />
@@ -399,6 +440,9 @@ const styles = StyleSheet.create({
     height: 100,
     margin: 5,
   },
+  map: {
+    height: 300,
+  },
   submitButton: {
     backgroundColor: "#007bff",
     paddingVertical: 10,
@@ -407,13 +451,28 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 20,
   },
-  map: {
-    height: 300,
-  },
   submitButtonText: {
     color: "#fff",
     fontSize: 16,
     fontWeight: "bold",
+  },
+  currentLocationButton: {
+    color: "#007bff",
+    textAlign: "center",
+    marginVertical: 10,
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  locationButton: {
+    position: "absolute",
+    bottom: 80, 
+    right: 20,
+    backgroundColor: "#007bff",
+    borderRadius: 50,
+    padding: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    elevation: 5,
   },
 });
 
