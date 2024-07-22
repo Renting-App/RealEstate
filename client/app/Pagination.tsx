@@ -51,6 +51,7 @@ const Pagination: React.FC<PaginationProps> = ({
 
 const styles = StyleSheet.create({
   paginationContainer: {
+ 
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",

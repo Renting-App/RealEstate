@@ -18,7 +18,7 @@ import MyAccount from "./MyAccount";
 import MyProperties from "./MyProperties";
 import Favorite from "./Favorite";
 import { FavoritesProvider } from './FavoritesContext';
-//import UpdatePropertyForm from "./UpdatePropertyForm";
+import UpdatePropertyForm from "./UpdatePropertyForm";
 export type RootStackParamList = {
   Welcome: undefined;
   Signin: undefined;

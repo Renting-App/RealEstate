@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   View,
   Text,
@@ -11,11 +11,13 @@ import {
 import { StyleSheet } from "react-native";
 import axios from "axios";
 import * as ImagePicker from "expo-image-picker";
+import * as Location from "expo-location";
 import { DateObject } from "react-native-calendars";
 import PropertyForm from "./PropertyForm";
 import MapView, { Marker } from "react-native-maps";
-import { RootStackParamList } from './_layout';
-import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from "./_layout";
+import { StackNavigationProp } from "@react-navigation/stack";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 const CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/dw1sxdmac/upload";
 const CLOUDINARY_PRESET = "hotel_preset";
@@ -30,7 +32,7 @@ interface PropertyData {
   description: string;
   images: string[];
   operation: "rent" | "sale";
-  map: { latitude: number, longitude: number };
+  map: { latitude: number; longitude: number };
   date_of_creation: string;
   rooms: number;
   price: number;
@@ -60,18 +62,24 @@ const getCurrentDate = () => {
   const currentDate = new Date().toISOString().split("T")[0];
   return currentDate;
 };
-type PostPropertyScreenNavigationProp = StackNavigationProp<RootStackParamList, 'PostProperty'>;
+type PostPropertyScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  "PostProperty"
+>;
 
 type Props = {
   navigation: PostPropertyScreenNavigationProp;
 };
 
 const PostProperty: React.FC<Props> = ({ navigation }) => {
-
   const [selectedDates, setSelectedDates] = useState<string[]>([]);
   const [showCalendar, setShowCalendar] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [map, setmap] = useState<{ latitude: number; longitude: number } | null>(null);
+  const [map, setmap] = useState<{
+    latitude: number;
+    longitude: number;
+  } | null>(null);
+  const mapRef = useRef(null);
 
   const handleDayPress = (day: DateObject) => {
     const date = day.dateString;
@@ -155,7 +163,10 @@ const PostProperty: React.FC<Props> = ({ navigation }) => {
       "Would you like to take a photo or select from the library?",
       [
         { text: "Take Photo", onPress: () => launchCamera(options) },
-        { text: "Select from Library", onPress: () => launchImageLibrary(options) },
+        {
+          text: "Select from Library",
+          onPress: () => launchImageLibrary(options),
+        },
         { text: "Cancel", style: "cancel" },
       ]
     );
@@ -166,7 +177,9 @@ const PostProperty: React.FC<Props> = ({ navigation }) => {
     handleImageResult(result);
   };
 
-  const launchImageLibrary = async (options: ImagePicker.ImagePickerOptions) => {
+  const launchImageLibrary = async (
+    options: ImagePicker.ImagePickerOptions
+  ) => {
     let result = await ImagePicker.launchImageLibraryAsync(options);
     handleImageResult(result);
   };
@@ -256,10 +269,10 @@ const PostProperty: React.FC<Props> = ({ navigation }) => {
           iduser: "1",
           map: { latitude: 0, longitude: 0 },
           condition: "new",
-          location: 'Ariana',
-          subLocation: 'Ariana Essoughra',
+          location: "Ariana",
+          subLocation: "Ariana Essoughra",
         });
-        navigation.navigate('HousesScreen')
+        navigation.navigate("HousesScreen");
       } else {
         console.error("Failed to post property:", response.statusText);
       }
@@ -268,7 +281,10 @@ const PostProperty: React.FC<Props> = ({ navigation }) => {
     }
   };
 
-  const handleInputChange = (name: keyof PropertyData, value: string | boolean) => {
+  const handleInputChange = (
+    name: keyof PropertyData,
+    value: string | boolean
+  ) => {
     setPropertyData((prevData) => ({
       ...prevData,
       [name]: value,
@@ -294,6 +310,36 @@ const PostProperty: React.FC<Props> = ({ navigation }) => {
     }));
   };
 
+  const handleUseCurrentLocation = async () => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== "granted") {
+      Alert.alert("Permission to access location was denied");
+      return;
+    }
+
+    let location = await Location.getCurrentPositionAsync({});
+    setmap({
+      latitude: location.coords.latitude,
+      longitude: location.coords.longitude,
+    });
+    setPropertyData((prevData) => ({
+      ...prevData,
+      map: {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      },
+    }));
+    mapRef.current.animateToRegion(
+      {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01,
+      },
+      1000
+    );
+  };
+
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -307,9 +353,7 @@ const PostProperty: React.FC<Props> = ({ navigation }) => {
             handleDayPress={handleDayPress}
             showCalendar={showCalendar}
             setShowCalendar={setShowCalendar}
-
           />
-   
 
           <TouchableOpacity onPress={handleImageSelection}>
             <Text style={styles.imageButton}>Upload Images</Text>
@@ -318,12 +362,17 @@ const PostProperty: React.FC<Props> = ({ navigation }) => {
           {propertyData.images.length > 0 && (
             <View style={styles.imageContainer}>
               {propertyData.images.map((image, index) => (
-                <Image key={index} source={{ uri: image }} style={styles.image} />
+                <Image
+                  key={index}
+                  source={{ uri: image }}
+                  style={styles.image}
+                />
               ))}
             </View>
           )}
 
           <MapView
+            ref={mapRef}
             style={styles.map}
             onPress={handleMapPress}
             initialRegion={{
@@ -333,18 +382,23 @@ const PostProperty: React.FC<Props> = ({ navigation }) => {
               longitudeDelta: 5,
             }}
           >
-            {map && (
-              <Marker
-                coordinate={map}
-                title="Property Location"
-              />
-            )}
+            {map && <Marker coordinate={map} title="Property Location" />}
           </MapView>
+
+          <TouchableOpacity
+            style={styles.locationButton}
+            onPress={handleUseCurrentLocation}
+          >
+            <Ionicons name="locate" size={24} color="#fff" />
+          </TouchableOpacity>
 
           {loading ? (
             <ActivityIndicator size="large" color="#0000ff" />
           ) : (
-            <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+            <TouchableOpacity
+              style={styles.submitButton}
+              onPress={handleSubmit}
+            >
               <Text style={styles.submitButtonText}>Post Property</Text>
             </TouchableOpacity>
           )}
@@ -386,6 +440,9 @@ const styles = StyleSheet.create({
     height: 100,
     margin: 5,
   },
+  map: {
+    height: 300,
+  },
   submitButton: {
     backgroundColor: "#007bff",
     paddingVertical: 10,
@@ -394,13 +451,28 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 20,
   },
-  map: {
-    height: 300,
-  },
   submitButtonText: {
     color: "#fff",
     fontSize: 16,
     fontWeight: "bold",
+  },
+  currentLocationButton: {
+    color: "#007bff",
+    textAlign: "center",
+    marginVertical: 10,
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  locationButton: {
+    position: "absolute",
+    bottom: 80, 
+    right: 20,
+    backgroundColor: "#007bff",
+    borderRadius: 50,
+    padding: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    elevation: 5,
   },
 });
 

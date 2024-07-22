@@ -111,7 +111,7 @@ const HousesScreen:React.FC<HousesScreenProps> = ({route}) => {
       residence.title.toLowerCase().includes(searchQuery.toLowerCase())
     );
     setFilteredResidences(filteredData);
-    setCurrentPage(1); // Reset the pagination to the first page
+    setCurrentPage(1); 
   };
 
   const totalPages = Math.ceil(filteredResidences.length / itemsPerPage);
