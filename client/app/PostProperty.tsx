@@ -213,14 +213,21 @@ const PostProperty: React.FC<Props> = ({ navigation }) => {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch("http://192.168.1.13:5000/api/addhouse", {
+      const formattedPropertyData = {
+        ...propertyData,
+        visits: propertyData.visits.map(date => new Date(date).toISOString()), // Ensure dates are in ISO format
+        iduser: "669a7339e08602d9a9a09c4c", // Replace with a valid ObjectId string
+        _id: "669a7339e08602d9a9a09c4c" // Replace with a valid ObjectId string
+      };
+  
+      const response = await fetch("http://192.168.1.14:5800/addhouse", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(propertyData),
+        body: JSON.stringify(formattedPropertyData),
       });
-
+  
       if (response.ok) {
         const result = await response.json();
         console.log("Property posted successfully:", result);
@@ -253,20 +260,22 @@ const PostProperty: React.FC<Props> = ({ navigation }) => {
           contact_info: "",
           status: "pending",
           notification: "",
-          iduser: "1",
+          iduser: "60af924c8d1f000000000000",
           map: { latitude: 0, longitude: 0 },
           condition: "new",
           location: 'Ariana',
           subLocation: 'Ariana Essoughra',
         });
-        navigation.navigate('HousesScreen')
+        navigation.navigate('HousesScreen');
       } else {
-        console.error("Failed to post property:", response.statusText);
+        const errorDetails = await response.text();
+        console.error(`Failed to post property: ${response.statusText} (${response.status}) - ${errorDetails}`);
       }
     } catch (error) {
       console.error("Error posting property:", error);
     }
   };
+  
 
   const handleInputChange = (name: keyof PropertyData, value: string | boolean) => {
     setPropertyData((prevData) => ({

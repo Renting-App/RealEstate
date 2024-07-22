@@ -39,7 +39,7 @@ const MyProperties: React.FC = () => {
   }, []);
 
   const fetchProperties = () => {
-    fetch("http://192.168.1.13:5000/api/gethouse")
+    fetch("http://192.168.1.14:5800/houses")
       .then((response) => response.json())
       .then((data) => {
         const mappedProperties = data.map((property: any) => ({
@@ -62,7 +62,7 @@ const MyProperties: React.FC = () => {
   const handleDelete = async (idhouses: number) => {
     try {
       const response = await fetch(
-        `http://192.168.1.13:5000/api/deletehouse/${idhouses}`,
+        `http://192.168.1.14:5800/deletehouse/${idhouses}`,
         {
           method: "DELETE",
         }

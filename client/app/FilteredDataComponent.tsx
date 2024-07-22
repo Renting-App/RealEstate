@@ -44,26 +44,28 @@ const FilteredDataComponent: React.FC<FilteredDataComponentProps> = ({ route }) 
   }, []);
 
   const fetchResidences = () => {
-    fetch("http://192.168.1.14:5000/api/gethouse")
+    fetch("http://192.168.1.14:5800/houses")
       .then((response) => response.json())
       .then((data) => {
-        const mappedResidences: Residence[] = data.map((residence: any) => ({
-          _id: residence.idhouses,
-          title: residence.title,
-          address: residence.address,
-          size: residence.size,
-          price: residence.price,
-          rooms: residence.rooms,
-          bathrooms: residence.bathrooms,
-          description: residence.description,
-          contact_info: residence.contact_info,
-          images: residence.images,
-          operation: residence.operation,
-          category: residence.category,
-          location: residence.location,
-          subLocation: residence.subLocation,
-          amenities: residence.amenities,
-        }));
+        const mappedResidences = data.map((residence: any) => { 
+          return {
+            _id: residence.idhouses ?? '', 
+            title: residence.title ?? '', 
+            address: residence.address ?? '', 
+            size: residence.size ?? '', 
+            price: residence.price ?? '', 
+            rooms: residence.rooms ?? '', 
+            bathrooms: residence.bathrooms ?? '', 
+            description: residence.description ?? '', 
+            contact_info: residence.contact_info ?? '', 
+            images: residence.images ?? [],
+            operation: residence.operation ?? '', 
+            category: residence.category ?? '', 
+            location: residence.location ?? '', 
+            subLocation: residence.subLocation ?? '', 
+            amenities: residence.amenities ?? '', 
+          };
+        });
         filterResidences(mappedResidences, criteria);
         setLoading(false);
       })
@@ -72,6 +74,7 @@ const FilteredDataComponent: React.FC<FilteredDataComponentProps> = ({ route }) 
         setLoading(false);
       });
   };
+  
 
   const filterResidences = (residences: Residence[], criteria: any) => {
     const filtered = residences.filter((residence) => {

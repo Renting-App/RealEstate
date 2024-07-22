@@ -47,29 +47,29 @@ const HousesScreen = () => {
   useEffect(() => {
     fetchResidences();
   }, []);
- const fetchResidences = () => {
-    fetch("http://192.168.1.14:5000/api/gethouse")
+  const fetchResidences = () => {
+    fetch("http://192.168.1.14:5800/houses")
       .then((response) => response.json())
       .then((data) => {
         const mappedResidences = data.map((residence: any) => ({
-          _id: residence.idhouses,
-          title: residence.title,
-          address: residence.address,
-          size: residence.size,
-          price: residence.price,
-          rooms: residence.rooms,
-          bathrooms: residence.bathrooms,
-          description: residence.description,
-          contact_info: residence.contact_info,
-          images: residence.images,
-          visits: residence.visits,
-          operation: residence.operation,
-          amenities: residence.amenities,
-          location: residence.location,
-          subLocation: residence.subLocation,
-          condition: residence.condition,
-          Favourite: residence.favourite,
-          map: residence.map,
+          _id: residence.idhouses ?? '',
+          title: residence.title ?? '',
+          address: residence.address ?? '',
+          size: residence.size ?? '',
+          price: residence.price ?? '',
+          rooms: residence.rooms ?? '',
+          bathrooms: residence.bathrooms ?? '', 
+          description: residence.description ?? '',
+          contact_info: residence.contact_info ?? '', 
+          images: residence.images ?? [], 
+          visits: residence.visits ?? '', 
+          operation: residence.operation ?? '', 
+          amenities: residence.amenities ?? '', 
+          location: residence.location ?? '', 
+          subLocation: residence.subLocation ?? '', 
+          condition: residence.condition ?? '', 
+          favourite: residence.favourite ?? false, 
+          map: residence.map ?? '', 
         }));
         setResidences(mappedResidences);
         setFilteredResidences(mappedResidences);
@@ -79,7 +79,7 @@ const HousesScreen = () => {
         console.error("Error fetching residences:", error);
         setLoading(false);
       });
-  };
+  };  
 
   const handleSearch = () => {
     const filteredData = residences.filter((residence) =>
