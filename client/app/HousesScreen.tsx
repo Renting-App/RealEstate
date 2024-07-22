@@ -44,7 +44,7 @@ interface Residence {
 }
 
 const HousesScreen:React.FC<HousesScreenProps> = ({route}) => {
-  const { criteria } = route.params ;
+  const { criteria } = route.params || {} ;
   const [residences, setResidences] = useState<Residence[]>([]);
   const [loading, setLoading] = useState(true);
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
