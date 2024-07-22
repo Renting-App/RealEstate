@@ -13,7 +13,7 @@ import { useNavigation } from "@react-navigation/native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import importedStyles from "./styles";
-import { RootStackParamList } from "./_layout"; 
+import { RootStackParamList } from "./_layout";
 import { StackNavigationProp } from "@react-navigation/stack";
 
 interface Property {
@@ -87,8 +87,21 @@ const MyProperties: React.FC = () => {
     }
   };
 
-  const handleUpdate = () => {
-    Alert.alert("قريباً", "انتظرونا.");
+  const handleUpdate = (updatedProperty: Property) => {
+    setProperties((prevProperties) =>
+      prevProperties.map((property) =>
+        property.idhouses === updatedProperty.idhouses
+          ? updatedProperty
+          : property
+      )
+    );
+  };
+
+  const navigateToUpdateForm = (property: Property) => {
+    navigation.navigate("UpdatePropertyForm", {
+      property,
+      onUpdate: handleUpdate,
+    });
   };
 
   const renderItem = ({ item }: { item: Property }) => {
@@ -116,7 +129,7 @@ const MyProperties: React.FC = () => {
             />
           </View>
           <View style={localStyles.button}>
-            <Button title="Update" onPress={handleUpdate} />
+            <Button title="Update" onPress={() => navigateToUpdateForm(item)} />
           </View>
         </View>
       </ThemedView>

@@ -18,7 +18,7 @@ import MyAccount from "./MyAccount";
 import MyProperties from "./MyProperties";
 import Favorite from "./Favorite";
 import { FavoritesProvider } from './FavoritesContext';
-//import UpdatePropertyForm from "./UpdatePropertyForm";
+import UpdatePropertyForm from "./UpdatePropertyForm";
 export type RootStackParamList = {
   Welcome: undefined;
   Signin: undefined;
@@ -36,7 +36,7 @@ export type RootStackParamList = {
   FilteredDataComponent: { criteria: any };
   MyProperties: undefined;
   MyAccount: undefined;
-  //UpdatePropertyForm: undefined;
+  UpdatePropertyForm: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -87,7 +87,7 @@ export default function App() {
       />
       <Stack.Screen name="MyAccount" component={MyAccount} />
       <Stack.Screen name="MyProperties" component={MyProperties} />
-      {/*<Stack.Screen name="UpdatePropertyForm" component={UpdatePropertyForm} />*/}
+      <Stack.Screen name="UpdatePropertyForm" component={UpdatePropertyForm} />
     </Stack.Navigator>
     
     </FavoritesProvider>
