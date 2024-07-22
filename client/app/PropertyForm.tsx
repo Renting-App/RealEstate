@@ -174,8 +174,6 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
         <Picker.Item label="Penthouse" value="penthouse" />
       </Picker>
 
-
-
       <Text style={styles.label}>Number of Rooms:</Text>
       <TextInput
         style={styles.input}
@@ -240,15 +238,21 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
             key={amenity}
             style={[
               styles.amenityButton,
-              propertyData.amenities[amenity as keyof typeof propertyData.amenities] && styles.amenityButtonSelected,
+              propertyData.amenities[
+                amenity as keyof typeof propertyData.amenities
+              ] && styles.amenityButtonSelected,
             ]}
-            onPress={() => toggleCheckbox(amenity as keyof typeof propertyData.amenities)}
+            onPress={() =>
+              toggleCheckbox(amenity as keyof typeof propertyData.amenities)
+            }
           >
             <Icon
               name={amenityIcons[amenity]}
               size={24}
               color={
-                propertyData.amenities[amenity as keyof typeof propertyData.amenities]
+                propertyData.amenities[
+                  amenity as keyof typeof propertyData.amenities
+                ]
                   ? "white"
                   : "black"
               }
@@ -256,7 +260,9 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
             <Text
               style={[
                 styles.amenityText,
-                propertyData.amenities[amenity as keyof typeof propertyData.amenities] && styles.amenityTextSelected,
+                propertyData.amenities[
+                  amenity as keyof typeof propertyData.amenities
+                ] && styles.amenityTextSelected,
               ]}
             >
               {amenity.replace("_", " ")}
@@ -264,7 +270,6 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
           </TouchableOpacity>
         ))}
       </View>
-
     </View>
   );
 };

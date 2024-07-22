@@ -99,6 +99,7 @@ const deleteHouseById = async (req, res) => {
 const updateHouseById = async (req, res) => {
   const { id } = req.params;
   const {
+    title,
     address,
     price,
     description,
@@ -117,7 +118,7 @@ const updateHouseById = async (req, res) => {
     subLocation,
     favourite,
     visits,
-    map
+    map,
   } = req.body;
 
   try {
@@ -128,6 +129,7 @@ const updateHouseById = async (req, res) => {
     }
 
     // Update the house object with the new values
+     house.title = title;
     house.address = address;
     house.price = price;
     house.description = description;
