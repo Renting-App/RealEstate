@@ -237,6 +237,7 @@ const HousesScreen:React.FC<HousesScreenProps> = ({route}) => {
           <Image source={{ uri: item.images[0] }} style={styles.image} />
           <Text style={styles.title}>{item.title}</Text>
           <Text>{item.address}</Text>
+          <Text>{item.category}</Text>
           <Text>{item.description}</Text>
           <Text>Price: {item.price}</Text>
         </View>
