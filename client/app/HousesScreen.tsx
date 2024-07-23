@@ -7,8 +7,6 @@ import {
   Button,
   Pressable,
   Text,
-  StyleSheet,
-  TouchableOpacity,
 } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
@@ -17,13 +15,17 @@ import { Link } from "expo-router";
 import DrawerContent from "@/app/DrawerContent";
 import Search from "./Search";
 import styles from "./styles"; // Importing styles
-import Favourite from "./Favorite";
 import Pagination from "./Pagination";
+import {
+  FlingGestureHandler,
+  Directions,
+  State,
+} from "react-native-gesture-handler";
 
 const itemsPerPage = 3;
 
 interface Residence {
-  _id: number;
+  _id: string; 
   title: string;
   address: string;
   price: string;
@@ -47,29 +49,30 @@ const HousesScreen = () => {
   useEffect(() => {
     fetchResidences();
   }, []);
- const fetchResidences = () => {
-    fetch("http://192.168.1.13:5000/api/gethouse")
+
+  const fetchResidences = () => {
+    fetch("http://192.168.1.13:5800/houses")
       .then((response) => response.json())
       .then((data) => {
         const mappedResidences = data.map((residence: any) => ({
-          _id: residence.idhouses,
-          title: residence.title,
-          address: residence.address,
-          size: residence.size,
-          price: residence.price,
-          rooms: residence.rooms,
-          bathrooms: residence.bathrooms,
-          description: residence.description,
-          contact_info: residence.contact_info,
-          images: residence.images,
-          visits: residence.visits,
-          operation: residence.operation,
-          amenities: residence.amenities,
-          location: residence.location,
-          subLocation: residence.subLocation,
-          condition: residence.condition,
-          Favourite: residence.favourite,
-          map: residence.map,
+          _id: residence._id ?? `id_${Date.now()}`,
+          title: residence.title ?? "",
+          address: residence.address ?? "",
+          size: residence.size ?? "",
+          price: residence.price ?? "",
+          rooms: residence.rooms ?? "",
+          bathrooms: residence.bathrooms ?? "",
+          description: residence.description ?? "",
+          contact_info: residence.contact_info ?? "",
+          images: residence.images ?? [],
+          visits: residence.visits ?? "",
+          operation: residence.operation ?? "",
+          amenities: residence.amenities ?? "",
+          location: residence.location ?? "",
+          subLocation: residence.subLocation ?? "",
+          condition: residence.condition ?? "",
+          favourite: residence.favourite ?? false,
+          map: residence.map ?? "",
         }));
         setResidences(mappedResidences);
         setFilteredResidences(mappedResidences);
@@ -86,7 +89,7 @@ const HousesScreen = () => {
       residence.title.toLowerCase().includes(searchQuery.toLowerCase())
     );
     setFilteredResidences(filteredData);
-    setCurrentPage(1); 
+    setCurrentPage(1);
   };
 
   const totalPages = Math.ceil(filteredResidences.length / itemsPerPage);
@@ -147,65 +150,85 @@ const HousesScreen = () => {
   }
 
   return (
-    <ThemedView style={styles.container}>
-      <DrawerContent
-        isVisible={isSidebarVisible}
-        onClose={() => setIsSidebarVisible(false)}
-      />
-      <View style={styles.header}>
-        <Pressable onPress={() => setIsSidebarVisible(true)}>
-          <Ionicons name="menu" style={styles.menuIcon} size={24} />
-        </Pressable>
-        <ThemedText
-          type="title"
-          style={[
-            styles.bgContainer,
-            {
-              fontSize: 22,
-              fontWeight: "bold",
-              color: "#333",
-              textTransform: "uppercase",
-              letterSpacing: 1,
-            },
-          ]}
-        >
-          Rent&Sell
-        </ThemedText>
-      </View>
-      <View style={styles.banner}>
-        <Image
-          source={require("../assets/images/banner01.jpg")}
-          style={styles.bannerImage}
-        />
-        <View style={styles.bannerContent}>
-          <ThemedText type="title" style={styles.bannerTitle}>
-            Discover Your New Home
-          </ThemedText>
-          <ThemedText type="subtitle" style={styles.bannerSubtitle}>
-            Helping 100 thousand renters and sellers
-          </ThemedText>
-          <Search
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            onSearch={handleSearch}
-          />
+    <FlingGestureHandler
+      direction={Directions.LEFT}
+      onHandlerStateChange={({ nativeEvent }) => {
+        if (nativeEvent.state === State.END) {
+          handlePageChange(currentPage + 1);
+        }
+      }}
+    >
+      <FlingGestureHandler
+        direction={Directions.RIGHT}
+        onHandlerStateChange={({ nativeEvent }) => {
+          if (nativeEvent.state === State.END) {
+            handlePageChange(currentPage - 1);
+          }
+        }}
+      >
+        <View style={{ flex: 1 }}>
+          <ThemedView style={styles.container}>
+            <DrawerContent
+              isVisible={isSidebarVisible}
+              onClose={() => setIsSidebarVisible(false)}
+            />
+            <View style={styles.header}>
+              <Pressable onPress={() => setIsSidebarVisible(true)}>
+                <Ionicons name="menu" style={styles.menuIcon} size={24} />
+              </Pressable>
+              <ThemedText
+                type="title"
+                style={[
+                  styles.bgContainer,
+                  {
+                    fontSize: 22,
+                    fontWeight: "bold",
+                    color: "#333",
+                    textTransform: "uppercase",
+                    letterSpacing: 1,
+                  },
+                ]}
+              >
+                Rent&Sell
+              </ThemedText>
+            </View>
+            <View style={styles.banner}>
+              <Image
+                source={require("../assets/images/banner01.jpg")}
+                style={styles.bannerImage}
+              />
+              <View style={styles.bannerContent}>
+                <ThemedText type="title" style={styles.bannerTitle}>
+                  Discover Your New Home
+                </ThemedText>
+                <ThemedText type="subtitle" style={styles.bannerSubtitle}>
+                  Helping 100 thousand renters and sellers
+                </ThemedText>
+                <Search
+                  searchQuery={searchQuery}
+                  setSearchQuery={setSearchQuery}
+                  onSearch={handleSearch}
+                />
+              </View>
+            </View>
+            <FlatList
+              data={filteredResidences.slice(
+                (currentPage - 1) * itemsPerPage,
+                currentPage * itemsPerPage
+              )}
+              renderItem={renderItem}
+              keyExtractor={(item) => item._id}
+              contentContainerStyle={styles.cardsContainer}
+            />
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
+          </ThemedView>
         </View>
-      </View>
-      <FlatList
-        data={filteredResidences.slice(
-          (currentPage - 1) * itemsPerPage,
-          currentPage * itemsPerPage
-        )}
-        renderItem={renderItem}
-        keyExtractor={(item) => item._id.toString()}
-        contentContainerStyle={styles.cardsContainer}
-      />
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={handlePageChange}
-      />
-    </ThemedView>
+      </FlingGestureHandler>
+    </FlingGestureHandler>
   );
 };
 

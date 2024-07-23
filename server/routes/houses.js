@@ -1,14 +1,12 @@
-const router = require('express').Router();
-const houseController = require('../controllers/houses.js')
+const express = require('express');
+const router = express.Router();
+const houseController = require('../controller/houses.js');
 
-
-router.post('/addhouse', houseController.addHouse);
-router.get('/gethouse', houseController.getAllHouses);
-router.get('/gethouse/:id', houseController.getHouseById);
-router.delete('/deletehouse/:id',houseController.deleteHouseById);
-router.put('/updatehouse/:id',houseController.updateHouseById);
-///search
-// router.post('/search', houseController.searchHouses);
-
+router.post('/addhouse', houseController.createHouse);
+router.get('/houses', houseController.getAllHouses);
+router.get('/houses/:id', houseController.getHouseById);
+router.put('/houses/:id', houseController.updateHouseById);
+router.delete('/deletehouse/:id', houseController.deleteHouseById);
 
 module.exports = router;
+
