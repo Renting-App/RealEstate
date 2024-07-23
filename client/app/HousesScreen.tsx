@@ -51,7 +51,7 @@ const HousesScreen = () => {
   }, []);
 
   const fetchResidences = () => {
-    fetch("http://192.168.1.13:5800/houses")
+    fetch("http://192.168.1.105:5800/houses")
       .then((response) => response.json())
       .then((data) => {
         const mappedResidences = data.map((residence: any) => ({

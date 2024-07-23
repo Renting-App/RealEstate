@@ -4,7 +4,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from './_layout';
 import { auth, firestore } from '../config/firebase';
 import { doc, getDoc } from 'firebase/firestore';
-import AdminDrawer from './admindrawer';
+import AdminDrawer from './AdminDrawer';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 type AdminScreenNavigationProp = StackNavigationProp<RootStackParamList, 'adminPage'>;
@@ -58,7 +58,9 @@ const AdminPage: React.FC<Props> = ({ navigation }) => {
             <Text>Welcome to the Admin Page!</Text>
             <AdminDrawer
                 isVisible={isSidebarVisible}
-                onClose={() => setIsSidebarVisible(false)}/>
+                onClose={() => setIsSidebarVisible(false)}
+                navigation={navigation}
+            />
         </View>
     );
 };

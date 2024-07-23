@@ -8,8 +8,16 @@ import {
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { Calendar, DateObject } from "react-native-calendars";
+import { Calendar } from "react-native-calendars";
 import { locations } from "./FilterComponent";
+
+type DateObject = {
+  dateString: string;
+  day: number;
+  month: number;
+  year: number;
+  timestamp: number;
+};
 
 interface PropertyData {
   _id: string;

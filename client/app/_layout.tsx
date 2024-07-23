@@ -19,6 +19,30 @@ import MyProperties from "./MyProperties";
 import Favorite from "./Favorite";
 import { FavoritesProvider } from './FavoritesContext';
 import UpdatePropertyForm from "./UpdatePropertyForm";
+import ManagePosts from "./ManagePosts";
+import PostDetail from "./PostDetail";
+
+export type Residence = {
+  _id: string;
+  title: string;
+  address: string;
+  size: number;
+  price: number;
+  rooms: number;
+  bathrooms: number;
+  description: string;
+  contact_info: string;
+  images: string[];
+  visits: number;
+  operation: string;
+  amenities: string[];
+  location: string;
+  subLocation: string;
+  condition: string;
+  favourite: boolean;
+};
+
+
 export type RootStackParamList = {
   Welcome: undefined;
   SignIn: undefined;
@@ -47,52 +71,100 @@ const Stack = createStackNavigator<RootStackParamList>();
 export default function App() {
   return (
     <FavoritesProvider>
-    <Stack.Navigator
-      initialRouteName="HousesScreen"
-      screenOptions={{ headerShown: false }}
-    >
-      <Stack.Screen name="Welcome" component={Welcome} />
-      <Stack.Screen name="Signin" component={Signin} />
-      <Stack.Screen name="Signup" component={Signup} />
-      <Stack.Screen name="HousesScreen" component={HousesScreen} />
-      <Stack.Screen
-        name="AboutUs"
-        component={AboutUs}
-        options={{ headerShown: true }}
-      />
-      <Stack.Screen
-        name="FAQ"
-        component={FAQ}
-        options={{ headerShown: true }}
-      />
-      <Stack.Screen name="PostProperty" component={PostProperty} />
-      <Stack.Screen name="PropertyDetails" component={PropertyDetails} />
-      <Stack.Screen name="Favorite" component={Favorite} />
-      <Stack.Screen
-        name="FilterComponent"
-        component={FilterComponent}
-        options={{ headerShown: true }}
-      />
-      <Stack.Screen
-        name="FilteredDataComponent"
-        component={FilteredDataComponent}
-        options={{ headerShown: true }}
-      />
-      <Stack.Screen
-        name="Maps"
-        component={Maps}
-        options={{ headerShown: true }}
-      />
-      <Stack.Screen
-        name="RequestTour"
-        component={RequestTour}
-        options={{ headerShown: true }}
-      />
-      <Stack.Screen name="MyAccount" component={MyAccount} />
-      <Stack.Screen name="MyProperties" component={MyProperties} />
-      <Stack.Screen name="UpdatePropertyForm" component={UpdatePropertyForm} />
-    </Stack.Navigator>
-    
+      <Stack.Navigator
+        initialRouteName="Welcome"
+        screenOptions={{ headerShown: true }}
+      >
+        <Stack.Screen
+          name="Welcome"
+          component={Welcome}
+          options={{ headerShown: false }} 
+        />
+
+        <Stack.Screen
+          name="SignIn"
+          component={Signin}
+        />
+
+        <Stack.Screen
+          name="SignUp"
+          component={Signup} />
+
+        <Stack.Screen
+          name="HousesScreen"
+          component={HousesScreen}
+          options={{ headerShown: false }} />
+
+        <Stack.Screen
+          name="AboutUs"
+          component={AboutUs} />
+
+        <Stack.Screen
+          name="FAQ"
+          component={FAQ}
+
+        />
+        <Stack.Screen
+          name="PostProperty"
+          component={PostProperty} />
+
+        <Stack.Screen
+          name="PropertyDetails"
+          component={PropertyDetails} />
+
+
+<Stack.Screen
+          name="PostDetail"
+          component={PostDetail} />
+
+        <Stack.Screen
+          name="Favorite"
+          component={Favorite} />
+
+        <Stack.Screen
+          name="FilterComponent"
+          component={FilterComponent}
+
+        />
+        <Stack.Screen
+          name="FilteredDataComponent"
+          component={FilteredDataComponent}
+
+        />
+        <Stack.Screen
+          name="Maps"
+          component={Maps}
+
+        />
+        <Stack.Screen
+          name="RequestTour"
+          component={RequestTour}
+
+        />
+        <Stack.Screen
+          name="adminPage"
+          component={AdminPage}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name="ManagePosts"
+          component={ManagePosts}
+        />
+
+        <Stack.Screen
+         name="MyAccount"
+          component={MyAccount} />
+
+        <Stack.Screen 
+        name="MyProperties"
+         component={MyProperties} />
+
+        <Stack.Screen 
+        name="UpdatePropertyForm"
+         component={UpdatePropertyForm} />
+      </Stack.Navigator>
+
     </FavoritesProvider>
   );
 }

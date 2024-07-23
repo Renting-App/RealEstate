@@ -1,12 +1,9 @@
-//hetha el sidebar te3 l admin
-
 import React from "react";
 import { View, StyleSheet, Pressable } from "react-native";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { ThemedText } from "@/components/ThemedText";
-import { Link } from "expo-router";
+import { Link, useNavigation } from "expo-router";
 import { StackNavigationProp } from '@react-navigation/stack';
-
 
 type AdminDrawerProps = {
   isVisible: boolean;
@@ -14,20 +11,21 @@ type AdminDrawerProps = {
   navigation: StackNavigationProp<any, any>;
 };
 
-const AdminDrawer: React.FC<AdminDrawerProps> = ({ isVisible, onClose,navigation }) => {
+const AdminDrawer: React.FC<AdminDrawerProps> = ({ isVisible, onClose, navigation }) => {
   return (
     <View style={[styles.sidebar, isVisible ? styles.sidebarVisible : styles.sidebarHidden]}>
       <Pressable style={styles.closeButton} onPress={onClose}>
         <Ionicons name="close-circle" size={32} color="#333" />
       </Pressable>
       <View style={styles.linksContainer}>
-       
-        <Link href={'/ManagePosts'} style={styles.link}>
+        <Pressable onPress={() => navigation.navigate('ManagePosts')} style={styles.link}>
           <ThemedText type="subtitle">Manage Posts</ThemedText>
-        </Link>
-
-        <Pressable onPress={()=>{navigation.navigate('ManagePosts')}}>
-          <ThemedText type="subtitle">Manage posts</ThemedText>
+        </Pressable>
+        <Pressable onPress={() => navigation.navigate('Profit')} style={styles.link}>
+          <ThemedText type="subtitle">Profit</ThemedText>
+        </Pressable>
+        <Pressable onPress={() => navigation.navigate('AcceptRequests')} style={styles.link}>
+          <ThemedText type="subtitle">Accept Requests</ThemedText>
         </Pressable>
       </View>
     </View>

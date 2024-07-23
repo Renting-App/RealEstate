@@ -1,39 +1,20 @@
+// ManagePosts.tsx
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useNavigation } from '@react-navigation/native';
-
-// Define the type for Residence
-type Residence = {
-    _id: string;
-    title: string;
-    address: string;
-    size: number;
-    price: number;
-    rooms: number;
-    bathrooms: number;
-    description: string;
-    contact_info: string;
-    images: string[];
-    visits: number;
-    operation: string;
-    amenities: string[];
-    location: string;
-    subLocation: string;
-    condition: string;
-    favourite: boolean;
-};
+import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { RootStackParamList, Residence } from './_layout'; // Adjust the import path
 
 const ManagePosts: React.FC = () => {
     const [posts, setPosts] = useState<Residence[]>([]);
-    const navigation = useNavigation();
+    const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
     const fetchResidences = () => {
-        fetch("http://192.168.1.105:5000/api/gethouse")
+        fetch("http://192.168.1.105:5800/houses")
             .then((response) => response.json())
             .then((data) => {
                 const mappedResidences = data.map((residence: any) => ({
-                    _id: residence.idhouses,
+                    _id: residence._id,
                     title: residence.title,
                     address: residence.address,
                     size: residence.size,
@@ -184,5 +165,9 @@ const styles = StyleSheet.create({
         marginLeft: 5,
     },
     separator: {
-    }})
-export default ManagePosts
+        height: 1,
+        backgroundColor: '#e0e0e0',
+    },
+});
+
+export default ManagePosts;

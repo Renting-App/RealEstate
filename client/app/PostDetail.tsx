@@ -1,20 +1,20 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { Residence } from './FilteredDataComponent';
+import { RouteProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList, Residence } from './_layout'; // Adjust the import path
+
+type PostDetailScreenRouteProp = RouteProp<RootStackParamList, 'PostDetail'>;
+type PostDetailScreenNavigationProp = StackNavigationProp<RootStackParamList, 'PostDetail'>;
 
 type PostDetailProps = {
-    route: {
-        params: {
-            post: Residence;
-        };
-    };
-    navigation: any;
+    route: PostDetailScreenRouteProp;
+    navigation: PostDetailScreenNavigationProp;
 };
 
 const PostDetail: React.FC<PostDetailProps> = ({ route, navigation }) => {
     const { post } = route.params;
-
     return (
         <ScrollView style={styles.container}>
             <Image source={{ uri: post.images[0] }} style={styles.image} />
@@ -27,9 +27,9 @@ const PostDetail: React.FC<PostDetailProps> = ({ route, navigation }) => {
                 <Text style={styles.details}>Bathrooms: {post.bathrooms}</Text>
                 <Text style={styles.details}>Description: {post.description}</Text>
                 <Text style={styles.details}>Contact: {post.contact_info}</Text>
-                <Text style={styles.details}>Visits: {post.visits}</Text>
+
                 <Text style={styles.details}>Location: {post.location}, {post.subLocation}</Text>
-                <Text style={styles.details}>Condition: {post.condition}</Text>
+
                 <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
                     <MaterialCommunityIcons name="arrow-left" size={24} color="#fff" />
                     <Text style={styles.backButtonText}>Back</Text>
