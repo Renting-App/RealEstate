@@ -48,7 +48,7 @@ export type RootStackParamList = {
   SignIn: undefined;
   SignUp: undefined;
   AdminDrawer: undefined;
-  HousesScreen: undefined;
+  HousesScreen: { criteria: any };
   AboutUs: undefined;
   FAQ: undefined;
   Maps: undefined;
@@ -58,7 +58,7 @@ export type RootStackParamList = {
   RequestTour: undefined;
   PostProperty: undefined;
   Favorite: undefined;
-  FilteredDataComponent: { criteria: any };
+  FilteredDataComponent:undefined ;
   ManagePosts: undefined;
   PostDetail: { post: Residence };
   MyProperties: undefined;
