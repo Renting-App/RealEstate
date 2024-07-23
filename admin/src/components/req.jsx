@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './TourRequestsList.css'; 
+import './TourRequestsList.css';
 
 const TourRequestsList = () => {
   const [requests, setRequests] = useState([]);
@@ -22,6 +22,21 @@ const TourRequestsList = () => {
     fetchRequests();
   }, []);
 
+  const handleApprove = async (id) => {
+    try {
+      await axios.delete(`http://localhost:5800/deletereq/${id}`);
+      setRequests(requests.filter((item) => item._id !== id));
+    } catch (error) {
+      console.error('Failed to approve request:', error);
+      setError('Failed to approve request.');
+    }
+  };
+
+  const handleCancel = (id) => {
+   
+    console.log(`Cancelled request with id: ${id}`);
+  };
+
   if (loading) return <div className="loading-text">Loading...</div>;
   if (error) return <div className="error-text">{error}</div>;
 
@@ -37,6 +52,7 @@ const TourRequestsList = () => {
             <p><strong>Message:</strong> {item.message}</p>
             <p><strong>Visit Date:</strong> {item.selectedVisitDate}</p>
             <p><strong>Residence:</strong> {item.residence.title}</p>
+            <button onClick={() => handleApprove(item._id)} className="approve-button">Approve</button>
           </li>
         ))}
       </ul>
