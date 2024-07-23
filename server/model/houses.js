@@ -218,6 +218,6 @@ const houseSchema = new mongoose.Schema(
   }
 );
 
-const House = mongoose.model("House", houseSchema);
+const House = mongoose.model("house", houseSchema);
 
 module.exports = House;
