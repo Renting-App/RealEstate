@@ -1,8 +1,7 @@
-//hetha el sidebar
-
+// Sidebar.js
 import React from "react";
 import { View, StyleSheet, Pressable } from "react-native";
-import Ionicons from '@expo/vector-icons/Ionicons';
+import Ionicons from "@expo/vector-icons/Ionicons";
 import { ThemedText } from "@/components/ThemedText";
 import { Link } from "expo-router";
 
@@ -12,36 +11,108 @@ interface SidebarProps {
 }
 
 const DrawerContent: React.FC<SidebarProps> = ({ isVisible, onClose }) => {
+  if (!isVisible) return null;
+
   return (
-    <View style={[styles.sidebar, isVisible ? styles.sidebarVisible : styles.sidebarHidden]}>
-      <Pressable style={styles.closeButton} onPress={onClose}>
-        <Ionicons name="close-circle" size={32} color="#333" />
+    <Pressable style={styles.overlay} onPress={onClose}>
+      <Pressable onPress={(e) => e.stopPropagation()} style={styles.sidebar}>
+        <Pressable style={styles.closeButton} onPress={onClose}>
+          <Ionicons name="close-circle" size={32} color="#333" />
+        </Pressable>
+        <View style={styles.linksContainer}>
+          <Link href="/AboutUs" style={styles.link}>
+            <View style={styles.linkContent}>
+              <Ionicons
+                name="information-circle-outline"
+                size={24}
+                color="#333"
+                style={styles.logo}
+              />
+              <ThemedText type="subtitle">About Us</ThemedText>
+            </View>
+          </Link>
+          <Link href="/FAQ" style={styles.link}>
+            <View style={styles.linkContent}>
+              <Ionicons
+                name="help-circle-outline"
+                size={24}
+                color="#333"
+                style={styles.logo}
+              />
+              <ThemedText type="subtitle">FAQ</ThemedText>
+            </View>
+          </Link>
+          <Link href="/PostProperty" style={styles.link}>
+            <View style={styles.linkContent}>
+              <Ionicons
+                name="home-outline"
+                size={24}
+                color="#333"
+                style={styles.logo}
+              />
+              <ThemedText type="subtitle">Post a Property</ThemedText>
+            </View>
+          </Link>
+          <Link href="/FilterComponent" style={styles.link}>
+            <View style={styles.linkContent}>
+              <Ionicons
+                name="filter-outline"
+                size={24}
+                color="#333"
+                style={styles.logo}
+              />
+              <ThemedText type="subtitle">Filter</ThemedText>
+            </View>
+          </Link>
+          <Link href="/Maps" style={styles.link}>
+            <View style={styles.linkContent}>
+              <Ionicons
+                name="map-outline"
+                size={24}
+                color="#333"
+                style={styles.logo}
+              />
+              <ThemedText type="subtitle">Map</ThemedText>
+            </View>
+          </Link>
+          <Link href="/Favorite" style={styles.link}>
+            <View style={styles.linkContent}>
+              <Ionicons
+                name="heart-outline"
+                size={24}
+                color="#333"
+                style={styles.logo}
+              />
+              <ThemedText type="subtitle">Favourite</ThemedText>
+            </View>
+          </Link>
+          <Link href="/MyAccount" style={styles.link}>
+            <View style={styles.linkContent}>
+              <Ionicons
+                name="person-circle-outline"
+                size={24}
+                color="#333"
+                style={styles.logo}
+              />
+              <ThemedText type="subtitle">My Account</ThemedText>
+            </View>
+          </Link>
+        </View>
       </Pressable>
-      <View style={styles.linksContainer}>
-        <Link href={'/AboutUs'} style={styles.link}>
-          <ThemedText type="subtitle">About Us</ThemedText>
-        </Link>
-        <Link href={'/FAQ'} style={styles.link}>
-          <ThemedText type="subtitle">FAQ</ThemedText>
-        </Link>
-        <Link href={'/PostProperty'} style={styles.link}>
-          <ThemedText type="subtitle">Post a Property</ThemedText>
-        </Link>
-        <Link href={'/FilterComponent'} style={styles.link}>
-          <ThemedText type="subtitle">Filter</ThemedText>
-        </Link>
-        <Link href={'/Maps'} style={styles.link}>
-          <ThemedText type="subtitle">Map</ThemedText>
-        </Link>
-        <Link href={'/Favorite'} style={styles.link}>
-          <ThemedText type="subtitle">Favourite</ThemedText>
-        </Link>
-      </View>
-    </View>
+    </Pressable>
   );
 };
 
 const styles = StyleSheet.create({
+  overlay: {
+    position: "absolute",
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: "rgba(0,0,0,0.5)",
+    zIndex: 999,
+  },
   sidebar: {
     position: "absolute",
     top: 0,
@@ -60,12 +131,6 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
-  sidebarHidden: {
-    left: -250,
-  },
-  sidebarVisible: {
-    left: 0,
-  },
   closeButton: {
     alignSelf: "flex-end",
     marginBottom: 10,
@@ -77,6 +142,13 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     textDecorationLine: "none",
     color: "#333",
+  },
+  linkContent: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  logo: {
+    marginRight: 8,
   },
 });
 

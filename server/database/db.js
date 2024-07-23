@@ -1,18 +1,17 @@
-const { Sequelize } = require("sequelize");
+const mongoose = require("mongoose");
 
-const sequelize = new Sequelize("realestate", "mariem", "root", {
-  host: "localhost",
-  dialect: "mysql",
-});
+const mongoURI =
+  "mongodb+srv://chaima:chaimabahi123456@realestate.fkwvart.mongodb.net/RealEstate?retryWrites=true&w=majority&appName=RealEstate";
 
+mongoose
+  .connect(mongoURI)
+  .then(() => {
+    console.log("db connected");
+  })
+  .catch((error) => {
+    console.error("db connection error:", error);
+  });
 
-async function testConnection() {
-  try {
-    await sequelize.authenticate();
-    console.log("Database connected successfully.");
-  } catch (error) {
-    console.error("Unable to connect to the database:", error);
-  }
-}
+const db = mongoose.connection;
 
-module.exports = { sequelize, testConnection };
+module.exports = db;
