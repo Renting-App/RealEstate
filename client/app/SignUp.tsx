@@ -8,7 +8,7 @@ import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth, firestore } from '../config/firebase';
 import { doc, setDoc } from 'firebase/firestore';
 
-type SignupScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Signup'>;
+type SignupScreenNavigationProp = StackNavigationProp<RootStackParamList, 'SignUp'>;
 
 type Props = {
     navigation: SignupScreenNavigationProp;
@@ -32,7 +32,7 @@ const Signup: React.FC<Props> = ({ navigation }) => {
 
         try {
             await createUserWithEmailAndPassword(auth, value.email, value.password);
-            navigation.navigate('Signin');
+            navigation.navigate('SignIn');
         } catch (error) {
             if (error instanceof Error) {
                 setValue({

@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from './index';
+import { RootStackParamList } from './_layout';
 import { auth, firestore } from '../config/firebase';
 import { doc, getDoc } from 'firebase/firestore';
+import AdminDrawer from './admindrawer';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
-type AdminScreenNavigationProp = StackNavigationProp<RootStackParamList, 'AdminPage'>;
+type AdminScreenNavigationProp = StackNavigationProp<RootStackParamList, 'adminPage'>;
 
 type Props = {
     navigation: AdminScreenNavigationProp;
@@ -14,6 +16,7 @@ type Props = {
 const AdminPage: React.FC<Props> = ({ navigation }) => {
     const [loading, setLoading] = useState(true);
     const [isAdmin, setIsAdmin] = useState(false);
+    const [isSidebarVisible, setIsSidebarVisible] = useState(false);
 
     useEffect(() => {
         const checkAdminRole = async () => {
@@ -25,7 +28,6 @@ const AdminPage: React.FC<Props> = ({ navigation }) => {
                     setIsAdmin(true);
                 }
             }
-            
             setLoading(false);
         };
 
@@ -50,7 +52,13 @@ const AdminPage: React.FC<Props> = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
+            <Pressable style={styles.menuButton} onPress={() => setIsSidebarVisible(true)}>
+                <Ionicons name="menu" size={32} color="#333" />
+            </Pressable>
             <Text>Welcome to the Admin Page!</Text>
+            <AdminDrawer
+                isVisible={isSidebarVisible}
+                onClose={() => setIsSidebarVisible(false)}/>
         </View>
     );
 };
@@ -60,6 +68,12 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        marginTop: 25,
+    },
+    menuButton: {
+        position: 'absolute',
+        top: 25,
+        left: 20,
     },
 });
 

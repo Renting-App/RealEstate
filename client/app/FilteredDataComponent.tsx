@@ -7,6 +7,8 @@ type FilteredDataComponentProps = {
   route: RouteProp<RootStackParamList, 'FilteredDataComponent'>;
 };
 export type Residence = {
+  visits: ReactNode;
+  condition: ReactNode;
   _id: number;
   title: string;
   address: string;
@@ -22,6 +24,7 @@ export type Residence = {
   location: string;
   subLocation: string;
   amenities: {
+    join(arg0: string): React.ReactNode;
     ac: boolean;
     pool: boolean;
     alarm: boolean;

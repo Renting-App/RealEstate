@@ -21,7 +21,7 @@ const Welcome: React.FC<Props> = ({ navigation }) => {
         resizeMode="contain"
       />
       <View style={styles.buttons}>
-        <Button title="Start" buttonStyle={styles.button} onPress={() => navigation.navigate('Signin')} />
+        <Button title="Start" buttonStyle={styles.button} onPress={() => navigation.navigate('SignIn')} />
       </View>
     </View>
   );
