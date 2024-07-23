@@ -23,7 +23,6 @@ const CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/dw1sxdmac/upload";
 const CLOUDINARY_PRESET = "hotel_preset";
 
 interface PropertyData {
-  _id: string;
   address: string;
   size: number;
   category: "apartment" | "house" | "office" | "studio" | "penthouse";
@@ -52,7 +51,7 @@ interface PropertyData {
   contact_info: string;
   status: "pending" | "approved" | "declined";
   notification: string;
-  iduser: string;
+  iduser?: string;
   condition: "new" | "occasion";
   location: string;
   subLocation: string;
@@ -62,6 +61,7 @@ const getCurrentDate = () => {
   const currentDate = new Date().toISOString().split("T")[0];
   return currentDate;
 };
+
 type PostPropertyScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
   "PostProperty"
@@ -75,11 +75,11 @@ const PostProperty: React.FC<Props> = ({ navigation }) => {
   const [selectedDates, setSelectedDates] = useState<string[]>([]);
   const [showCalendar, setShowCalendar] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [map, setmap] = useState<{
+  const [map, setMap] = useState<{
     latitude: number;
     longitude: number;
   } | null>(null);
-  const mapRef = useRef(null);
+  const mapRef = useRef<MapView>(null);
 
   const handleDayPress = (day: DateObject) => {
     const date = day.dateString;
@@ -108,7 +108,6 @@ const PostProperty: React.FC<Props> = ({ navigation }) => {
   };
 
   const [propertyData, setPropertyData] = useState<PropertyData>({
-    _id: "1",
     address: "123 Main Street, Cityville, State",
     size: 120,
     category: "apartment",
@@ -140,7 +139,7 @@ const PostProperty: React.FC<Props> = ({ navigation }) => {
     contact_info: "contact@example.com",
     status: "pending",
     notification: "",
-    iduser: "1",
+    iduser: undefined, 
     map: { latitude: 33.8869, longitude: 9.5375 },
   });
 
@@ -226,7 +225,8 @@ const PostProperty: React.FC<Props> = ({ navigation }) => {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch("http://192.168.1.13:5000/api/addhouse", {
+      setLoading(true); 
+      const response = await fetch("http://192.168.1.13:5800/addhouse", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -234,11 +234,13 @@ const PostProperty: React.FC<Props> = ({ navigation }) => {
         body: JSON.stringify(propertyData),
       });
 
+      setLoading(false); 
+
       if (response.ok) {
         const result = await response.json();
         console.log("Property posted successfully:", result);
+        Alert.alert("Success", "Property posted successfully!");
         setPropertyData({
-          _id: "",
           address: "",
           size: 0,
           category: "apartment",
@@ -266,7 +268,7 @@ const PostProperty: React.FC<Props> = ({ navigation }) => {
           contact_info: "",
           status: "pending",
           notification: "",
-          iduser: "1",
+          iduser: undefined, 
           map: { latitude: 0, longitude: 0 },
           condition: "new",
           location: "Ariana",
@@ -274,10 +276,17 @@ const PostProperty: React.FC<Props> = ({ navigation }) => {
         });
         navigation.navigate("HousesScreen");
       } else {
-        console.error("Failed to post property:", response.statusText);
+        const errorText = await response.text();
+        console.error("Failed to post property:", response.status, errorText);
+        Alert.alert(
+          "Error",
+          `Failed to post property: ${response.status} ${errorText}`
+        );
       }
     } catch (error) {
+      setLoading(false); 
       console.error("Error posting property:", error);
+      Alert.alert("Error", `Error posting property: ${error.message}`);
     }
   };
 
@@ -303,7 +312,7 @@ const PostProperty: React.FC<Props> = ({ navigation }) => {
 
   const handleMapPress = (event: any) => {
     const { latitude, longitude } = event.nativeEvent.coordinate;
-    setmap({ latitude, longitude });
+    setMap({ latitude, longitude });
     setPropertyData((prevData) => ({
       ...prevData,
       map: { latitude, longitude },
@@ -318,7 +327,7 @@ const PostProperty: React.FC<Props> = ({ navigation }) => {
     }
 
     let location = await Location.getCurrentPositionAsync({});
-    setmap({
+    setMap({
       latitude: location.coords.latitude,
       longitude: location.coords.longitude,
     });
@@ -329,7 +338,7 @@ const PostProperty: React.FC<Props> = ({ navigation }) => {
         longitude: location.coords.longitude,
       },
     }));
-    mapRef.current.animateToRegion(
+    mapRef.current?.animateToRegion(
       {
         latitude: location.coords.latitude,
         longitude: location.coords.longitude,
@@ -465,7 +474,7 @@ const styles = StyleSheet.create({
   },
   locationButton: {
     position: "absolute",
-    bottom: 80, 
+    bottom: 80,
     right: 20,
     backgroundColor: "#007bff",
     borderRadius: 50,

@@ -11,7 +11,7 @@ import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { auth, firestore } from '../config/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 
-type SigninScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Signin'>;
+type SigninScreenNavigationProp = StackNavigationProp<RootStackParamList, 'SignIn'>;
 
 type Props = {
     navigation: SigninScreenNavigationProp;
@@ -39,7 +39,7 @@ const Signin: React.FC<Props> = ({ navigation }) => {
             const userDoc = await getDoc(doc(firestore, 'users', user.uid));
             const userData = userDoc.data();
             if (userData && userData.role === 'admin') {
-                navigation.navigate('AdminPage');
+                navigation.navigate('adminPage');
             } else {
                 navigation.navigate('HousesScreen');
             }
@@ -79,7 +79,7 @@ const Signin: React.FC<Props> = ({ navigation }) => {
                 />
                 {value.error ? <Text style={styles.errorText}>{value.error}</Text> : null}
                 <Button title="Submit" buttonStyle={styles.button} onPress={signIn} />
-                <Button title="Sign up" buttonStyle={[styles.button, styles.signupButton]} onPress={() => navigation.navigate('Signup')} />
+                <Button title="Sign up" buttonStyle={[styles.button, styles.signupButton]} onPress={() => navigation.navigate('SignUp')} />
             </View>
         </View>
     );

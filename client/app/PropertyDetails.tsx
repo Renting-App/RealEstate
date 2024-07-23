@@ -96,7 +96,6 @@ const PropertyDetails: React.FC = () => {
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>
-        <HomeButton />
         <View style={styles.header}>
           <Text style={styles.title}>{residenceData.title}</Text>
           <Text style={styles.price}>${residenceData.price}</Text>

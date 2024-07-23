@@ -6,24 +6,39 @@ import {
   Alert,
   TouchableOpacity,
 } from "react-native";
-import MapView, { Marker } from "react-native-maps";
+import MapView, { Marker, MapViewProps } from "react-native-maps";
 import * as Location from "expo-location";
 import axios from "axios";
 import { HomeButton } from "./HomeButton";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, NavigationProp } from "@react-navigation/native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-const Maps = () => {
-  const [places, setPlaces] = useState([]);
+interface Place {
+  id: string;
+  title: string;
+  description: string;
+  map: {
+    latitude: number;
+    longitude: number;
+  };
+}
+
+interface LocationCoords {
+  latitude: number;
+  longitude: number;
+}
+
+const Maps: React.FC = () => {
+  const [places, setPlaces] = useState<Place[]>([]);
   const [loading, setLoading] = useState(true);
-  const [currentLocation, setCurrentLocation] = useState(null);
-  const navigation = useNavigation();
-  const mapRef = useRef(null);
+  const [currentLocation, setCurrentLocation] = useState<LocationCoords | null>(null);
+  const navigation = useNavigation<NavigationProp<any>>();
+  const mapRef = useRef<MapView>(null);
 
   useEffect(() => {
     const fetchPlaces = async () => {
       try {
-        const response = await axios.get("http://192.168.1.13:5000/api/gethouse");
+        const response = await axios.get("http://192.168.1.105:5800/houses");
         setPlaces(response.data);
       } catch (error) {
         console.error("Error fetching places:", error);
@@ -39,7 +54,10 @@ const Maps = () => {
         }
 
         let location = await Location.getCurrentPositionAsync({});
-        setCurrentLocation(location.coords);
+        setCurrentLocation({
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+        });
       } catch (error) {
         console.error("Error fetching location:", error);
       }
@@ -55,7 +73,7 @@ const Maps = () => {
     fetchData();
   }, []);
 
-  const handleMarkerPress = (place) => {
+  const handleMarkerPress = (place: Place) => {
     navigation.navigate("PropertyDetails", {
       residence: JSON.stringify(place),
     });
@@ -85,13 +103,12 @@ const Maps = () => {
 
   return (
     <View style={styles.container}>
-      <HomeButton />
       <MapView
         ref={mapRef}
         style={styles.map}
         initialRegion={{
-          latitude: currentLocation ? currentLocation.latitude : 33.8869,
-          longitude: currentLocation ? currentLocation.longitude : 9.5375,
+          latitude: 33.8869,
+          longitude: 9.5375,
           latitudeDelta: 5,
           longitudeDelta: 5,
         }}
@@ -106,9 +123,9 @@ const Maps = () => {
             pinColor="blue"
           />
         )}
-        {places.map((place, index) => (
+        {places.map((place) => (
           <Marker
-            key={index}
+            key={place.id}
             coordinate={{
               latitude: place.map.latitude,
               longitude: place.map.longitude,
