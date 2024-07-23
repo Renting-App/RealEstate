@@ -1,43 +1,34 @@
-/* TourRequestsList.css */
-
 .container {
-    padding: 16px;
-    background-color: #f9f9f9;
-  }
-  
-  .loading-text {
-    font-size: 18px;
-    color: #666;
-    text-align: center;
-    margin-top: 20px;
-  }
-  
-  .error-text {
-    font-size: 18px;
-    color: red;
-    text-align: center;
-    margin-top: 20px;
-  }
-  
-  .request-list {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  .request-item {
-    padding: 16px;
-    background-color: #fff;
-    border-radius: 8px;
-    margin-bottom: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  }
-  
-  .request-item p {
-    margin: 4px 0;
-  }
-  
-  .request-item strong {
-    display: inline-block;
-    width: 150px;
-  }
-  
+  padding: 20px;
+}
+
+.request-list {
+  list-style-type: none;
+  padding: 0;
+  width: 60%;
+}
+
+.request-item {
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.approve-button {
+  border: none;
+  padding: 10px 15px;
+  margin: 5px 0;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 14px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.approve-button {
+  background-color: #28a745;
+  color: white;
+}
+
+.approve-button:hover {
+  background-color: #218838;
+}
