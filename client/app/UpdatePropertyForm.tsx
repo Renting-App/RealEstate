@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   ScrollView,
   Button,
@@ -45,7 +45,7 @@ const initializePropertyData = (property: PropertyData): PropertyData => {
   const defaultSubLocation = locations[defaultLocation][0];
 
   return {
-    idhouses: property.idhouses || "", 
+    idhouses: property._id || "", // Updated to use `_id` from property
     address: property.address || "",
     size: property.size || 0,
     category: property.category || "apartment",
@@ -75,19 +75,23 @@ const initializePropertyData = (property: PropertyData): PropertyData => {
     contact_info: property.contact_info || "",
     status: property.status || "pending",
     notification: property.notification || "",
-    iduser: property.iduser || "",
+    iduser: property.iduser?._id || "", // Ensure iduser is correctly populated
     condition: property.condition || "new",
     map: property.map || { latitude: 0, longitude: 0 },
   };
 };
 
-const UpdatePropertyForm: React.FC<Props> = ({ navigation, route }) => {
+const UpdatePropertyForm: React.FC<Props> = ({ route, navigation }) => {
   const { property, onUpdate } = route.params;
   const [propertyData, setPropertyData] = useState(
     initializePropertyData(property)
   );
   const [loading, setLoading] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
+
+  useEffect(() => {
+    navigation.setParams({ onUpdate: undefined }); // Remove non-serializable params
+  }, []);
 
   const handleInputChange = (
     name: keyof PropertyData,
@@ -223,23 +227,32 @@ const UpdatePropertyForm: React.FC<Props> = ({ navigation, route }) => {
 
   const handleSubmit = async () => {
     try {
-      console.log("Submitting Property Data:", propertyData); 
+      if (!propertyData.idhouses) {
+        throw new Error("Property ID is missing.");
+      }
+
+      console.log("Submitting Property Data:", propertyData);
+
+      const { iduser, ...dataToUpdate } = propertyData; // Exclude iduser if it's empty
 
       const response = await fetch(
-        `http://192.168.1.13:5000/api/updatehouse/${propertyData.idhouses}`,
+        `http://192.168.1.13:5800/houses/${propertyData.idhouses}`,
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(propertyData),
+          body: JSON.stringify(dataToUpdate),
         }
       );
+
+      const text = await response.text(); // Get response text
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to update property");
+        console.error("Server response not OK:", text);
+        throw new Error(text);
       }
-      const result = await response.json();
+
+      const result = JSON.parse(text); // Parse the response text as JSON
       console.log("Property updated successfully:", result);
       setPropertyData(result);
       if (onUpdate) {

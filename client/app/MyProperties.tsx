@@ -17,7 +17,7 @@ import { RootStackParamList } from "./_layout";
 import { StackNavigationProp } from "@react-navigation/stack";
 
 interface Property {
-  idhouses: number;
+  _id: string;
   title: string;
   address: string;
   price: string;
@@ -39,11 +39,11 @@ const MyProperties: React.FC = () => {
   }, []);
 
   const fetchProperties = () => {
-    fetch("http://192.168.1.13:5000/api/gethouse")
+    fetch("http://192.168.1.13:5800/houses")
       .then((response) => response.json())
       .then((data) => {
         const mappedProperties = data.map((property: any) => ({
-          idhouses: property.idhouses || `id_${Date.now()}`,
+          _id: property._id || `id_${Date.now()}`,
           title: property.title || "Untitled",
           address: property.address || "No address provided",
           price: property.price || "Price not available",
@@ -59,10 +59,10 @@ const MyProperties: React.FC = () => {
       });
   };
 
-  const handleDelete = async (idhouses: number) => {
+  const handleDelete = async (_id: string) => {
     try {
       const response = await fetch(
-        `http://192.168.1.13:5000/api/deletehouse/${idhouses}`,
+        `http://192.168.1.13:5800/deletehouse/${_id}`,
         {
           method: "DELETE",
         }
@@ -74,7 +74,7 @@ const MyProperties: React.FC = () => {
       }
 
       setProperties((prevProperties) =>
-        prevProperties.filter((property) => property.idhouses !== idhouses)
+        prevProperties.filter((property) => property._id !== _id)
       );
       Alert.alert("Success", "Property deleted successfully.");
     } catch (error) {
@@ -90,9 +90,7 @@ const MyProperties: React.FC = () => {
   const handleUpdate = (updatedProperty: Property) => {
     setProperties((prevProperties) =>
       prevProperties.map((property) =>
-        property.idhouses === updatedProperty.idhouses
-          ? updatedProperty
-          : property
+        property._id === updatedProperty._id ? updatedProperty : property
       )
     );
   };
@@ -123,10 +121,7 @@ const MyProperties: React.FC = () => {
         </ThemedText>
         <View style={localStyles.buttonContainer}>
           <View style={localStyles.button}>
-            <Button
-              title="Delete"
-              onPress={() => handleDelete(item.idhouses)}
-            />
+            <Button title="Delete" onPress={() => handleDelete(item._id)} />
           </View>
           <View style={localStyles.button}>
             <Button title="Update" onPress={() => navigateToUpdateForm(item)} />
@@ -152,7 +147,7 @@ const MyProperties: React.FC = () => {
         style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
       >
         <ThemedText type="default" style={{ fontSize: 18 }}>
-          No more data
+          No properties available
         </ThemedText>
       </ThemedView>
     );
@@ -163,7 +158,7 @@ const MyProperties: React.FC = () => {
       <FlatList
         data={properties}
         renderItem={renderItem}
-        keyExtractor={(item) => item.idhouses.toString()}
+        keyExtractor={(item) => item._id.toString()}
         contentContainerStyle={importedStyles.cardsContainer}
       />
     </ThemedView>
