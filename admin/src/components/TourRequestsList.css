@@ -1,34 +1,64 @@
 .container {
-  padding: 20px;
+  padding: 1rem;
+}
+
+h1 {
+  color: #333;
+  margin-bottom: 1rem;
 }
 
 .request-list {
-  list-style-type: none;
+  list-style: none;
   padding: 0;
-  width: 60%;
 }
 
 .request-item {
   border: 1px solid #ddd;
-  padding: 10px;
-  margin-bottom: 10px;
+  border-radius: 5px;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background-color: #f9f9f9;
 }
 
-.approve-button {
-  border: none;
-  padding: 10px 15px;
-  margin: 5px 0;
-  cursor: pointer;
-  border-radius: 5px;
-  font-size: 14px;
-  transition: background-color 0.3s, color 0.3s;
+.request-item p {
+  margin: 0.5rem 0;
+}
+
+.button-group {
+  margin-top: 1rem;
 }
 
 .approve-button {
   background-color: #28a745;
   color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 0.5rem;
 }
 
 .approve-button:hover {
   background-color: #218838;
+}
+
+.cancel-button {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.cancel-button:hover {
+  background-color: #c82333;
+}
+
+.loading-text {
+  color: #007bff;
+}
+
+.error-text {
+  color: #dc3545;
 }
