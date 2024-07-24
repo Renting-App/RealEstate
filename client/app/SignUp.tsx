@@ -18,6 +18,8 @@ const Signup: React.FC<Props> = ({ navigation }) => {
     const [value, setValue] = React.useState({
         email: '',
         password: '',
+        username: '',
+        phoneNumber: '',
         error: ''
     })
 
@@ -29,9 +31,44 @@ const Signup: React.FC<Props> = ({ navigation }) => {
             })
             return;
         }
+        const phoneNumberRegex = /^\d{8}$/;
+        if (!phoneNumberRegex.test(value.phoneNumber)) {
+            setValue({
+                ...value,
+                error: 'Invalid Phone number '
+            });
+            return;
+        }
+
+        //     try {
+        //         await createUserWithEmailAndPassword(auth, value.email, value.password);
+        //         navigation.navigate('SignIn');
+        //     } catch (error) {
+        //         if (error instanceof Error) {
+        //             setValue({
+        //                 ...value,
+        //                 error: error.message,
+        //             });
+        //         } else {
+        //             setValue({
+        //                 ...value,
+        //                 error: 'An unknown error occurred',
+        //             });
+        //         }
+        //     }
+        // }
 
         try {
-            await createUserWithEmailAndPassword(auth, value.email, value.password);
+            const userCredential = await createUserWithEmailAndPassword(auth, value.email, value.password);
+            const user = userCredential.user;
+
+            await setDoc(doc(firestore, 'users', user.uid), {
+                email: value.email,
+                username: value.username,
+                phoneNumber: value.phoneNumber,
+                role: 'user'
+            });
+
             navigation.navigate('SignIn');
         } catch (error) {
             if (error instanceof Error) {
@@ -52,6 +89,27 @@ const Signup: React.FC<Props> = ({ navigation }) => {
         <View style={styles.container}>
             <Text style={styles.title}>Sign up </Text>
             <View style={styles.inputContainer}>
+                <Input
+                    placeholder='Username'
+                    containerStyle={styles.input}
+                    value={value.username}
+                    onChangeText={(text) => setValue({ ...value, username: text })}
+                    leftIcon={<Icon
+                        name='user'
+                        size={16}
+                    />}
+                />
+                <Input
+                    placeholder='Phone Number'
+                    containerStyle={styles.input}
+                    value={value.phoneNumber}
+                    onChangeText={(text) => setValue({ ...value, phoneNumber: text })}
+                    leftIcon={<Icon
+                        name='phone'
+                        size={16}
+                    />}
+                    keyboardType='numeric'
+                />
                 <Input
                     placeholder='Email'
                     containerStyle={styles.input}

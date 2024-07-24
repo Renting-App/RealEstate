@@ -5,7 +5,7 @@ import Welcome from "./Welcome";
 import Signin from "./SignIn";
 import Signup from "./SignUp";
 import HousesScreen from "./HousesScreen";
-import AdminPage from "./adminPage";
+import AdminPage from "./AdminPage";
 import FAQ from "./FAQ";
 import Maps from "./Maps";
 import FilterComponent from "./FilterComponent";
@@ -72,13 +72,13 @@ export default function App() {
   return (
     <FavoritesProvider>
       <Stack.Navigator
-        initialRouteName="HousesScreen"
+        initialRouteName="Welcome"
         screenOptions={{ headerShown: true }}
       >
         <Stack.Screen
           name="Welcome"
           component={Welcome}
-          options={{ headerShown: false }} 
+          options={{ headerShown: false }}
         />
 
         <Stack.Screen
@@ -113,7 +113,7 @@ export default function App() {
           component={PropertyDetails} />
 
 
-<Stack.Screen
+        <Stack.Screen
           name="PostDetail"
           component={PostDetail} />
 
@@ -153,16 +153,16 @@ export default function App() {
         />
 
         <Stack.Screen
-         name="MyAccount"
+          name="MyAccount"
           component={MyAccount} />
 
-        <Stack.Screen 
-        name="MyProperties"
-         component={MyProperties} />
+        <Stack.Screen
+          name="MyProperties"
+          component={MyProperties} />
 
-        <Stack.Screen 
-        name="UpdatePropertyForm"
-         component={UpdatePropertyForm} />
+        <Stack.Screen
+          name="UpdatePropertyForm"
+          component={UpdatePropertyForm} />
       </Stack.Navigator>
 
     </FavoritesProvider>
