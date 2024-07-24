@@ -21,7 +21,7 @@ import { FavoritesProvider } from './FavoritesContext';
 import UpdatePropertyForm from "./UpdatePropertyForm";
 import ManagePosts from "./ManagePosts";
 import PostDetail from "./PostDetail";
-
+import { ThemeProvider } from "./ThemeContext"
 export type Residence = {
   _id: string;
   title: string;
@@ -70,11 +70,14 @@ const Stack = createStackNavigator<RootStackParamList>();
 
 export default function App() {
   return (
+    <ThemeProvider>
     <FavoritesProvider>
+      
       <Stack.Navigator
         initialRouteName="HousesScreen"
         screenOptions={{ headerShown: true }}
       >
+        
         <Stack.Screen
           name="Welcome"
           component={Welcome}
@@ -166,5 +169,6 @@ export default function App() {
       </Stack.Navigator>
 
     </FavoritesProvider>
+    </ThemeProvider>
   );
 }

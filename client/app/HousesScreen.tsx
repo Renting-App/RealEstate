@@ -1,3 +1,4 @@
+// HousesScreen.tsx
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -7,6 +8,7 @@ import {
   Button,
   Pressable,
   Text,
+  Switch,
 } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
@@ -16,13 +18,11 @@ import DrawerContent from "@/app/DrawerContent";
 import Search from "./Search";
 import styles from "./styles"; // Importing styles
 import Pagination from "./Pagination";
-import {
-  FlingGestureHandler,
-  Directions,
-  State,
-} from "react-native-gesture-handler";
+import { FlingGestureHandler, Directions, State } from "react-native-gesture-handler";
 import { RouteProp } from '@react-navigation/native'
-import { RootStackParamList  } from './_layout'
+import { RootStackParamList } from './_layout'
+import { useTheme } from "./ThemeContext"; // Import useTheme hook
+
 type HousesScreenProps = {
   route: RouteProp<RootStackParamList, "HousesScreen">;
 };
@@ -54,6 +54,7 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredResidences, setFilteredResidences] = useState<Residence[]>([]);
+  const { isDarkMode, toggleTheme } = useTheme(); // Access theme context
 
   useEffect(() => {
     fetchResidences();
@@ -114,7 +115,7 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
     });
     setFilteredResidences(filtered);
   };
-// lenna zeda ⬇⬇⬇
+
   const handleSearch = () => {
     if (searchQuery === "") {
       setFilteredResidences(residences);
@@ -201,7 +202,7 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
           }
         }}
       >
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1, backgroundColor: isDarkMode ? '#000' : '#fff' }}>
           <ThemedView style={styles.container}>
             <DrawerContent
               isVisible={isSidebarVisible}
@@ -218,7 +219,7 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
                   {
                     fontSize: 22,
                     fontWeight: "bold",
-                    color: "#333",
+                    color: isDarkMode ? "#fff" : "#333",
                     textTransform: "uppercase",
                     letterSpacing: 1,
                   },
@@ -226,48 +227,26 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
               >
                 Rent&Sell
               </ThemedText>
-            </View>
-            <View style={styles.banner}>
-              <Image
-                source={require("../assets/images/banner01.jpg")}
-                style={styles.bannerImage}
+              <Switch
+                value={isDarkMode}
+                onValueChange={toggleTheme}
               />
-              <View style={styles.bannerContent}>
-                <ThemedText type="title" style={styles.bannerTitle}>
-                  Discover Your New Home
-                </ThemedText>
-                <ThemedText type="subtitle" style={styles.bannerSubtitle}>
-                  Helping 100 thousand renters and sellers
-                </ThemedText>
-                <Search
-                  searchQuery={searchQuery}
-                  setSearchQuery={setSearchQuery}
-                  onSearch={handleSearch}
-                />
-              </View>
             </View>
-            {filteredResidences.length === 0 ? (
-              <ThemedText style={styles.noDataText}>
-                No matching properties found.
-              </ThemedText>
-            ) : (
-              <>
-                <FlatList
-                  data={filteredResidences.slice(
-                    (currentPage - 1) * itemsPerPage,
-                    currentPage * itemsPerPage
-                  )}
-                  renderItem={renderItem}
-                  keyExtractor={(item) => item._id}
-                  contentContainerStyle={styles.cardsContainer}
-                />
+            <FlatList
+              data={filteredResidences.slice(
+                (currentPage - 1) * itemsPerPage,
+                currentPage * itemsPerPage
+              )}
+              renderItem={renderItem}
+              keyExtractor={(item) => item._id}
+              ListFooterComponent={
                 <Pagination
                   currentPage={currentPage}
                   totalPages={totalPages}
                   onPageChange={handlePageChange}
                 />
-              </>
-            )}
+              }
+            />
           </ThemedView>
         </View>
       </FlingGestureHandler>
