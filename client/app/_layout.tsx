@@ -72,7 +72,7 @@ export default function App() {
   return (
     <FavoritesProvider>
       <Stack.Navigator
-        initialRouteName="Welcome"
+        initialRouteName="HousesScreen"
         screenOptions={{ headerShown: true }}
       >
         <Stack.Screen

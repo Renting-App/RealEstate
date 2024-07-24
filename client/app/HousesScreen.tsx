@@ -23,18 +23,19 @@ import {
 } from "react-native-gesture-handler";
 
 type HousesScreenProps = {
-  route: RouteProp<RootStackParamList, 'HousesScreen'>;
+  route: RouteProp<RootStackParamList, "HousesScreen">;
 };
+
 const itemsPerPage = 3;
 
 interface Residence {
-  _id: string; 
+  _id: string;
   title: string;
   address: string;
   price: string;
-  rooms:string;
-  bathrooms:string;
-  size:string;
+  rooms: string;
+  bathrooms: string;
+  size: string;
   category: string;
   location: string;
   subLocation: string;
@@ -44,8 +45,8 @@ interface Residence {
   operation: "rent" | "sale";
 }
 
-const HousesScreen:React.FC<HousesScreenProps> = ({route}) => {
-  const { criteria } = route.params || {} ;
+const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
+  const { criteria = {} } = route.params || {}; 
   const [residences, setResidences] = useState<Residence[]>([]);
   const [loading, setLoading] = useState(true);
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
@@ -57,8 +58,12 @@ const HousesScreen:React.FC<HousesScreenProps> = ({route}) => {
     fetchResidences();
   }, []);
 
+  useEffect(() => {
+    handleSearch();
+  }, [searchQuery]);// el search query
+
   const fetchResidences = () => {
-    fetch("http://192.168.1.105:5800/houses")
+    fetch("http://192.168.1.13:5800/houses")
       .then((response) => response.json())
       .then((data) => {
         const mappedResidences = data.map((residence: any) => ({
@@ -97,20 +102,27 @@ const HousesScreen:React.FC<HousesScreenProps> = ({route}) => {
       return (
         (!criteria.category || residence.category === criteria.category) &&
         (!criteria.location || residence.location === criteria.location) &&
-        (!criteria.subLocation || residence.subLocation === criteria.subLocation) &&
+        (!criteria.subLocation ||
+          residence.subLocation === criteria.subLocation) &&
         (!criteria.operation || residence.operation === criteria.operation) &&
-        (!criteria.priceMax  || parseFloat(residence.price) <= parseFloat(criteria.priceMax)) &&
-        (!criteria.priceMin  || parseFloat(residence.price) >= parseFloat(criteria.priceMin))
-
+        (!criteria.priceMax ||
+          parseFloat(residence.price) <= parseFloat(criteria.priceMax)) &&
+        (!criteria.priceMin ||
+          parseFloat(residence.price) >= parseFloat(criteria.priceMin))
       );
     });
     setFilteredResidences(filtered);
   };
+// lenna zeda ⬇⬇⬇
   const handleSearch = () => {
-    const filteredData = residences.filter((residence) =>
-      residence.title.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-    setFilteredResidences(filteredData);
+    if (searchQuery === "") {
+      setFilteredResidences(residences);
+    } else {
+      const filteredData = residences.filter((residence) =>
+        residence.title.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setFilteredResidences(filteredData);
+    }
     setCurrentPage(1);
   };
 
@@ -233,20 +245,28 @@ const HousesScreen:React.FC<HousesScreenProps> = ({route}) => {
                 />
               </View>
             </View>
-            <FlatList
-              data={filteredResidences.slice(
-                (currentPage - 1) * itemsPerPage,
-                currentPage * itemsPerPage
-              )}
-              renderItem={renderItem}
-              keyExtractor={(item) => item._id}
-              contentContainerStyle={styles.cardsContainer}
-            />
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={handlePageChange}
-            />
+            {filteredResidences.length === 0 ? (
+              <ThemedText style={styles.noDataText}>
+                No matching properties found.
+              </ThemedText>
+            ) : (
+              <>
+                <FlatList
+                  data={filteredResidences.slice(
+                    (currentPage - 1) * itemsPerPage,
+                    currentPage * itemsPerPage
+                  )}
+                  renderItem={renderItem}
+                  keyExtractor={(item) => item._id}
+                  contentContainerStyle={styles.cardsContainer}
+                />
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={handlePageChange}
+                />
+              </>
+            )}
           </ThemedView>
         </View>
       </FlingGestureHandler>

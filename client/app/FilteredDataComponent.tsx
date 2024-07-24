@@ -46,7 +46,7 @@ const FilteredDataComponent: React.FC<FilteredDataComponentProps> = ({ route }) 
   // }, []);
 
   const fetchResidences = () => {
-    fetch("http://192.168.1.14:5800/houses")
+    fetch("http://192.168.1.13:5800/houses")
       .then((response) => response.json())
       .then((data) => {
         const mappedResidences = data.map((residence: any) => { 
