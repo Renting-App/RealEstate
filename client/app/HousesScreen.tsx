@@ -1,4 +1,3 @@
-// HousesScreen.tsx
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -9,6 +8,7 @@ import {
   Pressable,
   Text,
   Switch,
+  StyleSheet
 } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
@@ -16,7 +16,6 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { Link } from "expo-router";
 import DrawerContent from "@/app/DrawerContent";
 import Search from "./Search";
-import styles from "./styles"; // Importing styles
 import Pagination from "./Pagination";
 import { FlingGestureHandler, Directions, State } from "react-native-gesture-handler";
 import { RouteProp } from '@react-navigation/native'
@@ -62,7 +61,7 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
 
   useEffect(() => {
     handleSearch();
-  }, [searchQuery]);// el search query
+  }, [searchQuery]);
 
   const fetchResidences = () => {
     fetch("http://192.168.1.13:5800/houses")
@@ -232,26 +231,164 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
                 onValueChange={toggleTheme}
               />
             </View>
-            <FlatList
-              data={filteredResidences.slice(
-                (currentPage - 1) * itemsPerPage,
-                currentPage * itemsPerPage
-              )}
-              renderItem={renderItem}
-              keyExtractor={(item) => item._id}
-              ListFooterComponent={
+            <View style={styles.banner}>
+              <Image
+                source={require("../assets/images/banner01.jpg")}
+                style={styles.bannerImage}
+              />
+              <View style={styles.bannerContent}>
+                <ThemedText type="title" style={styles.bannerTitle}>
+                  Discover Your New Home
+                </ThemedText>
+                <ThemedText type="subtitle" style={styles.bannerSubtitle}>
+                  Helping 100 thousand renters and sellers
+                </ThemedText>
+                <Search
+                  searchQuery={searchQuery}
+                  setSearchQuery={setSearchQuery}
+                  onSearch={handleSearch}
+                />
+              </View>
+            </View>
+            {filteredResidences.length === 0 ? (
+              <ThemedText style={styles.noDataText}>
+                No matching properties found.
+              </ThemedText>
+            ) : (
+              <>
+                <FlatList
+                  data={filteredResidences.slice(
+                    (currentPage - 1) * itemsPerPage,
+                    currentPage * itemsPerPage
+                  )}
+                  renderItem={renderItem}
+                  keyExtractor={(item) => item._id}
+                  contentContainerStyle={styles.cardsContainer}
+                />
                 <Pagination
                   currentPage={currentPage}
                   totalPages={totalPages}
                   onPageChange={handlePageChange}
                 />
-              }
-            />
+              </>
+            )}
           </ThemedView>
         </View>
       </FlingGestureHandler>
     </FlingGestureHandler>
   );
 };
+const styles = StyleSheet.create({
+  container: {
+    marginTop: 20,
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: 10,
+    backgroundColor: '#f8f8f8',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+  },
+  menuIcon: {
+    marginLeft: 10,
+    color: '#333',
+  },
+  bgContainer: {
+    padding: 10,
+    backgroundColor: '#e0e0e0',
+  },
+  banner: {
+    position: 'relative',
+  },
+  bannerImage: {
+    width: '100%',
+    height: 200,
+  },
+  bannerContent: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: [{ translateX: -50 }, { translateY: -50 }],
+    alignItems: 'center',
+  },
+  bannerTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
+  bannerSubtitle: {
+    fontSize: 16,
+    color: '#fff',
+  },
+  card: {
+    marginBottom: 20,
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5,
+    padding: 15,
+  },
+  typeContainer: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    padding: 5,
+    borderRadius: 5,
+  },
+  rent: {
+    backgroundColor: '#4caf50',
+  },
+  sale: {
+    backgroundColor: '#f44336',
+  },
+  typeText: {
+    color: '#fff',
+    fontSize: 12,
+  },
+  image: {
+    width: '100%',
+    height: 150,
+    borderRadius: 8,
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginTop: 10,
+  },
+  price: {
+    fontSize: 16,
+    color: '#4caf50',
+    marginTop: 5,
+  },
+  contact: {
+    fontSize: 14,
+    color: '#757575',
+    marginTop: 5,
+  },
+  cardsContainer: {
+    paddingHorizontal: 15,
+  },
+  noDataText: {
+    textAlign: "center",
+    marginTop: 20,
+    fontSize: 18,
+    color: "grey",
+  },
+  nextButton: {
+    padding: 10,
+    backgroundColor: '#4caf50',
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 10,
+  },
+});
 
 export default HousesScreen;
