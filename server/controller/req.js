@@ -1,8 +1,17 @@
 const TourRequest = require('../model/req.js');
+let notifications = []; 
+let unreadCount = 0; 
 
 const createTourRequest = async (req, res) => {
   try {
     const tourRequest = await TourRequest.create(req.body);
+   
+    notifications.push({
+      type: 'Tour Request',
+      message: `New tour request from ${req.body.name} for ${req.body.residence.title}`,
+      read: false 
+    });
+    unreadCount++; 
     res.status(200).send(tourRequest);
   } catch (error) {
     res.status(400).send(error);
@@ -54,10 +63,33 @@ const deleteTourRequest = async (req, res) => {
   }
 };
 
+const getNotifications = async (req, res) => {
+  try {
+    res.status(200).send({ notifications, unreadCount });
+  } catch (error) {
+    res.status(400).send(error);
+  }
+};
+
+const markNotificationsAsRead = async (req, res) => {
+  try {
+    notifications = notifications.map(notification => ({
+      ...notification,
+      read: true
+    }));
+    unreadCount = 0; 
+    res.status(200).send({ message: 'Notifications marked as read' });
+  } catch (error) {
+    res.status(400).send(error);
+  }
+};
+
 module.exports = {
   createTourRequest,
   getAllTourRequests,
   getTourRequestById,
   updateTourRequest,
   deleteTourRequest,
+  getNotifications,
+  markNotificationsAsRead 
 };
