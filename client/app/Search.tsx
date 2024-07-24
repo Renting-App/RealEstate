@@ -11,8 +11,8 @@ interface Props {
 
 const Search: React.FC<Props> = ({ searchQuery, setSearchQuery, onSearch }) => {
   const handleSearch = (query: string) => {
-    setSearchQuery(query); 
-    onSearch(); 
+    setSearchQuery(query);
+    onSearch();
   };
 
   return (
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 16,
     margin: 10,
-    width: "65%"
+    width: "65%",
   },
   icon: {
     marginRight: 10,
