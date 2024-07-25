@@ -1,3 +1,4 @@
+// HousesScreen.tsx
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -7,13 +8,12 @@ import {
   Button,
   Pressable,
   Text,
-  TouchableOpacity,
   StyleSheet
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { useTheme } from "./ThemeContext"; // Adjust path as needed
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { Link, useNavigation } from "expo-router";
 import DrawerContent from "@/app/DrawerContent";
 import Search from "./Search";
 import Pagination from "./Pagination";
@@ -22,12 +22,11 @@ import {
   Directions,
   State,
 } from "react-native-gesture-handler";
-import { RouteProp } from '@react-navigation/native'
-import { RootStackParamList } from './_layout'
-import { Link } from "expo-router";
+import { RouteProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from './_layout';
 
-
-
+type HousesScreenNavigationProp = StackNavigationProp<RootStackParamList, "HousesScreen">;
 
 type HousesScreenProps = {
   route: RouteProp<RootStackParamList, "HousesScreen">;
@@ -54,14 +53,14 @@ interface Residence {
 
 const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
   const { criteria = {} } = route.params || {};
-  const { criteria = {} } = route.params || {};
   const [residences, setResidences] = useState<Residence[]>([]);
   const [loading, setLoading] = useState(true);
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredResidences, setFilteredResidences] = useState<Residence[]>([]);
-  const { isDarkMode, toggleTheme } = useTheme(); // Access theme context
+
+  const navigation = useNavigation<HousesScreenNavigationProp>();
 
   useEffect(() => {
     fetchResidences();
@@ -86,14 +85,10 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
           description: residence.description ?? "",
           contact_info: residence.contact_info ?? "",
           images: residence.images ?? [],
-          visits: residence.visits ?? "",
           operation: residence.operation ?? "",
-          amenities: residence.amenities ?? "",
+          category: residence.category ?? "",
           location: residence.location ?? "",
           subLocation: residence.subLocation ?? "",
-          condition: residence.condition ?? "",
-          favourite: residence.favourite ?? false,
-          map: residence.map ?? "",
         }));
         filterResidences(mappedResidences, criteria);
         setResidences(mappedResidences);
@@ -193,8 +188,6 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
   }
 
   return (
-    <ThemedView style={styles.container}>
-      <Button title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"} onPress={toggleTheme} />
     <FlingGestureHandler
       direction={Directions.LEFT}
       onHandlerStateChange={({ nativeEvent }) => {
@@ -216,6 +209,7 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
             <DrawerContent
               isVisible={isSidebarVisible}
               onClose={() => setIsSidebarVisible(false)}
+              navigation={navigation} // Pass the navigation prop here
             />
             <View style={styles.header}>
               <Pressable onPress={() => setIsSidebarVisible(true)}>
@@ -236,13 +230,6 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
               >
                 Rent&Sell
               </ThemedText>
-              {/* Dark/Light Mode Toggle Button */}
-              <TouchableOpacity onPress={toggleTheme} style={styles.toggleButton}>
-                <Ionicons name={isDarkMode ? "moon" : "sunny"} size={24} color="#333" />
-                <ThemedText type="subtitle" style={styles.toggleText}>
-                  {isDarkMode ? "Light Mode" : "Dark Mode"}
-                </ThemedText>
-              </TouchableOpacity>
             </View>
             <View style={styles.banner}>
               <Image
@@ -289,9 +276,9 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
         </View>
       </FlingGestureHandler>
     </FlingGestureHandler>
-    </ThemedView>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -305,102 +292,87 @@ const styles = StyleSheet.create({
   },
   menuIcon: {
     marginLeft: 10,
+    color: "#333",
   },
   bgContainer: {
-    backgroundColor: "#f8f8f8",
-    padding: 20,
-    borderRadius: 10,
-    margin: 10,
+    marginRight: 10,
+    marginLeft: 10,
   },
   banner: {
     flexDirection: "row",
-    alignItems: "center",
-    margin: 10,
+    height: 200,
+    marginBottom: 10,
   },
   bannerImage: {
     width: "100%",
-    height: 200,
+    height: "100%",
   },
   bannerContent: {
     position: "absolute",
-    top: 0,
+    bottom: 0,
     left: 0,
     right: 0,
-    bottom: 0,
-    justifyContent: "center",
-    alignItems: "center",
     padding: 20,
   },
   bannerTitle: {
     fontSize: 24,
     fontWeight: "bold",
     color: "#fff",
-    textAlign: "center",
   },
   bannerSubtitle: {
-    fontSize: 18,
+    fontSize: 16,
     color: "#fff",
-    textAlign: "center",
-    marginBottom: 20,
+  },
+  cardsContainer: {
+    padding: 10,
+  },
+  card: {
+    backgroundColor: "#fff",
+    borderRadius: 8,
+    marginBottom: 15,
+    padding: 10,
+    elevation: 2,
+  },
+  typeContainer: {
+    borderRadius: 4,
+    padding: 5,
+    position: "absolute",
+    top: 10,
+    left: 10,
+  },
+  rent: {
+    backgroundColor: "#ffcccc",
+  },
+  sale: {
+    backgroundColor: "#ccffcc",
+  },
+  typeText: {
+    fontSize: 12,
+    fontWeight: "bold",
+  },
+  image: {
+    width: "100%",
+    height: 150,
+    borderRadius: 4,
+    marginBottom: 10,
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  price: {
+    fontSize: 16,
+    color: "#666",
+  },
+  contact: {
+    fontSize: 14,
+    color: "#999",
   },
   noDataText: {
     textAlign: "center",
     marginTop: 20,
     fontSize: 18,
-  },
-  card: {
-    margin: 10,
-    padding: 10,
-    borderRadius: 10,
-    backgroundColor: "#fff",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  typeContainer: {
-    padding: 5,
-    borderRadius: 5,
-    marginBottom: 10,
-  },
-  rent: {
-    backgroundColor: "#f0ad4e",
-  },
-  sale: {
-    backgroundColor: "#d9534f",
-  },
-  typeText: {
-    color: "#fff",
-    textAlign: "center",
-  },
-  image: {
-    width: "100%",
-    height: 150,
-    borderRadius: 10,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginVertical: 10,
-  },
-  price: {
-    fontSize: 16,
-    color: "#555",
-  },
-  contact: {
-    fontSize: 14,
-    color: "#777",
-  },
-  cardsContainer: {
-    paddingBottom: 20,
-  },
-  toggleButton: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  toggleText: {
-    marginLeft: 8,
+    color: "#666",
   },
 });
 
