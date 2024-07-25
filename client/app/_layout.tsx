@@ -4,8 +4,9 @@ import { createStackNavigator } from "@react-navigation/stack";
 import Welcome from "./Welcome";
 import Signin from "./SignIn";
 import Signup from "./SignUp";
+// import Signout from "./SignOut"
 import HousesScreen from "./HousesScreen";
-import AdminPage from "./adminPage";
+import AdminPage from "./AdminPage";
 import FAQ from "./FAQ";
 import Maps from "./Maps";
 import FilterComponent from "./FilterComponent";
@@ -21,6 +22,7 @@ import { FavoritesProvider } from './FavoritesContext';
 import UpdatePropertyForm from "./UpdatePropertyForm";
 import ManagePosts from "./ManagePosts";
 import PostDetail from "./PostDetail";
+import DrawerContent from "./DrawerContent";
 
 export type Residence = {
   _id: string;
@@ -40,13 +42,16 @@ export type Residence = {
   subLocation: string;
   condition: string;
   favourite: boolean;
+
 };
 
 
 export type RootStackParamList = {
+  DrawerContent: undefined;
   Welcome: undefined;
   SignIn: undefined;
   SignUp: undefined;
+  SignOut: undefined;
   AdminDrawer: undefined;
   HousesScreen: undefined;
   AboutUs: undefined;
@@ -72,14 +77,19 @@ export default function App() {
   return (
     <FavoritesProvider>
       <Stack.Navigator
-        initialRouteName="HousesScreen"
+        initialRouteName="Welcome"
         screenOptions={{ headerShown: true }}
       >
         <Stack.Screen
           name="Welcome"
           component={Welcome}
-          options={{ headerShown: false }} 
+          options={{ headerShown: false }}
         />
+        {/* <Stack.Screen
+          name="DrawerContent"
+          component={DrawerContent}
+          options={{ headerShown: false }}
+        /> */}
 
         <Stack.Screen
           name="SignIn"
@@ -89,6 +99,10 @@ export default function App() {
         <Stack.Screen
           name="SignUp"
           component={Signup} />
+
+        {/* <Stack.Screen
+          name="SignOut"
+          component={Signout} /> */}
 
         <Stack.Screen
           name="HousesScreen"
@@ -113,7 +127,7 @@ export default function App() {
           component={PropertyDetails} />
 
 
-<Stack.Screen
+        <Stack.Screen
           name="PostDetail"
           component={PostDetail} />
 
@@ -153,16 +167,16 @@ export default function App() {
         />
 
         <Stack.Screen
-         name="MyAccount"
+          name="MyAccount"
           component={MyAccount} />
 
-        <Stack.Screen 
-        name="MyProperties"
-         component={MyProperties} />
+        <Stack.Screen
+          name="MyProperties"
+          component={MyProperties} />
 
-        <Stack.Screen 
-        name="UpdatePropertyForm"
-         component={UpdatePropertyForm} />
+        <Stack.Screen
+          name="UpdatePropertyForm"
+          component={UpdatePropertyForm} />
       </Stack.Navigator>
 
     </FavoritesProvider>

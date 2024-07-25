@@ -8,5 +8,3 @@
 
 //   return user ? <UserStack /> : <AuthStack />;
 // }
-
-
