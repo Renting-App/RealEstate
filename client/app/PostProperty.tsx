@@ -47,6 +47,7 @@ interface PropertyData {
     beach_view: boolean;
     alarm: boolean;
     garden: boolean;
+    
   };
   contact_info: string;
   status: "pending" | "approved" | "declined";
@@ -55,6 +56,8 @@ interface PropertyData {
   condition: "new" | "occasion";
   location: string;
   subLocation: string;
+  ////Admin  price
+  price:number
 }
 
 const getCurrentDate = () => {
@@ -75,11 +78,16 @@ const PostProperty: React.FC<Props> = ({ navigation }) => {
   const [selectedDates, setSelectedDates] = useState<string[]>([]);
   const [showCalendar, setShowCalendar] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [price, setPrice]=useState(1000)
   const [map, setMap] = useState<{
     latitude: number;
     longitude: number;
   } | null>(null);
   const mapRef = useRef<MapView>(null);
+/////ad
+  const [showModal, setShowModal] = useState(false);
+
+ 
 
   const handleDayPress = (day: DateObject) => {
     const date = day.dateString;

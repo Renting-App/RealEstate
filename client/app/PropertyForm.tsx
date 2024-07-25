@@ -90,7 +90,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
     alarm: "bell",
     garden: "tree",
   };
-
+  const adminFee = (parseFloat(propertyData.price.toString()) * 0.10).toFixed(2);
   return (
     <View style={styles.formContainer}>
       <View style={styles.header}>
@@ -126,6 +126,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
         placeholder="Enter price"
         keyboardType="numeric"
       />
+<Text style={styles.label}>Admin Fee: ${adminFee}</Text> 
 
       <Text style={styles.label}>Address:</Text>
       <TextInput

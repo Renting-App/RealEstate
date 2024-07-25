@@ -81,6 +81,8 @@ const PropertyDetails: React.FC = () => {
     }
   };
 
+  const adminFee = (parseFloat(residenceData.price) * 0.10).toFixed(2);
+
   const amenityIcons: { [key in keyof Property['amenities']]: string } = {
     parking: 'car',
     ac: 'snowflake',
@@ -99,6 +101,7 @@ const PropertyDetails: React.FC = () => {
         <View style={styles.header}>
           <Text style={styles.title}>{residenceData.title}</Text>
           <Text style={styles.price}>${residenceData.price}</Text>
+          <Text style={styles.adminFee }>Admin Fee: ${adminFee}</Text>
           <TouchableOpacity onPress={toggleFavourite}>
             <Ionicons name={isFavourite ? 'heart' : 'heart-outline'} size={24} color="#ff0000" />
           </TouchableOpacity>
@@ -237,6 +240,12 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     color: '#4CAF50',
+  },
+
+  adminFee: {
+    fontSize: 16,
+    color: '#FF5722',
+    marginTop: 5,
   },
   imageWrapper: {
     height: screenHeight * 0.4,
