@@ -4,8 +4,9 @@ import { createStackNavigator } from "@react-navigation/stack";
 import Welcome from "./Welcome";
 import Signin from "./SignIn";
 import Signup from "./SignUp";
+// import Signout from "./SignOut"
 import HousesScreen from "./HousesScreen";
-import AdminPage from "./adminPage";
+import AdminPage from "./AdminPage";
 import FAQ from "./FAQ";
 import Maps from "./Maps";
 import FilterComponent from "./FilterComponent";
@@ -41,12 +42,15 @@ export type Residence = {
   subLocation: string;
   condition: string;
   favourite: boolean;
+
 };
 
 export type RootStackParamList = {
+  DrawerContent: undefined;
   Welcome: undefined;
   SignIn: undefined;
   SignUp: undefined;
+  SignOut: undefined;
   AdminDrawer: undefined;
   HousesScreen: { criteria: any };
   AboutUs: undefined;

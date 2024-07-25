@@ -3,13 +3,20 @@ import { View, StyleSheet, Pressable } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { ThemedText } from "@/components/ThemedText";
 import { Link } from "expo-router";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RootStackParamList } from "./_layout"; // Update the path if necessary
+
+type DrawerContentScreenNavigationProp = StackNavigationProp<RootStackParamList, 'DrawerContent'>;
 
 interface SidebarProps {
   isVisible: boolean;
   onClose: () => void;
+  navigation: StackNavigationProp<RootStackParamList, 'DrawerContent'>;
 }
 
-const DrawerContent: React.FC<SidebarProps> = ({ isVisible, onClose }) => {
+
+
+const DrawerContent: React.FC<SidebarProps> = ({ isVisible, onClose, navigation }) => {
   if (!isVisible) return null;
 
   return (
@@ -96,6 +103,17 @@ const DrawerContent: React.FC<SidebarProps> = ({ isVisible, onClose }) => {
               <ThemedText type="subtitle">My Account</ThemedText>
             </View>
           </Link>
+          <Pressable style={styles.link} onPress={() => navigation.navigate('SignOut')}>
+            <View style={styles.linkContent}>
+              <Ionicons
+                name="log-out-outline"
+                size={24}
+                color="#333"
+                style={styles.logo}
+              />
+              <ThemedText type="subtitle">Sign Out</ThemedText>
+            </View>
+          </Pressable>
         </View>
       </Pressable>
     </Pressable>
