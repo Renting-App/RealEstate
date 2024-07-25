@@ -7,20 +7,27 @@ import {
   Button,
   Pressable,
   Text,
-  Switch,
+  TouchableOpacity,
   StyleSheet
 } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { useTheme } from "./ThemeContext"; // Adjust path as needed
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import { Link } from "expo-router";
 import DrawerContent from "@/app/DrawerContent";
 import Search from "./Search";
 import Pagination from "./Pagination";
-import { FlingGestureHandler, Directions, State } from "react-native-gesture-handler";
+import {
+  FlingGestureHandler,
+  Directions,
+  State,
+} from "react-native-gesture-handler";
 import { RouteProp } from '@react-navigation/native'
 import { RootStackParamList } from './_layout'
-import { useTheme } from "./ThemeContext"; // Import useTheme hook
+import { Link } from "expo-router";
+
+
+
 
 type HousesScreenProps = {
   route: RouteProp<RootStackParamList, "HousesScreen">;
@@ -46,7 +53,7 @@ interface Residence {
 }
 
 const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
-  const { criteria = {} } = route.params || {}; 
+  const { criteria = {} } = route.params || {};
   const [residences, setResidences] = useState<Residence[]>([]);
   const [loading, setLoading] = useState(true);
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
@@ -185,6 +192,8 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
   }
 
   return (
+    <ThemedView style={styles.container}>
+      <Button title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"} onPress={toggleTheme} />
     <FlingGestureHandler
       direction={Directions.LEFT}
       onHandlerStateChange={({ nativeEvent }) => {
@@ -201,7 +210,7 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
           }
         }}
       >
-        <View style={{ flex: 1, backgroundColor: isDarkMode ? '#000' : '#fff' }}>
+        <View style={{ flex: 1 }}>
           <ThemedView style={styles.container}>
             <DrawerContent
               isVisible={isSidebarVisible}
@@ -218,7 +227,7 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
                   {
                     fontSize: 22,
                     fontWeight: "bold",
-                    color: isDarkMode ? "#fff" : "#333",
+                    color: "#333",
                     textTransform: "uppercase",
                     letterSpacing: 1,
                   },
@@ -226,10 +235,13 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
               >
                 Rent&Sell
               </ThemedText>
-              <Switch
-                value={isDarkMode}
-                onValueChange={toggleTheme}
-              />
+              {/* Dark/Light Mode Toggle Button */}
+              <TouchableOpacity onPress={toggleTheme} style={styles.toggleButton}>
+                <Ionicons name={isDarkMode ? "moon" : "sunny"} size={24} color="#333" />
+                <ThemedText type="subtitle" style={styles.toggleText}>
+                  {isDarkMode ? "Light Mode" : "Dark Mode"}
+                </ThemedText>
+              </TouchableOpacity>
             </View>
             <View style={styles.banner}>
               <Image
@@ -276,118 +288,118 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
         </View>
       </FlingGestureHandler>
     </FlingGestureHandler>
+    </ThemedView>
   );
 };
 const styles = StyleSheet.create({
   container: {
-    marginTop: 20,
     flex: 1,
-    backgroundColor: '#fff',
+    marginTop: 20,
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     padding: 10,
-    backgroundColor: '#f8f8f8',
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
   },
   menuIcon: {
     marginLeft: 10,
-    color: '#333',
   },
   bgContainer: {
-    padding: 10,
-    backgroundColor: '#e0e0e0',
+    backgroundColor: "#f8f8f8",
+    padding: 20,
+    borderRadius: 10,
+    margin: 10,
   },
   banner: {
-    position: 'relative',
+    flexDirection: "row",
+    alignItems: "center",
+    margin: 10,
   },
   bannerImage: {
-    width: '100%',
+    width: "100%",
     height: 200,
   },
   bannerContent: {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: [{ translateX: -50 }, { translateY: -50 }],
-    alignItems: 'center',
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
   },
   bannerTitle: {
     fontSize: 24,
-    fontWeight: 'bold',
-    color: '#fff',
+    fontWeight: "bold",
+    color: "#fff",
+    textAlign: "center",
   },
   bannerSubtitle: {
-    fontSize: 16,
-    color: '#fff',
-  },
-  card: {
-    marginBottom: 20,
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 5,
-    padding: 15,
-  },
-  typeContainer: {
-    position: 'absolute',
-    top: 10,
-    right: 10,
-    padding: 5,
-    borderRadius: 5,
-  },
-  rent: {
-    backgroundColor: '#4caf50',
-  },
-  sale: {
-    backgroundColor: '#f44336',
-  },
-  typeText: {
-    color: '#fff',
-    fontSize: 12,
-  },
-  image: {
-    width: '100%',
-    height: 150,
-    borderRadius: 8,
-  },
-  title: {
     fontSize: 18,
-    fontWeight: 'bold',
-    marginTop: 10,
-  },
-  price: {
-    fontSize: 16,
-    color: '#4caf50',
-    marginTop: 5,
-  },
-  contact: {
-    fontSize: 14,
-    color: '#757575',
-    marginTop: 5,
-  },
-  cardsContainer: {
-    paddingHorizontal: 15,
+    color: "#fff",
+    textAlign: "center",
+    marginBottom: 20,
   },
   noDataText: {
     textAlign: "center",
     marginTop: 20,
     fontSize: 18,
-    color: "grey",
   },
-  nextButton: {
+  card: {
+    margin: 10,
     padding: 10,
-    backgroundColor: '#4caf50',
+    borderRadius: 10,
+    backgroundColor: "#fff",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  typeContainer: {
+    padding: 5,
     borderRadius: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 10,
+    marginBottom: 10,
+  },
+  rent: {
+    backgroundColor: "#f0ad4e",
+  },
+  sale: {
+    backgroundColor: "#d9534f",
+  },
+  typeText: {
+    color: "#fff",
+    textAlign: "center",
+  },
+  image: {
+    width: "100%",
+    height: 150,
+    borderRadius: 10,
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginVertical: 10,
+  },
+  price: {
+    fontSize: 16,
+    color: "#555",
+  },
+  contact: {
+    fontSize: 14,
+    color: "#777",
+  },
+  cardsContainer: {
+    paddingBottom: 20,
+  },
+  toggleButton: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  toggleText: {
+    marginLeft: 8,
   },
 });
 

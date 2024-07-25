@@ -1,4 +1,3 @@
-// ThemeContext.tsx
 import React, { createContext, useState, useContext, ReactNode } from "react";
 
 interface ThemeContextProps {
@@ -12,7 +11,7 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   const toggleTheme = () => {
-    setIsDarkMode((prevMode) => !prevMode);
+    setIsDarkMode(prevMode => !prevMode);
   };
 
   return (
