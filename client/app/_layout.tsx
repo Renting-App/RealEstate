@@ -4,6 +4,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import Welcome from "./Welcome";
 import Signin from "./SignIn";
 import Signup from "./SignUp";
+// import Signout from "./SignOut"
 import HousesScreen from "./HousesScreen";
 import AdminPage from "./AdminPage";
 import FAQ from "./FAQ";
@@ -21,6 +22,7 @@ import { FavoritesProvider } from './FavoritesContext';
 import UpdatePropertyForm from "./UpdatePropertyForm";
 import ManagePosts from "./ManagePosts";
 import PostDetail from "./PostDetail";
+import DrawerContent from "./DrawerContent";
 
 export type Residence = {
   _id: string;
@@ -40,13 +42,16 @@ export type Residence = {
   subLocation: string;
   condition: string;
   favourite: boolean;
+
 };
 
 
 export type RootStackParamList = {
+  DrawerContent: undefined;
   Welcome: undefined;
   SignIn: undefined;
   SignUp: undefined;
+  SignOut: undefined;
   AdminDrawer: undefined;
   HousesScreen: undefined;
   AboutUs: undefined;
@@ -80,6 +85,11 @@ export default function App() {
           component={Welcome}
           options={{ headerShown: false }}
         />
+        {/* <Stack.Screen
+          name="DrawerContent"
+          component={DrawerContent}
+          options={{ headerShown: false }}
+        /> */}
 
         <Stack.Screen
           name="SignIn"
@@ -89,6 +99,10 @@ export default function App() {
         <Stack.Screen
           name="SignUp"
           component={Signup} />
+
+        {/* <Stack.Screen
+          name="SignOut"
+          component={Signout} /> */}
 
         <Stack.Screen
           name="HousesScreen"

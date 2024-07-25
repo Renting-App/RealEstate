@@ -68,8 +68,32 @@ const Signup: React.FC<Props> = ({ navigation }) => {
                 phoneNumber: value.phoneNumber,
                 role: 'user'
             });
+            //mongo
+            const response = await fetch('http://localhost:3000/adduser', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    username: value.username,
+                    password: value.password,
+                    email: value.email,
+                    phone_number: parseInt(value.phoneNumber)
+                })
+            });
 
-            navigation.navigate('SignIn');
+            if (response.ok) {
+                navigation.navigate('SignIn');
+            }
+            else {
+                const errorMessage = await response.text();
+                setValue({
+                    ...value,
+                    error: errorMessage
+                });
+            }
+
+
         } catch (error) {
             if (error instanceof Error) {
                 setValue({
