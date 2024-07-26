@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, Image, ScrollView, Button, Dimensions, Touchabl
 import { useRoute, useNavigation, RouteProp } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { HomeButton } from './HomeButton';
 import MapView, { Marker } from 'react-native-maps';
 import { RootStackParamList } from '../constants/types';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -101,7 +100,7 @@ const PropertyDetails: React.FC = () => {
         <View style={styles.header}>
           <Text style={styles.title}>{residenceData.title}</Text>
           <Text style={styles.price}>${residenceData.price}</Text>
-          <Text style={styles.adminFee }>Admin Fee: ${adminFee}</Text>
+          <Text style={styles.adminFee}>Admin Fee: ${adminFee}</Text>
           <TouchableOpacity onPress={toggleFavourite}>
             <Ionicons name={isFavourite ? 'heart' : 'heart-outline'} size={24} color="#ff0000" />
           </TouchableOpacity>
@@ -167,15 +166,15 @@ const PropertyDetails: React.FC = () => {
           </View>
         </View>
 
-        {residenceData.map && (
+        {residenceData.map && residenceData.map.latitude && residenceData.map.longitude && (
           <View style={styles.mapContainer}>
             <MapView
               style={styles.map}
               initialRegion={{
                 latitude: residenceData.map.latitude,
                 longitude: residenceData.map.longitude,
-                latitudeDelta: 0.5,
-                longitudeDelta: 0.5,
+                latitudeDelta: 0.05,
+                longitudeDelta: 0.05,
               }}
             >
               <Marker
@@ -241,7 +240,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#4CAF50',
   },
-
   adminFee: {
     fontSize: 16,
     color: '#FF5722',

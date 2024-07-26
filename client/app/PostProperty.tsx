@@ -7,17 +7,16 @@ import {
   Image,
   Alert,
   ActivityIndicator,
+  StyleSheet,
 } from "react-native";
-import { StyleSheet } from "react-native";
 import axios from "axios";
 import * as ImagePicker from "expo-image-picker";
 import * as Location from "expo-location";
-import { DateObject } from "react-native-calendars";
-import PropertyForm from "./PropertyForm";
 import MapView, { Marker } from "react-native-maps";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import PropertyForm from "./PropertyForm";
 import { RootStackParamList } from "./_layout";
 import { StackNavigationProp } from "@react-navigation/stack";
-import Ionicons from "react-native-vector-icons/Ionicons";
 
 const CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/dw1sxdmac/upload";
 const CLOUDINARY_PRESET = "hotel_preset";
@@ -47,7 +46,6 @@ interface PropertyData {
     beach_view: boolean;
     alarm: boolean;
     garden: boolean;
-    
   };
   contact_info: string;
   status: "pending" | "approved" | "declined";
@@ -56,8 +54,6 @@ interface PropertyData {
   condition: "new" | "occasion";
   location: string;
   subLocation: string;
-  ////Admin  price
-  price:number
 }
 
 const getCurrentDate = () => {
@@ -78,43 +74,8 @@ const PostProperty: React.FC<Props> = ({ navigation }) => {
   const [selectedDates, setSelectedDates] = useState<string[]>([]);
   const [showCalendar, setShowCalendar] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [price, setPrice]=useState(1000)
-  const [map, setMap] = useState<{
-    latitude: number;
-    longitude: number;
-  } | null>(null);
+  const [map, setMap] = useState<{ latitude: number; longitude: number } | null>(null);
   const mapRef = useRef<MapView>(null);
-/////ad
-  const [showModal, setShowModal] = useState(false);
-
- 
-
-  const handleDayPress = (day: DateObject) => {
-    const date = day.dateString;
-    const isSelected = selectedDates.includes(date);
-
-    if (isSelected) {
-      setSelectedDates(selectedDates.filter((d) => d !== date));
-    } else {
-      setSelectedDates([...selectedDates, date]);
-    }
-
-    setPropertyData((prevData) => ({
-      ...prevData,
-      visits: isSelected
-        ? prevData.visits.filter((d) => d !== date)
-        : [...prevData.visits, date],
-    }));
-  };
-
-  const getMarkedDates = () => {
-    const markedDates: { [date: string]: { selected: boolean } } = {};
-    selectedDates.forEach((date) => {
-      markedDates[date] = { selected: true };
-    });
-    return markedDates;
-  };
-
   const [propertyData, setPropertyData] = useState<PropertyData>({
     address: "123 Main Street, Cityville, State",
     size: 120,
@@ -147,9 +108,35 @@ const PostProperty: React.FC<Props> = ({ navigation }) => {
     contact_info: "contact@example.com",
     status: "pending",
     notification: "",
-    iduser: undefined, 
+    iduser: undefined,
     map: { latitude: 33.8869, longitude: 9.5375 },
   });
+
+  const handleDayPress = (day: any) => {
+    const date = day.dateString;
+    const isSelected = selectedDates.includes(date);
+
+    if (isSelected) {
+      setSelectedDates(selectedDates.filter((d) => d !== date));
+    } else {
+      setSelectedDates([...selectedDates, date]);
+    }
+
+    setPropertyData((prevData) => ({
+      ...prevData,
+      visits: isSelected
+        ? prevData.visits.filter((d) => d !== date)
+        : [...prevData.visits, date],
+    }));
+  };
+
+  const getMarkedDates = () => {
+    const markedDates: { [date: string]: { selected: boolean } } = {};
+    selectedDates.forEach((date) => {
+      markedDates[date] = { selected: true };
+    });
+    return markedDates;
+  };
 
   const handleImageSelection = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -184,9 +171,7 @@ const PostProperty: React.FC<Props> = ({ navigation }) => {
     handleImageResult(result);
   };
 
-  const launchImageLibrary = async (
-    options: ImagePicker.ImagePickerOptions
-  ) => {
+  const launchImageLibrary = async (options: ImagePicker.ImagePickerOptions) => {
     let result = await ImagePicker.launchImageLibraryAsync(options);
     handleImageResult(result);
   };
@@ -232,70 +217,81 @@ const PostProperty: React.FC<Props> = ({ navigation }) => {
   };
 
   const handleSubmit = async () => {
-    try {
-      setLoading(true); 
-      const response = await fetch("http://192.168.1.13:5800/addhouse", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+    const adminFee = propertyData.price * 0.1;
+    Alert.alert(
+      "Confirmation",
+      `Are you sure you want to post this property? The admin fee is $${adminFee}.`,
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
         },
-        body: JSON.stringify(propertyData),
-      });
+        {
+          text: "OK",
+          onPress: async () => {
+            try {
+              setLoading(true);
+              const response = await fetch("http://192.168.1.13:5800/addhouse", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(propertyData),
+              });
 
-      setLoading(false); 
+              setLoading(false);
 
-      if (response.ok) {
-        const result = await response.json();
-        console.log("Property posted successfully:", result);
-        Alert.alert("Success", "Property posted successfully!");
-        setPropertyData({
-          address: "",
-          size: 0,
-          category: "apartment",
-          title: "",
-          favourite: false,
-          description: "",
-          images: [],
-          operation: "rent",
-          date_of_creation: getCurrentDate(),
-          rooms: 0,
-          price: 0,
-          bathrooms: 0,
-          visits: [],
-          amenities: {
-            parking: false,
-            ac: false,
-            furnished: false,
-            pool: false,
-            microwave: false,
-            near_subway: false,
-            beach_view: false,
-            alarm: false,
-            garden: false,
+              if (response.ok) {
+                const result = await response.json();
+                console.log("Property posted successfully:", result);
+                Alert.alert("Success", "Property posted successfully!");
+                setPropertyData({
+                  address: "",
+                  size: 0,
+                  category: "apartment",
+                  title: "",
+                  favourite: false,
+                  description: "",
+                  images: [],
+                  operation: "rent",
+                  condition: "new",
+                  location: "Ariana",
+                  subLocation: "Ariana Essoughra",
+                  date_of_creation: getCurrentDate(),
+                  rooms: 0,
+                  price: 0,
+                  bathrooms: 0,
+                  visits: [],
+                  amenities: {
+                    parking: false,
+                    ac: false,
+                    furnished: false,
+                    pool: false,
+                    microwave: false,
+                    near_subway: false,
+                    beach_view: false,
+                    alarm: false,
+                    garden: false,
+                  },
+                  contact_info: "",
+                  status: "pending",
+                  notification: "",
+                  iduser: undefined,
+                  map: { latitude: 0, longitude: 0 },
+                });
+              } else {
+                const error = await response.json();
+                console.error("Error posting property:", error);
+                Alert.alert("Error", `Error posting property: ${error.message}`);
+              }
+            } catch (error) {
+              console.error("Error posting property:", error);
+              Alert.alert("Error", `Error posting property: ${error.message}`);
+            }
           },
-          contact_info: "",
-          status: "pending",
-          notification: "",
-          iduser: undefined, 
-          map: { latitude: 0, longitude: 0 },
-          condition: "new",
-          location: "Ariana",
-          subLocation: "Ariana Essoughra",
-        });
-        navigation.navigate("HousesScreen");
-      } else {
-        const errorText = await response.text();
-        console.error("Failed to post property:", response.status, errorText);
-        Alert.alert(
-          "Error",
-          `Failed to post property: ${response.status} ${errorText}`
-        );
-      }
-    } catch (error) {
-      setLoading(false); 
-      console.error("Error posting property:", error);
-      Alert.alert("Error", `Error posting property: ${error.message}`);
-    }
+        },
+      ]
+    );
   };
 
   const handleInputChange = (
@@ -379,11 +375,7 @@ const PostProperty: React.FC<Props> = ({ navigation }) => {
           {propertyData.images.length > 0 && (
             <View style={styles.imageContainer}>
               {propertyData.images.map((image, index) => (
-                <Image
-                  key={index}
-                  source={{ uri: image }}
-                  style={styles.image}
-                />
+                <Image key={index} source={{ uri: image }} style={styles.image} />
               ))}
             </View>
           )}
@@ -433,13 +425,6 @@ const styles = StyleSheet.create({
   formContainer: {
     marginBottom: 20,
   },
-  calendarButton: {
-    color: "#007bff",
-    textAlign: "center",
-    marginVertical: 10,
-    fontSize: 16,
-    fontWeight: "bold",
-  },
   imageButton: {
     color: "#007bff",
     textAlign: "center",
@@ -470,13 +455,6 @@ const styles = StyleSheet.create({
   },
   submitButtonText: {
     color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  currentLocationButton: {
-    color: "#007bff",
-    textAlign: "center",
-    marginVertical: 10,
     fontSize: 16,
     fontWeight: "bold",
   },

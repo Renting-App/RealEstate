@@ -73,7 +73,7 @@ export default function App() {
   return (
     <FavoritesProvider>
       <ThemeProvider>
-        <NavigationContainer>
+        {/* <NavigationContainer> */}
           <Stack.Navigator
             initialRouteName="HousesScreen"
             screenOptions={{ headerShown: true }}
@@ -158,7 +158,7 @@ export default function App() {
               component={UpdatePropertyForm} 
             />
           </Stack.Navigator>
-        </NavigationContainer>
+        {/* </NavigationContainer> */}
       </ThemeProvider>
     </FavoritesProvider>
   );
