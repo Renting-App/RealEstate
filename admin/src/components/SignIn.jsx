@@ -15,15 +15,12 @@ const SignIn = ({setAdminAccess }) => {
   const handleSignIn = async (e) => {
     e.preventDefault();
     try {
-      // Fetch the admin document from Firestore
       const adminDocRef = doc(firestore, 'admin', 'admin');
       const adminDoc = await getDoc(adminDocRef);
 
-      // Check if the admin document exists and compare email and password
       if (adminDoc.exists()) {
         const adminData = adminDoc.data();
         if (adminData.email === email && adminData.password === password) {
-          // Sign in the user using Firebase Authentication
           const userCredential = await signInWithEmailAndPassword(auth, email, password);
           setAdminAccess(true);
           console.log('Admin signed in');
@@ -41,32 +38,7 @@ const SignIn = ({setAdminAccess }) => {
       setError('Failed to sign in. Please try again.');
     }
   };
-  // const handleSignIn = async (e) => {
-
-  //   e.preventDefault();
-  //   try {
-  //     const adminDocRef = doc(firestore, 'admin', 'admin');
-  //     const adminDoc = await getDoc(adminDocRef);
-
-  //     const adminCredential = await signInWithEmailAndPassword(auth,email, password);
-  //     const admin = adminCredential.admin;
-  //     // const adminDoc = await getDoc(doc(firestore, 'admin', admin.id));
-  //     const adminData = adminDoc.data();
-
-  //     if (adminDoc.exists && adminData.role === 'admin') {
-  //       setAdminAccess(true);
-  //       console.log('Admin signed in');
-  //       navigate('/dashboard')
-  //     } else {
-  //       setAdminAccess(false);
-  //       await auth.signOut();
-  //       setError('You are not authorized to access this site.');
-  //     }
-  //   } catch (error) {
-  //     // setError(error.message);
-  //     console.log(error);
-  //   }
-  // };
+ 
 
 return (
   <div className="sign-in-container">
