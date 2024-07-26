@@ -12,7 +12,7 @@ const Profit = () => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
         setUser(user);
-        const adminRef = firestore.collection('admins').doc(user.uid);
+        const adminRef = firestore.collection('admin').doc(user.uid);
         const doc = await adminRef.get();
         if (doc.exists) {
           setProfit(doc.data().profit);

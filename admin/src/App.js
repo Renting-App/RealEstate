@@ -1,39 +1,57 @@
 import React,{useEffect,useState} from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import {auth} from '../src/config/firebase.js'
-import SignIn from './components/SignIn.js';
-import Home from './components/dashbord.jsx';
+import SignIn from './components/SignIn.jsx';
+import Dashboard from './components/dashbord.jsx';
 import Profit from './components/profit.jsx';
-// import TourRequestsList from './components/req.jsx';
+import TourRequestsList from './components/req.jsx';
+
 
 const App = () => {
 const [user,setUser]=useState(null)
+const [adminAccess, setAdminAccess] = useState(false);
+const [loading, setLoading] = useState(true);
 useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
+      setLoading(false);
       setUser(user);
     });
     return () => unsubscribe();
   }, []);
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
     return (
 //         <Router>
 //             <Routes>
 //                 <Route path="/signin" component={SignIn} />
-//                 <Route path="/" element={<AdminDashboard />} />
+//                 <Route path="/signin" component={SignIn} />
+//                 <Route path="/" element={<SignIn />} />
 //                 <Route path="/tour-request" element={<TourRequestsList />} />
 //             </Routes>
 //         </Router>
 //     );
 // };
-<Router>
-      <Routes>
-        <Route path="/signin" element={<SignIn />} />
-        <Route path="/Home" element={user ? <Home /> : <Navigate to="/signin" />} />
-        <Route path="/profit" element={user ? <Profit /> : <Navigate to="/signin" />} />
-        <Route path="*" element={<Navigate to={user ? "/home" : "/signin"} />} />
+    <Router>
+    <div>
+      {loading ? (
+        <div>Loading...</div>
+      ) : (
+        <>
+        {user && adminAccess }
+        <Routes>
+          <Route path="/signin" element={<SignIn setAdminAccess={setAdminAccess} />} />
+          <Route path="/dashboard" element={user && adminAccess ? <Dashboard /> : <Navigate to="/signin" />} />
+          <Route path="/profit" element={user && adminAccess ? <Profit /> : <Navigate to="/signin" />} />
+          <Route path="/tour-request" element={user && adminAccess ? <TourRequestsList /> : <Navigate to="/signin" />} />
+          <Route path="/" element={<Navigate to="/signin" />} />
+        </Routes>
+      </>
+      )}
+    </div>
+  </Router>
 
-      </Routes>
-    </Router>
     )
 }
 
