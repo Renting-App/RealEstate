@@ -1,4 +1,3 @@
-// HousesScreen.tsx
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -8,12 +7,12 @@ import {
   Button,
   Pressable,
   Text,
-  StyleSheet
+  StyleSheet,
 } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { Link, useNavigation } from "expo-router";
+import { Link, useNavigation, useFocusEffect } from "expo-router";
 import DrawerContent from "@/app/DrawerContent";
 import Search from "./Search";
 import Pagination from "./Pagination";
@@ -22,11 +21,14 @@ import {
   Directions,
   State,
 } from "react-native-gesture-handler";
-import { RouteProp } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from './_layout';
+import { RouteProp } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RootStackParamList } from "./_layout";
 
-type HousesScreenNavigationProp = StackNavigationProp<RootStackParamList, "HousesScreen">;
+type HousesScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  "HousesScreen"
+>;
 
 type HousesScreenProps = {
   route: RouteProp<RootStackParamList, "HousesScreen">;
@@ -66,11 +68,18 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
     fetchResidences();
   }, []);
 
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchResidences();
+    }, [])
+  );
+
   useEffect(() => {
     handleSearch();
   }, [searchQuery]);
 
   const fetchResidences = () => {
+    setLoading(true);
     fetch("http://192.168.1.13:5800/houses")
       .then((response) => response.json())
       .then((data) => {
@@ -209,7 +218,7 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
             <DrawerContent
               isVisible={isSidebarVisible}
               onClose={() => setIsSidebarVisible(false)}
-              navigation={navigation} // Pass the navigation prop here
+              navigation={navigation}
             />
             <View style={styles.header}>
               <Pressable onPress={() => setIsSidebarVisible(true)}>

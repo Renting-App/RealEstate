@@ -22,6 +22,7 @@ import UpdatePropertyForm from "./UpdatePropertyForm";
 import ManagePosts from "./ManagePosts";
 import PostDetail from "./PostDetail";
 import { ThemeProvider } from "./ThemeContext";
+import EditProfile from "./EditProfile";
 
 export type Residence = {
   _id: string;
@@ -65,6 +66,7 @@ export type RootStackParamList = {
   MyProperties: undefined;
   MyAccount: undefined;
   UpdatePropertyForm: undefined;
+  EditProfile: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -75,7 +77,7 @@ export default function App() {
       <ThemeProvider>
         {/* <NavigationContainer> */}
           <Stack.Navigator
-            initialRouteName="HousesScreen"
+            initialRouteName="Welcome"
             screenOptions={{ headerShown: true }}
           >
             <Stack.Screen
@@ -115,6 +117,10 @@ export default function App() {
             <Stack.Screen
               name="PostDetail"
               component={PostDetail} 
+          />
+          <Stack.Screen
+              name="EditProfile"
+              component={EditProfile}  
             />
             <Stack.Screen
               name="Favorite"

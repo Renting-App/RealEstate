@@ -90,7 +90,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
     alarm: "bell",
     garden: "tree",
   };
-  const adminFee = (parseFloat(propertyData.price.toString()) * 0.10).toFixed(2);
+  const adminFee = (parseFloat(propertyData.price.toString()) * 0.1).toFixed(2);
   return (
     <View style={styles.formContainer}>
       <View style={styles.header}>
@@ -126,7 +126,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
         placeholder="Enter price"
         keyboardType="numeric"
       />
-<Text style={styles.label}>Admin Fee: ${adminFee}</Text> 
+      <Text style={styles.label}>Admin Fee: ${adminFee}</Text>
 
       <Text style={styles.label}>Address:</Text>
       <TextInput
@@ -140,7 +140,13 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
       <Picker
         style={styles.picker}
         selectedValue={propertyData.location}
-        onValueChange={(itemValue) => handleInputChange("location", itemValue)}
+        onValueChange={(itemValue) => {
+          handleInputChange("location", itemValue);
+          handleInputChange(
+            "address",
+            `${itemValue}, ${propertyData.subLocation}`
+          );
+        }}
       >
         {Object.keys(locations).map((location, index) => (
           <Picker.Item key={index} label={location} value={location} />
@@ -151,9 +157,13 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
       <Picker
         style={styles.picker}
         selectedValue={propertyData.subLocation}
-        onValueChange={(itemValue) =>
-          handleInputChange("subLocation", itemValue)
-        }
+        onValueChange={(itemValue) => {
+          handleInputChange("subLocation", itemValue);
+          handleInputChange(
+            "address",
+            `${propertyData.location}, ${itemValue}`
+          );
+        }}
       >
         {propertyData.location &&
           locations[propertyData.location].map((subLocation, index) => (

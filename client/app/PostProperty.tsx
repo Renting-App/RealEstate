@@ -1,83 +1,48 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   View,
   Text,
+  TextInput,
   TouchableOpacity,
-  ScrollView,
-  Image,
-  Alert,
   ActivityIndicator,
   StyleSheet,
+  Image,
+  FlatList,
+  Alert,
 } from "react-native";
 import axios from "axios";
-import * as ImagePicker from "expo-image-picker";
 import * as Location from "expo-location";
 import MapView, { Marker } from "react-native-maps";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { getAuth } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
+import { firestore } from "../config/firebase";
 import PropertyForm from "./PropertyForm";
-import { RootStackParamList } from "./_layout";
-import { StackNavigationProp } from "@react-navigation/stack";
-
+import * as ImagePicker from "expo-image-picker";
 const CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/dw1sxdmac/upload";
 const CLOUDINARY_PRESET = "hotel_preset";
-
-interface PropertyData {
-  address: string;
-  size: number;
-  category: "apartment" | "house" | "office" | "studio" | "penthouse";
-  title: string;
-  favourite: boolean;
-  description: string;
-  images: string[];
-  operation: "rent" | "sale";
-  map: { latitude: number; longitude: number };
-  date_of_creation: string;
-  rooms: number;
-  price: number;
-  bathrooms: number;
-  visits: string[];
-  amenities: {
-    parking: boolean;
-    ac: boolean;
-    furnished: boolean;
-    pool: boolean;
-    microwave: boolean;
-    near_subway: boolean;
-    beach_view: boolean;
-    alarm: boolean;
-    garden: boolean;
-  };
-  contact_info: string;
-  status: "pending" | "approved" | "declined";
-  notification: string;
-  iduser?: string;
-  condition: "new" | "occasion";
-  location: string;
-  subLocation: string;
-}
+const MAPBOX_GEOCODING_URL =
+  "https://api.mapbox.com/geocoding/v5/mapbox.places";
+const MAPBOX_ACCESS_TOKEN =
+  "pk.eyJ1IjoibW9oYW1lZGFsaTgwNTYiLCJhIjoiY2x6Mjd6azc3Mm5jZDJscXZkN2U3djlxcCJ9.YV7MiFQVFazJi7w4iY_JDw";
 
 const getCurrentDate = () => {
   const currentDate = new Date().toISOString().split("T")[0];
   return currentDate;
 };
 
-type PostPropertyScreenNavigationProp = StackNavigationProp<
-  RootStackParamList,
-  "PostProperty"
->;
-
-type Props = {
-  navigation: PostPropertyScreenNavigationProp;
-};
-
-const PostProperty: React.FC<Props> = ({ navigation }) => {
+const PostProperty = () => {
   const [selectedDates, setSelectedDates] = useState<string[]>([]);
   const [showCalendar, setShowCalendar] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [map, setMap] = useState<{ latitude: number; longitude: number } | null>(null);
+  const [map, setMap] = useState<{
+    latitude: number;
+    longitude: number;
+  } | null>(null);
   const mapRef = useRef<MapView>(null);
-  const [propertyData, setPropertyData] = useState<PropertyData>({
-    address: "123 Main Street, Cityville, State",
+  const [suggestions, setSuggestions] = useState<any[]>([]);
+  const [propertyData, setPropertyData] = useState({
+    address: "",
     size: 120,
     category: "apartment",
     title: "Modern Apartment in City Center",
@@ -108,9 +73,31 @@ const PostProperty: React.FC<Props> = ({ navigation }) => {
     contact_info: "contact@example.com",
     status: "pending",
     notification: "",
-    iduser: undefined,
+    iduser: "",
     map: { latitude: 33.8869, longitude: 9.5375 },
   });
+
+  const auth = getAuth();
+
+  const fetchUserId = async () => {
+    const currentUser = auth.currentUser;
+    if (currentUser) {
+      const userDocRef = doc(firestore, "users", currentUser.uid);
+      const userDoc = await getDoc(userDocRef);
+      if (userDoc.exists()) {
+        setPropertyData((prevData) => ({
+          ...prevData,
+          iduser: currentUser.uid,
+        }));
+      }
+    } else {
+      console.log("No user is signed in!");
+    }
+  };
+
+  useEffect(() => {
+    fetchUserId();
+  }, []);
 
   const handleDayPress = (day: any) => {
     const date = day.dateString;
@@ -171,7 +158,9 @@ const PostProperty: React.FC<Props> = ({ navigation }) => {
     handleImageResult(result);
   };
 
-  const launchImageLibrary = async (options: ImagePicker.ImagePickerOptions) => {
+  const launchImageLibrary = async (
+    options: ImagePicker.ImagePickerOptions
+  ) => {
     let result = await ImagePicker.launchImageLibraryAsync(options);
     handleImageResult(result);
   };
@@ -231,13 +220,16 @@ const PostProperty: React.FC<Props> = ({ navigation }) => {
           onPress: async () => {
             try {
               setLoading(true);
-              const response = await fetch("http://192.168.1.13:5800/addhouse", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify(propertyData),
-              });
+              const response = await fetch(
+                "http://192.168.1.13:5800/addhouse",
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify(propertyData),
+                }
+              );
 
               setLoading(false);
 
@@ -276,13 +268,16 @@ const PostProperty: React.FC<Props> = ({ navigation }) => {
                   contact_info: "",
                   status: "pending",
                   notification: "",
-                  iduser: undefined,
+                  iduser: "",
                   map: { latitude: 0, longitude: 0 },
                 });
               } else {
                 const error = await response.json();
                 console.error("Error posting property:", error);
-                Alert.alert("Error", `Error posting property: ${error.message}`);
+                Alert.alert(
+                  "Error",
+                  `Error posting property: ${error.message}`
+                );
               }
             } catch (error) {
               console.error("Error posting property:", error);
@@ -295,7 +290,7 @@ const PostProperty: React.FC<Props> = ({ navigation }) => {
   };
 
   const handleInputChange = (
-    name: keyof PropertyData,
+    name: keyof typeof propertyData,
     value: string | boolean
   ) => {
     setPropertyData((prevData) => ({
@@ -304,7 +299,7 @@ const PostProperty: React.FC<Props> = ({ navigation }) => {
     }));
   };
 
-  const toggleCheckbox = (name: keyof typeof propertyData.amenities) => {
+  const toggleCheckbox = (name: keyof (typeof propertyData)["amenities"]) => {
     setPropertyData((prevData) => ({
       ...prevData,
       amenities: {
@@ -314,13 +309,38 @@ const PostProperty: React.FC<Props> = ({ navigation }) => {
     }));
   };
 
-  const handleMapPress = (event: any) => {
+  const handleMapPress = async (event: any) => {
     const { latitude, longitude } = event.nativeEvent.coordinate;
     setMap({ latitude, longitude });
     setPropertyData((prevData) => ({
       ...prevData,
       map: { latitude, longitude },
     }));
+
+    try {
+      const response = await axios.get(
+        `${MAPBOX_GEOCODING_URL}/${longitude},${latitude}.json`,
+        {
+          params: {
+            access_token: MAPBOX_ACCESS_TOKEN,
+          },
+        }
+      );
+
+      if (
+        response.data &&
+        response.data.features &&
+        response.data.features.length > 0
+      ) {
+        const address = response.data.features[0].place_name;
+        setPropertyData((prevData) => ({
+          ...prevData,
+          address: address,
+        }));
+      }
+    } catch (error) {
+      console.error("Error reverse geocoding:", error);
+    }
   };
 
   const handleUseCurrentLocation = async () => {
@@ -351,69 +371,168 @@ const PostProperty: React.FC<Props> = ({ navigation }) => {
       },
       1000
     );
+
+    try {
+      const response = await axios.get(
+        `${MAPBOX_GEOCODING_URL}/${location.coords.longitude},${location.coords.latitude}.json`,
+        {
+          params: {
+            access_token: MAPBOX_ACCESS_TOKEN,
+          },
+        }
+      );
+
+      if (
+        response.data &&
+        response.data.features &&
+        response.data.features.length > 0
+      ) {
+        const address = response.data.features[0].place_name;
+        setPropertyData((prevData) => ({
+          ...prevData,
+          address: address,
+        }));
+      }
+    } catch (error) {
+      console.error("Error reverse geocoding:", error);
+    }
+  };
+
+  const handleQueryChange = async (text: string) => {
+    setPropertyData((prevData) => ({
+      ...prevData,
+      address: text,
+    }));
+    if (text.length > 2) {
+      try {
+        const response = await axios.get(
+          `${MAPBOX_GEOCODING_URL}/${encodeURIComponent(text)}.json`,
+          {
+            params: {
+              access_token: MAPBOX_ACCESS_TOKEN,
+              autocomplete: true,
+            },
+          }
+        );
+        const data = response.data;
+        setSuggestions(data.features);
+      } catch (error) {
+        console.error("Error fetching suggestions:", error);
+        setSuggestions([]);
+      }
+    } else {
+      setSuggestions([]);
+    }
+  };
+
+  const handleSuggestionSelect = async (suggestion: any) => {
+    setPropertyData((prevData) => ({
+      ...prevData,
+      address: suggestion.place_name,
+      map: {
+        latitude: suggestion.center[1],
+        longitude: suggestion.center[0],
+      },
+    }));
+    setSuggestions([]);
+    mapRef.current?.animateToRegion(
+      {
+        latitude: suggestion.center[1],
+        longitude: suggestion.center[0],
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01,
+      },
+      1000
+    );
   };
 
   return (
-    <ScrollView>
-      <View style={styles.container}>
-        <View style={styles.formContainer}>
-          <PropertyForm
-            propertyData={propertyData}
-            handleInputChange={handleInputChange}
-            toggleCheckbox={toggleCheckbox}
-            handleImageSelection={handleImageSelection}
-            getMarkedDates={getMarkedDates}
-            handleDayPress={handleDayPress}
-            showCalendar={showCalendar}
-            setShowCalendar={setShowCalendar}
-          />
-
-          <TouchableOpacity onPress={handleImageSelection}>
-            <Text style={styles.imageButton}>Upload Images</Text>
-          </TouchableOpacity>
-
-          {propertyData.images.length > 0 && (
-            <View style={styles.imageContainer}>
-              {propertyData.images.map((image, index) => (
-                <Image key={index} source={{ uri: image }} style={styles.image} />
-              ))}
+    <View style={styles.container}>
+      <FlatList
+        ListHeaderComponent={
+          <>
+            <View style={styles.formContainer}>
+              <PropertyForm
+                propertyData={propertyData}
+                handleInputChange={handleInputChange}
+                toggleCheckbox={toggleCheckbox}
+                handleImageSelection={handleImageSelection}
+                getMarkedDates={getMarkedDates}
+                handleDayPress={handleDayPress}
+                showCalendar={showCalendar}
+                setShowCalendar={setShowCalendar}
+              />
+              <TouchableOpacity onPress={handleImageSelection}>
+                <Text style={styles.imageButton}>Upload Images</Text>
+              </TouchableOpacity>
+              <TextInput
+                style={styles.input}
+                value={propertyData.address}
+                onChangeText={handleQueryChange}
+                placeholder="Enter address"
+              />
             </View>
-          )}
-
-          <MapView
-            ref={mapRef}
-            style={styles.map}
-            onPress={handleMapPress}
-            initialRegion={{
-              latitude: 33.8869,
-              longitude: 9.5375,
-              latitudeDelta: 5,
-              longitudeDelta: 5,
-            }}
-          >
-            {map && <Marker coordinate={map} title="Property Location" />}
-          </MapView>
-
-          <TouchableOpacity
-            style={styles.locationButton}
-            onPress={handleUseCurrentLocation}
-          >
-            <Ionicons name="locate" size={24} color="#fff" />
+          </>
+        }
+        data={suggestions}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <TouchableOpacity onPress={() => handleSuggestionSelect(item)}>
+            <Text style={styles.itemText}>{item.place_name}</Text>
           </TouchableOpacity>
+        )}
+        ListFooterComponent={
+          <>
+            {propertyData.images.length > 0 && (
+              <View style={styles.imageContainer}>
+                {propertyData.images.map((image, index) => (
+                  <Image
+                    key={index}
+                    source={{ uri: image }}
+                    style={styles.image}
+                  />
+                ))}{" "}
+                <TouchableOpacity onPress={handleImageSelection}>
+                  <Text style={styles.imageButton}>Upload Images</Text>
+                </TouchableOpacity>
+              </View>
+            )}
 
-          {loading ? (
-            <ActivityIndicator size="large" color="#0000ff" />
-          ) : (
-            <TouchableOpacity
-              style={styles.submitButton}
-              onPress={handleSubmit}
+            <MapView
+              ref={mapRef}
+              style={styles.map}
+              onPress={handleMapPress}
+              initialRegion={{
+                latitude: 33.8869,
+                longitude: 9.5375,
+                latitudeDelta: 5,
+                longitudeDelta: 5,
+              }}
             >
-              <Text style={styles.submitButtonText}>Post Property</Text>
+              {map && <Marker coordinate={map} title="Property Location" />}
+            </MapView>
+
+            <TouchableOpacity
+              style={styles.locationButton}
+              onPress={handleUseCurrentLocation}
+            >
+              <Ionicons name="locate" size={24} color="#fff" />
             </TouchableOpacity>
-          )}
-        </View>
-      </View>
-    </ScrollView>
+
+            {loading ? (
+              <ActivityIndicator size="large" color="#0000ff" />
+            ) : (
+              <TouchableOpacity
+                style={styles.submitButton}
+                onPress={handleSubmit}
+              >
+                <Text style={styles.submitButtonText}>Post Property</Text>
+              </TouchableOpacity>
+            )}
+          </>
+        }
+      />
+    </View>
   );
 };
 
@@ -468,6 +587,18 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     elevation: 5,
+  },
+  input: {
+    height: 40,
+    borderColor: "#ccc",
+    borderWidth: 1,
+    paddingLeft: 8,
+    marginBottom: 10,
+  },
+  itemText: {
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ccc",
   },
 });
 

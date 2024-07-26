@@ -9,12 +9,13 @@ import {
   Alert,
   StyleSheet,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import importedStyles from "./styles";
 import { RootStackParamList } from "./_layout";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { getAuth } from "firebase/auth";
 
 interface Property {
   _id: string;
@@ -22,6 +23,7 @@ interface Property {
   address: string;
   price: string;
   images: string[];
+  iduser: string;
 }
 
 type MyPropertiesNavigationProp = StackNavigationProp<
@@ -32,13 +34,33 @@ type MyPropertiesNavigationProp = StackNavigationProp<
 const MyProperties: React.FC = () => {
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
+  const [userId, setUserId] = useState<string | null>(null);
   const navigation = useNavigation<MyPropertiesNavigationProp>();
 
   useEffect(() => {
-    fetchProperties();
+    const fetchUserId = async () => {
+      const auth = getAuth();
+      const currentUser = auth.currentUser;
+      if (currentUser) {
+        setUserId(currentUser.uid);
+      } else {
+        console.log("No user is signed in!");
+      }
+    };
+
+    fetchUserId();
   }, []);
 
+  useFocusEffect(
+    React.useCallback(() => {
+      if (userId) {
+        fetchProperties();
+      }
+    }, [userId])
+  );
+
   const fetchProperties = () => {
+    setLoading(true);
     fetch("http://192.168.1.13:5800/houses")
       .then((response) => response.json())
       .then((data) => {
@@ -48,9 +70,15 @@ const MyProperties: React.FC = () => {
           address: property.address || "No address provided",
           price: property.price || "Price not available",
           images: property.images || [],
+          iduser: property.iduser,
         }));
 
-        setProperties(mappedProperties);
+        // Filter properties by current user's UID
+        const userProperties = mappedProperties.filter(
+          (property: Property) => property.iduser === userId
+        );
+
+        setProperties(userProperties);
         setLoading(false);
       })
       .catch((error) => {
