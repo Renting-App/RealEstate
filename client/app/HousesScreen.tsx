@@ -21,7 +21,7 @@ import {
   Directions,
   State,
 } from "react-native-gesture-handler";
-
+import { Route } from "expo-router/build/Route";
 type HousesScreenProps = {
   route: RouteProp<RootStackParamList, "HousesScreen">;
 };
