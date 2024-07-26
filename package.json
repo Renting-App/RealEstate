@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "@react-native-mapbox-gl/maps": "^8.5.0",
+    "axios": "^1.7.2",
+    "react-native-autocomplete-input": "^5.4.0"
+  }
+}

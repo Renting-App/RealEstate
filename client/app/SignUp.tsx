@@ -1,17 +1,20 @@
-import React from 'react';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { Input, Button } from 'react-native-elements';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from './_layout'; // Update the path if necessary
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth, firestore } from '../config/firebase';
-import { doc, setDoc } from 'firebase/firestore';
+import React from "react";
+import { View, Text, StyleSheet, Dimensions } from "react-native";
+import Icon from "react-native-vector-icons/FontAwesome";
+import { Input, Button } from "react-native-elements";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RootStackParamList } from "./_layout"; // Update the path if necessary
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { auth, firestore } from "../config/firebase";
+import { doc, setDoc } from "firebase/firestore";
 
-type SignupScreenNavigationProp = StackNavigationProp<RootStackParamList, 'SignUp'>;
+type SignupScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  "SignUp"
+>;
 
 type Props = {
-    navigation: SignupScreenNavigationProp;
+  navigation: SignupScreenNavigationProp;
 };
 
 const Signup: React.FC<Props> = ({ navigation }) => {
@@ -69,17 +72,17 @@ const Signup: React.FC<Props> = ({ navigation }) => {
                 role: 'user'
             });
             //mongo
-            const response = await fetch('http://localhost:3000/adduser', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    username: value.username,
-                    password: value.password,
-                    email: value.email,
-                    phone_number: parseInt(value.phoneNumber)
-                })
+            const response = await fetch("http:///192.168.1.13:58000/adduser", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                username: value.username,
+                password: value.password,
+                email: value.email,
+                phone_number: parseInt(value.phoneNumber),
+              }),
             });
 
             if (response.ok) {
@@ -157,34 +160,34 @@ const Signup: React.FC<Props> = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        paddingTop: 50,
-        backgroundColor: '#f5f5f5',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    title: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        marginBottom: 20,
-    },
-    inputContainer: {
-        width: '80%',
-    },
-    input: {
-        marginBottom: 20,
-    },
-    button: {
-        backgroundColor: '#007BFF',
-        borderRadius: 5,
-        paddingVertical: 15,
-        marginTop: 20,
-    },
-    errorText: {
-        color: '#ff0000',
-        marginBottom: 10,
-    },
+  container: {
+    flex: 1,
+    paddingTop: 50,
+    backgroundColor: "#f5f5f5",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 20,
+  },
+  inputContainer: {
+    width: "80%",
+  },
+  input: {
+    marginBottom: 20,
+  },
+  button: {
+    backgroundColor: "#007BFF",
+    borderRadius: 5,
+    paddingVertical: 15,
+    marginTop: 20,
+  },
+  errorText: {
+    color: "#ff0000",
+    marginBottom: 10,
+  },
 });
 
 export default Signup;

@@ -2,31 +2,16 @@ const mongoose = require("mongoose");
 
 const houseSchema = new mongoose.Schema(
   {
-    address: {
-      type: String,
-      required: true,
-    },
-    size: {
-      type: Number,
-    },
+    address: { type: String, required: true },
+    size: { type: Number },
     category: {
       type: String,
       enum: ["apartment", "house", "office", "studio", "penthouse"],
     },
-    title: {
-     type: String,
-      required: true,
-    },
-    favourite: {
-      type: Boolean,
-      default: false,
-    },
-    description: {
-      type: String,
-    },
-    images: {
-      type: [String],
-    },
+    title: { type: String, required: true },
+    favourite: { type: Boolean, default: false },
+    description: { type: String },
+    images: { type: [String] },
     operation: {
       type: String,
       enum: ["rent", "sale"],
@@ -166,51 +151,22 @@ const houseSchema = new mongoose.Schema(
         "Sidi bou said",
       ],
     },
-    date_of_creation: {
-      type: Date,
-      default: Date.now,
-    },
-    rooms: {
-      type: Number,
-    },
-    price: {
-      type: Number,
-    },
-    bathrooms: {
-      type: Number,
-    },
-    visits: {
-      type: [Date],
-    },
-    amenities: {
-      type: Map,
-      of: mongoose.Schema.Types.Mixed,
-    },
-    contact_info: {
-      type: String,
-    },
+    date_of_creation: { type: Date, default: Date.now },
+    rooms: { type: Number },
+    price: { type: Number },
+    bathrooms: { type: Number },
+    visits: { type: [Date] },
+    amenities: { type: Map, of: mongoose.Schema.Types.Mixed },
+    contact_info: { type: String },
     status: {
       type: String,
       enum: ["pending", "approved", "declined"],
       default: "pending",
     },
-    notification: {
-      type: String,
-    },
-    iduser: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: false,
-    },
-    condition: {
-      type: String,
-      enum: ["new", "occasion"],
-      default: "new",
-    },
-    map: {
-      type: Map,
-      of: mongoose.Schema.Types.Mixed,
-    },
+    notification: { type: String },
+    iduser: { type: String, required: true },
+    condition: { type: String, enum: ["new", "occasion"], default: "new" },
+    map: { type: Map, of: mongoose.Schema.Types.Mixed },
   },
   {
     timestamps: false,
@@ -218,6 +174,6 @@ const houseSchema = new mongoose.Schema(
   }
 );
 
-const House = mongoose.model("house", houseSchema);
+const House = mongoose.model("House", houseSchema);
 
 module.exports = House;
