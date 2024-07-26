@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './style.css';
 import dashboardIcon from './img/icons8-dashboard-layout-24.png';
@@ -14,6 +14,43 @@ import alarmIcon from './img/icons8-alarm-24.png';
 import avatar from './img/avater.jpeg';
 
 const AdminDashboard = () => {
+    const [showNotification, setShowNotification] = useState(false);
+    const [notifications, setNotifications] = useState([]);
+    const [unreadCount, setUnreadCount] = useState(0);
+
+    const toggleNotification = () => {
+        setShowNotification(!showNotification);
+        if (!showNotification) {
+            markNotificationsAsRead();
+        }
+    };
+
+    const fetchNotifications = async () => {
+        try {
+            const response = await fetch('http://localhost:5800/notifications');
+            const data = await response.json();
+            setNotifications(data.notifications);
+            setUnreadCount(data.unreadCount);
+        } catch (error) {
+            console.error('Error fetching notifications:', error);
+        }
+    };
+
+    const markNotificationsAsRead = async () => {
+        try {
+            await fetch('http://localhost:5800/notifications/mark-as-read', {
+                method: 'POST'
+            });
+            setUnreadCount(0);
+        } catch (error) {
+            console.error('Error marking notifications as read:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchNotifications();
+    }, []);
+
     return (
         <div className="container grid grid-container">
             <div className="side-bar">
@@ -38,7 +75,12 @@ const AdminDashboard = () => {
                         <input type="text" />
                     </div>
                     <div className="end">
-                        <img src={alarmIcon} alt="Alarm Icon" />
+                        <div style={{ position: 'relative' }}>
+                            <img src={alarmIcon} alt="Alarm Icon" onClick={toggleNotification} />
+                            {unreadCount > 0 && (
+                                <span className="notification-counter">{unreadCount}</span>
+                            )}
+                        </div>
                         <img style={{ width: '50px', borderRadius: '50%' }} src={avatar} alt="Avatar" />
                         <p className="bold">Admin</p>
                     </div>
@@ -52,6 +94,17 @@ const AdminDashboard = () => {
                         <li><Link to="#">Share</Link></li>
                     </ul>
                 </nav>
+
+                {showNotification && (
+                    <div className="notification">
+                        <p>New Post Request Notification</p>
+                        <ul>
+                            {notifications.map((notification, index) => (
+                                <li key={index}>{notification.message}</li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
             </div>
         </div>
     );

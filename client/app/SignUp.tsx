@@ -18,142 +18,145 @@ type Props = {
 };
 
 const Signup: React.FC<Props> = ({ navigation }) => {
-  const [value, setValue] = React.useState({
-    email: "",
-    password: "",
-    username: "",
-    phoneNumber: "",
-    error: "",
-  });
+    const [value, setValue] = React.useState({
+        email: '',
+        password: '',
+        username: '',
+        phoneNumber: '',
+        error: ''
+    })
 
-  async function signUp() {
-    if (value.email === "" || value.password === "") {
-      setValue({
-        ...value,
-        error: "Email and password are mandatory.",
-      });
-      return;
+    async function signUp() {
+        if (value.email === '' || value.password === '') {
+            setValue({
+                ...value,
+                error: 'Email and password are mandatory.'
+            })
+            return;
+        }
+        const phoneNumberRegex = /^\d{8}$/;
+        if (!phoneNumberRegex.test(value.phoneNumber)) {
+            setValue({
+                ...value,
+                error: 'Invalid Phone number '
+            });
+            return;
+        }
+
+        //     try {
+        //         await createUserWithEmailAndPassword(auth, value.email, value.password);
+        //         navigation.navigate('SignIn');
+        //     } catch (error) {
+        //         if (error instanceof Error) {
+        //             setValue({
+        //                 ...value,
+        //                 error: error.message,
+        //             });
+        //         } else {
+        //             setValue({
+        //                 ...value,
+        //                 error: 'An unknown error occurred',
+        //             });
+        //         }
+        //     }
+        // }
+
+        try {
+            const userCredential = await createUserWithEmailAndPassword(auth, value.email, value.password);
+            const user = userCredential.user;
+
+            await setDoc(doc(firestore, 'users', user.uid), {
+                email: value.email,
+                username: value.username,
+                phoneNumber: value.phoneNumber,
+                role: 'user'
+            });
+            //mongo
+            const response = await fetch("http:///192.168.1.13:58000/adduser", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                username: value.username,
+                password: value.password,
+                email: value.email,
+                phone_number: parseInt(value.phoneNumber),
+              }),
+            });
+
+            if (response.ok) {
+                navigation.navigate('SignIn');
+            }
+            else {
+                const errorMessage = await response.text();
+                setValue({
+                    ...value,
+                    error: errorMessage
+                });
+            }
+
+
+        } catch (error) {
+            if (error instanceof Error) {
+                setValue({
+                    ...value,
+                    error: error.message,
+                });
+            } else {
+                setValue({
+                    ...value,
+                    error: 'An unknown error occurred',
+                });
+            }
+        }
     }
-    const phoneNumberRegex = /^\d{8}$/;
-    if (!phoneNumberRegex.test(value.phoneNumber)) {
-      setValue({
-        ...value,
-        error: "Invalid Phone number ",
-      });
-      return;
-    }
 
-    //     try {
-    //         await createUserWithEmailAndPassword(auth, value.email, value.password);
-    //         navigation.navigate('SignIn');
-    //     } catch (error) {
-    //         if (error instanceof Error) {
-    //             setValue({
-    //                 ...value,
-    //                 error: error.message,
-    //             });
-    //         } else {
-    //             setValue({
-    //                 ...value,
-    //                 error: 'An unknown error occurred',
-    //             });
-    //         }
-    //     }
-    // }
-
-    try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        value.email,
-        value.password
-      );
-      const user = userCredential.user;
-
-      await setDoc(doc(firestore, "users", user.uid), {
-        email: value.email,
-        username: value.username,
-        phoneNumber: value.phoneNumber,
-        role: "user",
-      });
-      //mongo
-      const response = await fetch("http://localhost:3000/adduser", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: value.username,
-          password: value.password,
-          email: value.email,
-          phone_number: parseInt(value.phoneNumber),
-        }),
-      });
-
-      if (response.ok) {
-        navigation.navigate("SignIn");
-      } else {
-        const errorMessage = await response.text();
-        setValue({
-          ...value,
-          error: errorMessage,
-        });
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        setValue({
-          ...value,
-          error: error.message,
-        });
-      } else {
-        setValue({
-          ...value,
-          error: "An unknown error occurred",
-        });
-      }
-    }
-  }
-
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Sign up </Text>
-      <View style={styles.inputContainer}>
-        <Input
-          placeholder="Username"
-          containerStyle={styles.input}
-          value={value.username}
-          onChangeText={(text) => setValue({ ...value, username: text })}
-          leftIcon={<Icon name="user" size={16} />}
-        />
-        <Input
-          placeholder="Phone Number"
-          containerStyle={styles.input}
-          value={value.phoneNumber}
-          onChangeText={(text) => setValue({ ...value, phoneNumber: text })}
-          leftIcon={<Icon name="phone" size={16} />}
-          keyboardType="numeric"
-        />
-        <Input
-          placeholder="Email"
-          containerStyle={styles.input}
-          value={value.email}
-          onChangeText={(text) => setValue({ ...value, email: text })}
-          leftIcon={<Icon name="envelope" size={16} />}
-        />
-        <Input
-          placeholder="Password"
-          containerStyle={styles.input}
-          value={value.password}
-          onChangeText={(text) => setValue({ ...value, password: text })}
-          secureTextEntry={true}
-          leftIcon={<Icon name="key" size={16} />}
-        />
-        {value.error ? (
-          <Text style={styles.errorText}>{value.error}</Text>
-        ) : null}
-        <Button title="Submit" buttonStyle={styles.button} onPress={signUp} />
-      </View>
-    </View>
-  );
+    return (
+        <View style={styles.container}>
+            <Text style={styles.title}>Sign up </Text>
+            <View style={styles.inputContainer}>
+                <Input
+                    placeholder='Username'
+                    containerStyle={styles.input}
+                    value={value.username}
+                    onChangeText={(text) => setValue({ ...value, username: text })}
+                    leftIcon={<Icon
+                        name='user'
+                        size={16}
+                    />}
+                />
+                <Input
+                    placeholder='Phone Number'
+                    containerStyle={styles.input}
+                    value={value.phoneNumber}
+                    onChangeText={(text) => setValue({ ...value, phoneNumber: text })}
+                    leftIcon={<Icon
+                        name='phone'
+                        size={16}
+                    />}
+                    keyboardType='numeric'
+                />
+                <Input
+                    placeholder='Email'
+                    containerStyle={styles.input}
+                    value={value.email}
+                    onChangeText={(text) => setValue({ ...value, email: text })}
+                    leftIcon={<Icon name='envelope' size={16} />}
+                />
+                <Input
+                    placeholder='Password'
+                    containerStyle={styles.input}
+                    value={value.password}
+                    onChangeText={(text) => setValue({ ...value, password: text })}
+                    secureTextEntry={true}
+                    leftIcon={<Icon name='key' size={16} />}
+                />
+                {value.error ? <Text style={styles.errorText}>{value.error}</Text> : null}
+                <Button title="Submit" buttonStyle={styles.button} onPress={signUp} />
+            </View>
+        </View>
+    );
 };
 
 const styles = StyleSheet.create({

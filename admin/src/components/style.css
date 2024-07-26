@@ -314,13 +314,39 @@ hr {
         display: none;
     }
 }
-/* src/components/style.css */
-.notification-icon {
-    position: relative;
-    display: inline-block;
+.notification {
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    width: 300px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    z-index: 1000;
 }
 
-.notification-badge {
+.notification p {
+    font-weight: bold;
+    margin: 0 0 10px 0;
+}
+
+.notification ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.notification ul li {
+    padding: 5px 0;
+    border-bottom: 1px solid #ccc;
+}
+
+.notification ul li:last-child {
+    border-bottom: none;
+}
+
+.notification-counter {
     position: absolute;
     top: -10px;
     right: -10px;

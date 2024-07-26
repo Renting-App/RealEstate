@@ -1,27 +1,19 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const userSchema = new mongoose.Schema({
-  username: {
-    type: String,
-    required: true
+const userSchema = new mongoose.Schema(
+  {
+    _id: { type: String, required: true }, // Using string for Firebase UID
+    username: { type: String, required: true },
+    password: { type: String, required: true },
+    email: { type: String, required: true },
+    phone_number: { type: Number, required: true },
   },
-  password: {
-    type: String,
-    required: true 
-  },
-  email: {
-    type: String,
-    required: true 
-  },
-  phone_number: {
-    type: Number,
-    required: true
+  {
+    timestamps: true,
+    collection: "user",
   }
-}, {
-  timestamps: true,
-  collection: 'user'
-});
+);
 
-const User = mongoose.model('User', userSchema,'user');
+const User = mongoose.model("User", userSchema);
 
 module.exports = User;

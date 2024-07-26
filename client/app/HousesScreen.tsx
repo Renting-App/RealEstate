@@ -7,21 +7,29 @@ import {
   Button,
   Pressable,
   Text,
+  StyleSheet,
 } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { Link } from "expo-router";
+import { Link, useNavigation, useFocusEffect } from "expo-router";
 import DrawerContent from "@/app/DrawerContent";
 import Search from "./Search";
-import styles from "./styles"; // Importing styles
 import Pagination from "./Pagination";
 import {
   FlingGestureHandler,
   Directions,
   State,
 } from "react-native-gesture-handler";
-import { Route } from "expo-router/build/Route";
+import { RouteProp } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RootStackParamList } from "./_layout";
+
+type HousesScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  "HousesScreen"
+>;
+
 type HousesScreenProps = {
   route: RouteProp<RootStackParamList, "HousesScreen">;
 };
@@ -46,7 +54,7 @@ interface Residence {
 }
 
 const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
-  const { criteria = {} } = route.params || {}; 
+  const { criteria = {} } = route.params || {};
   const [residences, setResidences] = useState<Residence[]>([]);
   const [loading, setLoading] = useState(true);
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
@@ -54,15 +62,24 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredResidences, setFilteredResidences] = useState<Residence[]>([]);
 
+  const navigation = useNavigation<HousesScreenNavigationProp>();
+
   useEffect(() => {
     fetchResidences();
   }, []);
 
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchResidences();
+    }, [])
+  );
+
   useEffect(() => {
     handleSearch();
-  }, [searchQuery]);// el search query
+  }, [searchQuery]);
 
   const fetchResidences = () => {
+    setLoading(true);
     fetch("http://192.168.1.13:5800/houses")
       .then((response) => response.json())
       .then((data) => {
@@ -77,14 +94,10 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
           description: residence.description ?? "",
           contact_info: residence.contact_info ?? "",
           images: residence.images ?? [],
-          visits: residence.visits ?? "",
           operation: residence.operation ?? "",
-          amenities: residence.amenities ?? "",
+          category: residence.category ?? "",
           location: residence.location ?? "",
           subLocation: residence.subLocation ?? "",
-          condition: residence.condition ?? "",
-          favourite: residence.favourite ?? false,
-          map: residence.map ?? "",
         }));
         filterResidences(mappedResidences, criteria);
         setResidences(mappedResidences);
@@ -113,7 +126,7 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
     });
     setFilteredResidences(filtered);
   };
-// lenna zeda ⬇⬇⬇
+
   const handleSearch = () => {
     if (searchQuery === "") {
       setFilteredResidences(residences);
@@ -205,6 +218,7 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
             <DrawerContent
               isVisible={isSidebarVisible}
               onClose={() => setIsSidebarVisible(false)}
+              navigation={navigation}
             />
             <View style={styles.header}>
               <Pressable onPress={() => setIsSidebarVisible(true)}>
@@ -273,5 +287,102 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
     </FlingGestureHandler>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginTop: 20,
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: 10,
+  },
+  menuIcon: {
+    marginLeft: 10,
+    color: "#333",
+  },
+  bgContainer: {
+    marginRight: 10,
+    marginLeft: 10,
+  },
+  banner: {
+    flexDirection: "row",
+    height: 200,
+    marginBottom: 10,
+  },
+  bannerImage: {
+    width: "100%",
+    height: "100%",
+  },
+  bannerContent: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    padding: 20,
+  },
+  bannerTitle: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#fff",
+  },
+  bannerSubtitle: {
+    fontSize: 16,
+    color: "#fff",
+  },
+  cardsContainer: {
+    padding: 10,
+  },
+  card: {
+    backgroundColor: "#fff",
+    borderRadius: 8,
+    marginBottom: 15,
+    padding: 10,
+    elevation: 2,
+  },
+  typeContainer: {
+    borderRadius: 4,
+    padding: 5,
+    position: "absolute",
+    top: 10,
+    left: 10,
+  },
+  rent: {
+    backgroundColor: "#ffcccc",
+  },
+  sale: {
+    backgroundColor: "#ccffcc",
+  },
+  typeText: {
+    fontSize: 12,
+    fontWeight: "bold",
+  },
+  image: {
+    width: "100%",
+    height: 150,
+    borderRadius: 4,
+    marginBottom: 10,
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  price: {
+    fontSize: 16,
+    color: "#666",
+  },
+  contact: {
+    fontSize: 14,
+    color: "#999",
+  },
+  noDataText: {
+    textAlign: "center",
+    marginTop: 20,
+    fontSize: 18,
+    color: "#666",
+  },
+});
 
 export default HousesScreen;
