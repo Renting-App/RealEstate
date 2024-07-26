@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, Image, ScrollView, Button, Dimensions, Touchabl
 import { useRoute, useNavigation, RouteProp } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { HomeButton } from './HomeButton';
 import MapView, { Marker } from 'react-native-maps';
 import { RootStackParamList } from '../constants/types';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -98,7 +97,7 @@ const PropertyDetails: React.FC = () => {
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.title}>{residenceData.title}</Text>
-          <Text style={styles.price}>${residenceData.price}</Text>
+          <Text style={styles.price}>{residenceData.price}DT</Text>
           <TouchableOpacity onPress={toggleFavourite}>
             <Ionicons name={isFavourite ? 'heart' : 'heart-outline'} size={24} color="#ff0000" />
           </TouchableOpacity>

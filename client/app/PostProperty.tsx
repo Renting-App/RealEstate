@@ -226,7 +226,7 @@ const PostProperty: React.FC<Props> = ({ navigation }) => {
   const handleSubmit = async () => {
     try {
       setLoading(true); 
-      const response = await fetch("http://192.168.1.13:5800/addhouse", {
+      const response = await fetch("http://192.168.1.105:5800/addhouse", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

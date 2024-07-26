@@ -1,11 +1,9 @@
-// FAQ.tsx
-
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 
 const FAQ: React.FC = () => {
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>Frequently Asked Questions</Text>
 
       <View style={styles.faqItem}>
@@ -55,17 +53,22 @@ const FAQ: React.FC = () => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 30,
     backgroundColor: '#fff',
-    flex: 1,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
+    textAlign: 'center',
   },
   faqItem: {
     marginBottom: 20,
+    backgroundColor: '#f0f0f0',
+    padding: 15,
+    borderRadius: 8,
+    elevation: 2,
   },
   question: {
     fontSize: 18,

@@ -6,7 +6,7 @@ import Signin from "./SignIn";
 import Signup from "./SignUp";
 // import Signout from "./SignOut"
 import HousesScreen from "./HousesScreen";
-import AdminPage from "./AdminPage";
+import AdminPage from "./adminPage";
 import FAQ from "./FAQ";
 import Maps from "./Maps";
 import FilterComponent from "./FilterComponent";

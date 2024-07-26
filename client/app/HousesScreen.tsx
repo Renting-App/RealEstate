@@ -21,6 +21,8 @@ import {
   Directions,
   State,
 } from "react-native-gesture-handler";
+import { RouteProp } from "@react-navigation/native";
+import { RootStackParamList } from "./_layout";
 
 type HousesScreenProps = {
   route: RouteProp<RootStackParamList, "HousesScreen">;
@@ -63,7 +65,7 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
   }, [searchQuery]);// el search query
 
   const fetchResidences = () => {
-    fetch("http://192.168.1.13:5800/houses")
+    fetch("http://192.168.1.105:5800/houses")
       .then((response) => response.json())
       .then((data) => {
         const mappedResidences = data.map((residence: any) => ({
@@ -204,8 +206,7 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
           <ThemedView style={styles.container}>
             <DrawerContent
               isVisible={isSidebarVisible}
-              onClose={() => setIsSidebarVisible(false)}
-            />
+              onClose={() => setIsSidebarVisible(false)} />
             <View style={styles.header}>
               <Pressable onPress={() => setIsSidebarVisible(true)}>
                 <Ionicons name="menu" style={styles.menuIcon} size={24} />
@@ -246,7 +247,9 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
               </View>
             </View>
             {filteredResidences.length === 0 ? (
-              <ThemedText style={styles.noDataText}>
+              <ThemedText 
+              // style={styles.noDataText}
+              >
                 No matching properties found.
               </ThemedText>
             ) : (
