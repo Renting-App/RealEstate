@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link,Navigate,useNavigate } from 'react-router-dom';
+import { auth } from '../config/firebase';
 import './style.css';
 import dashboardIcon from './img/icons8-dashboard-layout-24.png';
 import homeIcon from './img/icons8-home-page-24.png';
@@ -13,7 +14,7 @@ import searchIcon from './img/icons8-search-24.png';
 import alarmIcon from './img/icons8-alarm-24.png';
 import avatar from './img/avater.jpeg';
 
-const AdminDashboard = () => {
+const Dashboard = () => {
     const [showNotification, setShowNotification] = useState(false);
     const [notifications, setNotifications] = useState([]);
     const [unreadCount, setUnreadCount] = useState(0);
@@ -44,6 +45,15 @@ const AdminDashboard = () => {
             setUnreadCount(0);
         } catch (error) {
             console.error('Error marking notifications as read:', error);
+        }
+    };
+
+    const Logout = async () => {
+        try {
+            await auth.signOut();
+            Navigate('/signin');
+        } catch (error) {
+            console.error('Error logging out:', error);
         }
     };
 
@@ -83,6 +93,8 @@ const AdminDashboard = () => {
                         </div>
                         <img style={{ width: '50px', borderRadius: '50%' }} src={avatar} alt="Avatar" />
                         <p className="bold">Admin</p>
+                        <button onClick={Logout}>Logout</button>
+
                     </div>
                     <div className="row1">
                         <img style={{ width: '50px', borderRadius: '50%' }} src={avatar} alt="Avatar" />
@@ -110,4 +122,4 @@ const AdminDashboard = () => {
     );
 };
 
-export default AdminDashboard;
+export default Dashboard;
