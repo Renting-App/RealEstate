@@ -1,21 +1,19 @@
-// Sidebar.js
 import React from "react";
 import { View, StyleSheet, Pressable } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { ThemedText } from "@/components/ThemedText";
 import { Link } from "expo-router";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { RootStackParamList } from "./_layout"; // Update the path if necessary
+import { RootStackParamList } from "./_layout"; // Adjust the path if needed
 
-type DrawerContentScreenNavigationProp = StackNavigationProp<RootStackParamList, 'DrawerContent'>;
+// Adjust the navigation prop to be more appropriate for your navigation structure
+type DrawerContentScreenNavigationProp = StackNavigationProp<RootStackParamList, 'HousesScreen'>;
 
 interface SidebarProps {
   isVisible: boolean;
   onClose: () => void;
-  navigation: StackNavigationProp<RootStackParamList, 'DrawerContent'>;
+  navigation: DrawerContentScreenNavigationProp; // Use the correct navigation type
 }
-
-
 
 const DrawerContent: React.FC<SidebarProps> = ({ isVisible, onClose, navigation }) => {
   if (!isVisible) return null;
