@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, Image, StyleSheet } from 'react-native';
 import { RouteProp } from '@react-navigation/native';
-import { RootStackParamList } from './_layout'; // Adjust the path as necessary
+import { RootStackParamList } from './_layout'; 
 
 type FilteredDataComponentProps = {
   route: RouteProp<RootStackParamList, 'FilteredDataComponent'>;
