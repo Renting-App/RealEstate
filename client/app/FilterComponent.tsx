@@ -37,7 +37,7 @@ export const locations: { [key: string]: string[] } = {
   "Mahdia": ['Mahdia Ville', 'Chebba', 'Ksour Essef', 'Bou Merdes'],
   "Medenine": ['Medenine Ville', 'Houmt Souk', 'Zarzis', 'Beni Khedache'],
   "Monastir": ['Monastir Ville', 'Skanes', 'Ksar Hellal', 'Jemmal'],
-  "Nabeul": ['Nabeul Ville', 'Hammamet', 'Korba', 'Kelibia'],
+  "Nabeul": ['Nabeul Ville', 'Hammamet', 'Korba',"Baraket essahel" ,'Kelibia'],
   "Sfax": ['Sfax Ville', 'Sakiet Ezzit', 'Thyna', 'El Ain'],
   "Sidi Bouzid": ['Sidi Bouzid Ville', 'Regueb', 'Meknassy', 'Bir El Hafey'],
   "Siliana": ['Siliana Ville', 'Le Krib', 'Makthar', 'Gaafour'],
