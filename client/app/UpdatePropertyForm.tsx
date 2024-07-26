@@ -236,7 +236,7 @@ const UpdatePropertyForm: React.FC<Props> = ({ route, navigation }) => {
       const { iduser, ...dataToUpdate } = propertyData; // Exclude iduser if it's empty
 
       const response = await fetch(
-        `http://192.168.1.13:5800/houses/${propertyData.idhouses}`,
+        `http://192.168.1.22:5800/houses/${propertyData.idhouses}`,
         {
           method: "PUT",
           headers: {
@@ -266,7 +266,7 @@ const UpdatePropertyForm: React.FC<Props> = ({ route, navigation }) => {
       Alert.alert(
         "Error",
         (error as Error).message ||
-          "An error occurred while updating the property."
+        "An error occurred while updating the property."
       );
     }
   };

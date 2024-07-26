@@ -221,7 +221,7 @@ const PostProperty = () => {
             try {
               setLoading(true);
               const response = await fetch(
-                "http://192.168.1.13:5800/addhouse",
+                "http://192.168.1.22:5800/addhouse",
                 {
                   method: "POST",
                   headers: {
