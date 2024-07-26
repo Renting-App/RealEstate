@@ -10,7 +10,7 @@ const ManagePosts: React.FC = () => {
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
     const fetchResidences = () => {
-        fetch("http://192.168.1.13:5800/houses")
+        fetch("http://192.168.1.22:5800/houses")
             .then((response) => response.json())
             .then((data) => {
                 const mappedResidences = data.map((residence: any) => ({
@@ -45,7 +45,7 @@ const ManagePosts: React.FC = () => {
 
     const handleDelete = async (postId: string) => {
         try {
-            await fetch(`http://192.168.1.13:5800/api/deletehouse/${postId}`, {
+            await fetch(`http://192.168.1.22:5800/api/deletehouse/${postId}`, {
                 method: 'DELETE',
             });
             setPosts(posts.filter(post => post._id !== postId));

@@ -68,6 +68,7 @@ const Signin: React.FC<Props> = ({ navigation }) => {
                     value={value.email}
                     onChangeText={(text) => setValue({ ...value, email: text })}
                     leftIcon={<Icon name='envelope' size={16} />}
+                    autoCapitalize='none'
                 />
                 <Input
                     placeholder='Password'

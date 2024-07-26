@@ -47,7 +47,7 @@ const RequestTour: React.FC = () => {
 
   const handleSubmit = async () => {
     try {
-      const response = await axios.post('http://192.168.1.14:5800/addreq', {
+      const response = await axios.post('http://192.168.1.22:5800/addreq', {
         name,
         email,
         phone,

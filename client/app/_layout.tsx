@@ -23,6 +23,7 @@ import ManagePosts from "./ManagePosts";
 import PostDetail from "./PostDetail";
 import { ThemeProvider } from "./ThemeContext";
 import EditProfile from "./EditProfile";
+import AccountCreated from "./AccountCreated";
 
 export type Residence = {
   _id: string;
@@ -67,6 +68,7 @@ export type RootStackParamList = {
   MyAccount: undefined;
   UpdatePropertyForm: undefined;
   EditProfile: undefined;
+  AccountCreated: undefined
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -88,6 +90,10 @@ export default function App() {
           <Stack.Screen
             name="SignIn"
             component={Signin}
+          />
+          <Stack.Screen
+            name="AccountCreated"
+            component={AccountCreated}
           />
           <Stack.Screen
             name="SignUp"

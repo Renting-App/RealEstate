@@ -102,17 +102,6 @@ const DrawerContent: React.FC<SidebarProps> = ({ isVisible, onClose, navigation 
               <ThemedText type="subtitle">My Account</ThemedText>
             </View>
           </Link>
-          <Pressable style={styles.link} onPress={() => navigation.navigate('SignOut')}>
-            <View style={styles.linkContent}>
-              <Ionicons
-                name="log-out-outline"
-                size={24}
-                color="#333"
-                style={styles.logo}
-              />
-              <ThemedText type="subtitle">Sign Out</ThemedText>
-            </View>
-          </Pressable>
         </View>
       </Pressable>
     </Pressable>
