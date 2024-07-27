@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from 'rea
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList, Residence } from './_layout'; // Adjust the import path
+import { RootStackParamList, Residence } from './_layout';
 
 type PostDetailScreenRouteProp = RouteProp<RootStackParamList, 'PostDetail'>;
 type PostDetailScreenNavigationProp = StackNavigationProp<RootStackParamList, 'PostDetail'>;

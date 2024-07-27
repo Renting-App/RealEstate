@@ -4,35 +4,37 @@ import {
   Text,
   TextInput,
   StyleSheet,
-  Button,
   ScrollView,
   TouchableOpacity,
-  Alert
+  Alert,
 } from "react-native";
 import { RouteProp, useRoute } from "@react-navigation/native";
 import { RootStackParamList } from "../constants/types";
 import { Picker } from "@react-native-picker/picker";
-import axios from "axios";
+import { getAuth } from "firebase/auth";
+import { doc, getDoc, updateDoc, arrayUnion } from "firebase/firestore";
+import { firestore } from "../config/firebase";
 
 type RequestTourScreenRouteProp = RouteProp<RootStackParamList, "RequestTour">;
 
 interface ResidenceData {
   title: string;
   visits: string[];
+  iduser: string;
 }
 
 const RequestTour: React.FC = () => {
   const route = useRoute<RequestTourScreenRouteProp>();
   const { residence } = route.params;
-  const [residenceData, setResidenceData] = useState<ResidenceData | null>(null);
+  const [residenceData, setResidenceData] = useState<ResidenceData | null>(
+    null
+  );
   const [selectedVisitDate, setSelectedVisitDate] = useState<string>("");
 
   useEffect(() => {
-    console.log("Raw residence parameter:", residence);
     if (residence) {
       try {
         const parsedResidence = JSON.parse(residence) as ResidenceData;
-        console.log("Parsed residence:", parsedResidence);
         setResidenceData(parsedResidence);
       } catch (error) {
         console.error("Error parsing residence data:", error);
@@ -45,30 +47,52 @@ const RequestTour: React.FC = () => {
   const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
 
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const auth = getAuth();
+      const currentUser = auth.currentUser;
+      if (currentUser) {
+        const userDocRef = doc(firestore, "users", currentUser.uid);
+        const userDoc = await getDoc(userDocRef);
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+          setName(userData.username);
+          setEmail(userData.email);
+          setPhone(userData.phone_number);
+        }
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
   const handleSubmit = async () => {
     try {
-      const response = await axios.post('http://192.168.1.22:5800/addreq', {
-        name,
-        email,
-        phone,
-        message,
-        selectedVisitDate,
-        residence: residenceData,
-      });
-      console.log('Tour request created:', response.data);
-      
-      Alert.alert(
-        "Request Submitted",
-        "Your tour request has been sent successfully.",
-        [{ text: "OK" }]
-      );
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.error('Axios Error:', error.message);
-        console.error('Axios Error Details:', error.response?.data);
-      } else {
-        console.error('Unexpected Error:', error);
+      const auth = getAuth();
+      const currentUser = auth.currentUser;
+      if (currentUser && residenceData) {
+        const ownerDocRef = doc(firestore, "users", residenceData.iduser);
+        await updateDoc(ownerDocRef, {
+          requests: arrayUnion({
+            type: "tourRequest",
+            userId: currentUser.uid,
+            username: name,
+            email,
+            phone_number: phone,
+            residenceTitle: residenceData.title,
+            selectedVisitDate,
+            message,
+          }),
+        });
+
+        Alert.alert(
+          "Request Submitted",
+          "Your tour request has been sent successfully.",
+          [{ text: "OK" }]
+        );
       }
+    } catch (error) {
+      console.error("Error submitting request:", error);
     }
   };
 
@@ -197,7 +221,7 @@ const styles = StyleSheet.create({
     borderColor: "#ddd",
     borderWidth: 1,
     borderRadius: 5,
-    overflow: 'hidden',
+    overflow: "hidden",
     backgroundColor: "#fff",
   },
   picker: {
@@ -213,6 +237,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderRadius: 5,
     alignItems: "center",
+    marginTop: 10,
   },
   buttonText: {
     color: "#fff",

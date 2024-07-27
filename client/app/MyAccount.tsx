@@ -1,23 +1,26 @@
 import React, { useEffect, useState } from "react";
 import {
   View,
-  Button,
   StyleSheet,
   ActivityIndicator,
   Image,
   TouchableOpacity,
+  FlatList,
+  Text,
 } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
-import { Link, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { getAuth } from "firebase/auth";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { firestore } from "../config/firebase";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 interface User {
   username: string;
   email: string;
   phone_number: string;
   image: string;
+  notification: any[];
 }
 
 const MyAccount = () => {
@@ -38,7 +41,7 @@ const MyAccount = () => {
           if (userDoc.exists()) {
             console.log("User document data: ", userDoc.data());
             setUser(userDoc.data() as User);
-          } 
+          }
         } else {
           console.log("No user is signed in!");
         }
@@ -71,7 +74,7 @@ const MyAccount = () => {
     );
   }
 
-  const defaultImage = "https://via.placeholder.com/100?text=No+Image"; 
+  const defaultImage = "https://via.placeholder.com/100?text=No+Image";
 
   return (
     <View style={styles.container}>
@@ -93,6 +96,21 @@ const MyAccount = () => {
           <ThemedText type="subtitle" style={styles.profileText}>
             Phone: {user.phone_number}
           </ThemedText>
+          <View style={styles.notificationIconContainer}>
+            <TouchableOpacity
+              style={styles.notificationButton}
+              onPress={() => router.push("/NotificationList")}
+            >
+              <Ionicons name="notifications" size={24} color="#fff" />
+              {user.notification.length > 0 && (
+                <View style={styles.notificationBadge}>
+                  <Text style={styles.notificationBadgeText}>
+                    {user.notification.length}
+                  </Text>
+                </View>
+              )}
+            </TouchableOpacity>
+          </View>
         </View>
       ) : (
         <ThemedText type="subtitle" style={styles.profileText}>
@@ -151,6 +169,32 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginBottom: 10,
     color: "#495057",
+  },
+  notificationIconContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  notificationButton: {
+    backgroundColor: "#007bff",
+    padding: 10,
+    borderRadius: 50,
+    justifyContent: "center",
+    alignItems: "center",
+    position: "relative",
+  },
+  notificationBadge: {
+    position: "absolute",
+    top: -5,
+    right: -5,
+    backgroundColor: "#ff0000",
+    borderRadius: 10,
+    padding: 2,
+    paddingHorizontal: 5,
+  },
+  notificationBadgeText: {
+    color: "#fff",
+    fontSize: 12,
   },
   button: {
     backgroundColor: "#007bff",
