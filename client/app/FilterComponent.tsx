@@ -61,7 +61,7 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ navigation }) => {
 
   const handleLocationChange = (selectedLocation: string) => {
     setLocation(selectedLocation);
-    setSubLocation(''); // Reset sublocation when location changes
+    setSubLocation(''); 
   };
 
   const handleAmenityChange = (amenity: string) => {

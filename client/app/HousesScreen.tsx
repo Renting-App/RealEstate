@@ -6,13 +6,17 @@ import {
   Image,
   Button,
   Pressable,
-  Text,
+  TextInput,
   StyleSheet,
+  Text,
 } from "react-native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { RouteProp } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RootStackParamList } from "./_layout";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import { Link, useNavigation, useFocusEffect } from "expo-router";
 import DrawerContent from "@/app/DrawerContent";
 import Search from "./Search";
 import Pagination from "./Pagination";
@@ -21,9 +25,6 @@ import {
   Directions,
   State,
 } from "react-native-gesture-handler";
-import { RouteProp } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
-import { RootStackParamList } from "./_layout";
 
 type HousesScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -51,6 +52,29 @@ interface Residence {
   contact_info: string;
   images: string[];
   operation: "rent" | "sale";
+  visits: string[];
+  favourite: boolean;
+  date_of_creation: string;
+  amenities: {
+    parking: boolean;
+    ac: boolean;
+    furnished: boolean;
+    pool: boolean;
+    microwave: boolean;
+    near_subway: boolean;
+    beach_view: boolean;
+    alarm: boolean;
+    garden: boolean;
+  };
+  status: string;
+  notification: string;
+  iduser: string;
+  condition: string;
+  map: {
+    latitude: number;
+    longitude: number;
+  };
+  __v: number;
 }
 
 const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
@@ -87,10 +111,10 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
           _id: residence._id ?? `id_${Date.now()}`,
           title: residence.title ?? "",
           address: residence.address ?? "",
-          size: residence.size ?? "",
-          price: residence.price ?? "",
-          rooms: residence.rooms ?? "",
-          bathrooms: residence.bathrooms ?? "",
+          size: residence.size ?? 0,
+          price: residence.price ?? 0,
+          rooms: residence.rooms ?? 0,
+          bathrooms: residence.bathrooms ?? 0,
           description: residence.description ?? "",
           contact_info: residence.contact_info ?? "",
           images: residence.images ?? [],
@@ -98,6 +122,15 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
           category: residence.category ?? "",
           location: residence.location ?? "",
           subLocation: residence.subLocation ?? "",
+          visits: residence.visits ?? [],
+          favourite: residence.favourite ?? false,
+          date_of_creation: residence.date_of_creation ?? "",
+          amenities: residence.amenities ?? {},
+          status: residence.status ?? "",
+          notification: residence.notification ?? "",
+          iduser: residence.iduser ?? "",
+          condition: residence.condition ?? "",
+          map: residence.map ?? {},
         }));
         filterResidences(mappedResidences, criteria);
         setResidences(mappedResidences);
@@ -147,6 +180,12 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
     }
   };
 
+  const handleDetailsPress = (residence: Residence) => {
+    navigation.navigate("PropertyDetails", {
+      residence: JSON.stringify(residence),
+    });
+  };
+
   const renderItem = ({ item }: { item: Residence }) => (
     <ThemedView style={styles.card}>
       <View
@@ -174,15 +213,7 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
       <ThemedText type="default" style={styles.contact}>
         Address: {item.address}
       </ThemedText>
-      <Link
-        href={{
-          pathname: "/PropertyDetails",
-          params: { residence: JSON.stringify(item) },
-        }}
-        asChild
-      >
-        <Button title="Details" />
-      </Link>
+      <Button title="Details" onPress={() => handleDetailsPress(item)} />
     </ThemedView>
   );
 

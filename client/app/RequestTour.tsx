@@ -18,9 +18,43 @@ import { firestore } from "../config/firebase";
 type RequestTourScreenRouteProp = RouteProp<RootStackParamList, "RequestTour">;
 
 interface ResidenceData {
+  _id: string;
+  address: string;
+  size: number;
+  category: string;
   title: string;
+  favourite: boolean;
+  description: string;
+  images: string[];
+  operation: string;
+  location: string;
+  subLocation: string;
+  date_of_creation: string;
+  rooms: number;
+  price: number;
+  bathrooms: number;
   visits: string[];
+  amenities: {
+    parking: boolean;
+    ac: boolean;
+    furnished: boolean;
+    pool: boolean;
+    microwave: boolean;
+    near_subway: boolean;
+    beach_view: boolean;
+    alarm: boolean;
+    garden: boolean;
+  };
+  contact_info: string;
+  status: string;
+  notification: string;
   iduser: string;
+  condition: string;
+  map: {
+    latitude: number;
+    longitude: number;
+  };
+  __v: number;
 }
 
 const RequestTour: React.FC = () => {
@@ -35,6 +69,7 @@ const RequestTour: React.FC = () => {
     if (residence) {
       try {
         const parsedResidence = JSON.parse(residence) as ResidenceData;
+        console.log("Parsed residence data:", parsedResidence);
         setResidenceData(parsedResidence);
       } catch (error) {
         console.error("Error parsing residence data:", error);

@@ -216,7 +216,7 @@ import { View, Text, StyleSheet, Dimensions } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Input, Button } from "react-native-elements";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { RootStackParamList } from "./_layout"; // Update the path if necessary
+import { RootStackParamList } from "./_layout"; 
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, firestore } from "../config/firebase";
 import { doc, setDoc } from "firebase/firestore";

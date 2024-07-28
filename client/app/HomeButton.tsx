@@ -27,7 +27,7 @@ const buttonstyles = StyleSheet.create({
     position: "absolute",
     top: 10,
     left: 10,
-    zIndex: 1, // Ensure it stays on top of other elements
+    zIndex: 1
   },
 });
 

@@ -4,15 +4,15 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { ThemedText } from "@/components/ThemedText";
 import { Link } from "expo-router";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { RootStackParamList } from "./_layout"; // Adjust the path if needed
+import { RootStackParamList } from "./_layout"; 
 
-// Adjust the navigation prop to be more appropriate for your navigation structure
+
 type DrawerContentScreenNavigationProp = StackNavigationProp<RootStackParamList, 'HousesScreen'>;
 
 interface SidebarProps {
   isVisible: boolean;
   onClose: () => void;
-  navigation: DrawerContentScreenNavigationProp; // Use the correct navigation type
+  navigation: DrawerContentScreenNavigationProp; 
 }
 
 const DrawerContent: React.FC<SidebarProps> = ({ isVisible, onClose, navigation }) => {

@@ -45,7 +45,7 @@ const initializePropertyData = (property: PropertyData): PropertyData => {
   const defaultSubLocation = locations[defaultLocation][0];
 
   return {
-    idhouses: property._id || "", // Updated to use `_id` from property
+    idhouses: property._id || "",
     address: property.address || "",
     size: property.size || 0,
     category: property.category || "apartment",
@@ -75,7 +75,7 @@ const initializePropertyData = (property: PropertyData): PropertyData => {
     contact_info: property.contact_info || "",
     status: property.status || "pending",
     notification: property.notification || "",
-    iduser: property.iduser?._id || "", // Ensure iduser is correctly populated
+    iduser: property.iduser?._id || "", 
     condition: property.condition || "new",
     map: property.map || { latitude: 0, longitude: 0 },
   };
@@ -90,7 +90,7 @@ const UpdatePropertyForm: React.FC<Props> = ({ route, navigation }) => {
   const [showCalendar, setShowCalendar] = useState(false);
 
   useEffect(() => {
-    navigation.setParams({ onUpdate: undefined }); // Remove non-serializable params
+    navigation.setParams({ onUpdate: undefined });
   }, []);
 
   const handleInputChange = (
@@ -233,7 +233,7 @@ const UpdatePropertyForm: React.FC<Props> = ({ route, navigation }) => {
 
       console.log("Submitting Property Data:", propertyData);
 
-      const { iduser, ...dataToUpdate } = propertyData; // Exclude iduser if it's empty
+      const { iduser, ...dataToUpdate } = propertyData; 
 
       const response = await fetch(
         `http://192.168.1.22:5800/houses/${propertyData.idhouses}`,
@@ -246,13 +246,13 @@ const UpdatePropertyForm: React.FC<Props> = ({ route, navigation }) => {
         }
       );
 
-      const text = await response.text(); // Get response text
+      const text = await response.text(); 
       if (!response.ok) {
         console.error("Server response not OK:", text);
         throw new Error(text);
       }
 
-      const result = JSON.parse(text); // Parse the response text as JSON
+      const result = JSON.parse(text); 
       console.log("Property updated successfully:", result);
       setPropertyData(result);
       if (onUpdate) {
