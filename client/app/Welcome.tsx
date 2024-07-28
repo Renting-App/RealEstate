@@ -3,7 +3,7 @@ import React from 'react';
 import { View, Text, StyleSheet, Dimensions, Image } from 'react-native';
 import { Button } from 'react-native-elements';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from './_layout'; // Update the path if necessary
+import { RootStackParamList } from './_layout';
 
 type WelcomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Welcome'>;
 
@@ -41,8 +41,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   }
   , image: {
-    width: Dimensions.get('window').width * 0.8, // Adjust width as per requirement
-    height: Dimensions.get('window').height * 0.3, // Adjust height as per requirement
+    width: Dimensions.get('window').width * 0.8, 
+    height: Dimensions.get('window').height * 0.3, 
     marginBottom: 20,
   },
   buttons: {

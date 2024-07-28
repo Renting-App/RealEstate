@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
-import { RootStackParamList, Residence } from './_layout'; // Adjust the import path
+import { RootStackParamList, Residence } from './_layout';
 
 const ManagePosts: React.FC = () => {
     const [posts, setPosts] = useState<Residence[]>([]);

@@ -5,6 +5,7 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  FlatList,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -67,6 +68,10 @@ interface PropertyFormProps {
   handleDayPress: (day: DateObject) => void;
   showCalendar: boolean;
   setShowCalendar: (show: boolean) => void;
+  handleQueryChange: (text: string) => void;
+  handleSuggestionSelect: (suggestion: any) => void;
+  suggestions: any[];
+  setSuggestions: React.Dispatch<React.SetStateAction<any[]>>;
 }
 
 const PropertyForm: React.FC<PropertyFormProps> = ({
@@ -78,6 +83,10 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
   handleDayPress,
   showCalendar,
   setShowCalendar,
+  handleQueryChange,
+  handleSuggestionSelect,
+  suggestions,
+  setSuggestions,
 }) => {
   const amenityIcons: { [key: string]: string } = {
     parking: "car",
@@ -132,8 +141,22 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
       <TextInput
         style={styles.input}
         value={propertyData.address}
-        onChangeText={(text) => handleInputChange("address", text)}
+        onChangeText={(text) => {
+          handleQueryChange(text);
+          if (text.length === 0) {
+            setSuggestions([]);
+          }
+        }}
         placeholder="Enter address"
+      />
+      <FlatList
+        data={suggestions}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <TouchableOpacity onPress={() => handleSuggestionSelect(item)}>
+            <Text style={styles.itemText}>{item.place_name}</Text>
+          </TouchableOpacity>
+        )}
       />
 
       <Text style={styles.label}>Location:</Text>
@@ -378,6 +401,11 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
     fontWeight: "bold",
+  },
+  itemText: {
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ccc",
   },
 });
 

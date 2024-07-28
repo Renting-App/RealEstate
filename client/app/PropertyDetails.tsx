@@ -1,23 +1,32 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, Button, Dimensions, TouchableOpacity } from 'react-native';
-import { useRoute, useNavigation, RouteProp } from '@react-navigation/native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import MapView, { Marker } from 'react-native-maps';
-import { RootStackParamList } from '../constants/types';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { useFavorites } from './FavoritesContext';
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  ScrollView,
+  Button,
+  Dimensions,
+  TouchableOpacity,
+} from "react-native";
+import { useRoute, useNavigation, RouteProp } from "@react-navigation/native";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import MapView, { Marker } from "react-native-maps";
+import { RootStackParamList } from "../constants/types";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { useFavorites } from "./FavoritesContext";
 
 interface Property {
   _id: number;
   address: string;
   size: string;
-  category: 'apartment' | 'house' | 'office' | 'studio' | 'penthouse';
+  category: "apartment" | "house" | "office" | "studio" | "penthouse";
   title: string;
   favourite: boolean;
   description: string;
   images: string[];
-  operation: 'rent' | 'sale';
+  operation: "rent" | "sale";
   price: string;
   date_of_creation: string;
   rooms: string;
@@ -42,56 +51,66 @@ interface Property {
   };
 }
 
-type PropertyDetailsScreenRouteProp = RouteProp<RootStackParamList, 'PropertyDetails'>;
-type PropertyDetailsNavigationProp = StackNavigationProp<RootStackParamList, 'PropertyDetails'>;
+type PropertyDetailsScreenRouteProp = RouteProp<
+  RootStackParamList,
+  "PropertyDetails"
+>;
+type PropertyDetailsNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  "PropertyDetails"
+>;
 
 const PropertyDetails: React.FC = () => {
   const route = useRoute<PropertyDetailsScreenRouteProp>();
   const navigation = useNavigation<PropertyDetailsNavigationProp>();
   const { residence } = route.params;
   const { addToFavorites, removeFromFavorites } = useFavorites();
+  const [residenceData, setResidenceData] = useState<Property | null>(null);
+  const [isFavourite, setIsFavourite] = useState(false);
 
-  let residenceData: Property | null = null;
-
-  if (residence) {
-    try {
-      residenceData = JSON.parse(residence);
-    } catch (error) {
-      console.error('Error parsing residence data:', error);
+  useEffect(() => {
+    if (residence) {
+      try {
+        const parsedResidence = JSON.parse(residence);
+        setResidenceData(parsedResidence);
+        setIsFavourite(parsedResidence.favourite);
+        console.log("Residence data:", parsedResidence);
+      } catch (error) {
+        console.error("Error parsing residence data:", error);
+      }
+    } else {
+      console.error("Residence data is undefined");
     }
-  } else {
-    console.error('Residence data is undefined');
-  }
+  }, [residence]);
 
-  const [isFavourite, setIsFavourite] = useState(
-    residenceData ? residenceData.favourite : false
-  );
+  const toggleFavourite = () => {
+    if (residenceData) {
+      const newFavouriteStatus = !isFavourite;
+      setIsFavourite(newFavouriteStatus);
+      if (newFavouriteStatus) {
+        addToFavorites(residenceData);
+      } else {
+        removeFromFavorites(residenceData._id);
+      }
+    }
+  };
 
   if (!residenceData) {
     return <Text>Loading...</Text>;
   }
 
-  const toggleFavourite = () => {
-    setIsFavourite(!isFavourite);
-    if (!isFavourite) {
-      addToFavorites(residenceData);
-    } else {
-      removeFromFavorites(residenceData._id);
-    }
-  };
+  const adminFee = (parseFloat(residenceData.price) * 0.1).toFixed(2);
 
-  const adminFee = (parseFloat(residenceData.price) * 0.10).toFixed(2);
-
-  const amenityIcons: { [key in keyof Property['amenities']]: string } = {
-    parking: 'car',
-    ac: 'snowflake',
-    furnished: 'bed',
-    pool: 'pool',
-    microwave: 'microwave',
-    near_subway: 'train',
-    beach_view: 'beach',
-    alarm: 'alert',
-    garden: 'flower',
+  const amenityIcons: { [key in keyof Property["amenities"]]: string } = {
+    parking: "car",
+    ac: "snowflake",
+    furnished: "bed",
+    pool: "pool",
+    microwave: "microwave",
+    near_subway: "train",
+    beach_view: "beach",
+    alarm: "alert",
+    garden: "flower",
   };
 
   return (
@@ -102,7 +121,11 @@ const PropertyDetails: React.FC = () => {
           <Text style={styles.price}>${residenceData.price}</Text>
           <Text style={styles.adminFee}>Admin Fee: ${adminFee}</Text>
           <TouchableOpacity onPress={toggleFavourite}>
-            <Ionicons name={isFavourite ? 'heart' : 'heart-outline'} size={24} color="#ff0000" />
+            <Ionicons
+              name={isFavourite ? "heart" : "heart-outline"}
+              size={24}
+              color="#ff0000"
+            />
           </TouchableOpacity>
         </View>
         <View style={styles.imageWrapper}>
@@ -112,9 +135,15 @@ const PropertyDetails: React.FC = () => {
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.imageContainer}
           >
-            {residenceData.images.map((image, index) => (
-              <Image key={index} source={{ uri: image }} style={styles.image} resizeMode="contain" />
-            ))}
+            {residenceData.images &&
+              residenceData.images.map((image, index) => (
+                <Image
+                  key={index}
+                  source={{ uri: image }}
+                  style={styles.image}
+                  resizeMode="contain"
+                />
+              ))}
           </ScrollView>
         </View>
 
@@ -129,7 +158,9 @@ const PropertyDetails: React.FC = () => {
           </View>
           <View style={styles.detailItem}>
             <Ionicons name="water" size={24} color="white" />
-            <Text style={styles.detailText}>{residenceData.bathrooms} Bathrooms</Text>
+            <Text style={styles.detailText}>
+              {residenceData.bathrooms} Bathrooms
+            </Text>
           </View>
         </View>
 
@@ -139,60 +170,69 @@ const PropertyDetails: React.FC = () => {
         <View style={styles.amenities}>
           <Text style={styles.amenitiesTitle}>Amenities</Text>
           <View style={styles.amenitiesList}>
-            {Object.keys(residenceData.amenities).map((key) => (
-              <View key={key} style={styles.amenity}>
-                <Ionicons
-                  name={
-                    residenceData.amenities[key as keyof Property['amenities']]
-                      ? 'checkbox'
-                      : 'square-outline'
-                  }
-                  size={24}
-                  color={
-                    residenceData.amenities[key as keyof Property['amenities']]
-                      ? '#4CAF50'
-                      : '#ccc'
-                  }
-                />
-                <MaterialCommunityIcons
-                  name={amenityIcons[key as keyof Property['amenities']]}
-                  size={24}
-                  color="#666"
-                  style={{ marginLeft: 8 }}
-                />
-                <Text style={styles.amenityText}>{key.replace('_', ' ')}</Text>
-              </View>
-            ))}
+            {residenceData.amenities &&
+              Object.keys(residenceData.amenities).map((key) => (
+                <View key={key} style={styles.amenity}>
+                  <Ionicons
+                    name={
+                      residenceData.amenities[
+                        key as keyof Property["amenities"]
+                      ]
+                        ? "checkbox"
+                        : "square-outline"
+                    }
+                    size={24}
+                    color={
+                      residenceData.amenities[
+                        key as keyof Property["amenities"]
+                      ]
+                        ? "#4CAF50"
+                        : "#ccc"
+                    }
+                  />
+                  <MaterialCommunityIcons
+                    name={amenityIcons[key as keyof Property["amenities"]]}
+                    size={24}
+                    color="#666"
+                    style={{ marginLeft: 8 }}
+                  />
+                  <Text style={styles.amenityText}>
+                    {key.replace("_", " ")}
+                  </Text>
+                </View>
+              ))}
           </View>
         </View>
 
-        {residenceData.map && residenceData.map.latitude && residenceData.map.longitude && (
-          <View style={styles.mapContainer}>
-            <MapView
-              style={styles.map}
-              initialRegion={{
-                latitude: residenceData.map.latitude,
-                longitude: residenceData.map.longitude,
-                latitudeDelta: 0.05,
-                longitudeDelta: 0.05,
-              }}
-            >
-              <Marker
-                coordinate={{
+        {residenceData.map &&
+          residenceData.map.latitude &&
+          residenceData.map.longitude && (
+            <View style={styles.mapContainer}>
+              <MapView
+                style={styles.map}
+                initialRegion={{
                   latitude: residenceData.map.latitude,
                   longitude: residenceData.map.longitude,
+                  latitudeDelta: 0.05,
+                  longitudeDelta: 0.05,
                 }}
-                title={residenceData.map.title}
-                description={residenceData.map.description}
-              />
-            </MapView>
-          </View>
-        )}
+              >
+                <Marker
+                  coordinate={{
+                    latitude: residenceData.map.latitude,
+                    longitude: residenceData.map.longitude,
+                  }}
+                  title={residenceData.map.title}
+                  description={residenceData.map.description}
+                />
+              </MapView>
+            </View>
+          )}
 
         <Button
           title="Request a Tour"
           onPress={() => {
-            navigation.navigate('RequestTour', {
+            navigation.navigate("RequestTour", {
               residence: JSON.stringify(residenceData),
             });
           }}
@@ -202,47 +242,47 @@ const PropertyDetails: React.FC = () => {
   );
 };
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,
     paddingVertical: 20,
     paddingHorizontal: 16,
-    backgroundColor: '#f7f7f7',
+    backgroundColor: "#f7f7f7",
   },
   container: {
     padding: 14,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     flex: 1,
     borderRadius: 10,
     margin: 4,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 8,
     elevation: 5,
   },
   header: {
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
     marginBottom: 20,
     marginTop: 45,
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
+    fontWeight: "bold",
+    color: "#333",
   },
   price: {
     fontSize: 24,
-    fontWeight: 'bold',
-    color: '#4CAF50',
+    fontWeight: "bold",
+    color: "#4CAF50",
   },
   adminFee: {
     fontSize: 16,
-    color: '#FF5722',
+    color: "#FF5722",
     marginTop: 5,
   },
   imageWrapper: {
@@ -251,7 +291,7 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     flexGrow: 1,
-    alignItems: 'center',
+    alignItems: "center",
   },
   image: {
     width: screenWidth - 32,
@@ -260,32 +300,32 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   details: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginBottom: 20,
     marginTop: 20,
   },
   detailItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#4CAF50',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#4CAF50",
     borderRadius: 5,
     padding: 10,
   },
   detailText: {
     fontSize: 16,
-    color: 'white',
+    color: "white",
     marginLeft: 5,
   },
   description: {
     fontSize: 16,
-    color: '#666',
+    color: "#666",
     marginBottom: 20,
   },
   address: {
     fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
+    fontWeight: "bold",
+    color: "#333",
     marginBottom: 20,
   },
   amenities: {
@@ -293,30 +333,30 @@ const styles = StyleSheet.create({
   },
   amenitiesTitle: {
     fontSize: 20,
-    fontWeight: 'bold',
-    color: '#333',
+    fontWeight: "bold",
+    color: "#333",
     marginBottom: 10,
   },
   amenitiesList: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
   },
   amenity: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginRight: 15,
     marginBottom: 10,
   },
   amenityText: {
     fontSize: 14,
-    color: '#666',
+    color: "#666",
     marginLeft: 5,
-    textTransform: 'capitalize',
+    textTransform: "capitalize",
   },
   mapContainer: {
     height: 200,
     borderRadius: 10,
-    overflow: 'hidden',
+    overflow: "hidden",
     marginTop: 20,
     marginBottom: 20,
   },
