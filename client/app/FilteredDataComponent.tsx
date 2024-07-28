@@ -41,57 +41,7 @@ const FilteredDataComponent: React.FC<FilteredDataComponentProps> = ({ route }) 
   const [filteredResidences, setFilteredResidences] = useState<Residence[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // useEffect(() => {
-  //   fetchResidences();
-  // }, []);
 
-  // const fetchResidences = () => {
-  //   fetch("http://192.168.1.13:5800/houses")
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       const mappedResidences = data.map((residence: any) => { 
-  //         return {
-  //           _id: residence.idhouses ?? '', 
-  //           title: residence.title ?? '', 
-  //           address: residence.address ?? '', 
-  //           size: residence.size ?? '', 
-  //           price: residence.price ?? '', 
-  //           rooms: residence.rooms ?? '', 
-  //           bathrooms: residence.bathrooms ?? '', 
-  //           description: residence.description ?? '', 
-  //           contact_info: residence.contact_info ?? '', 
-  //           images: residence.images ?? [],
-  //           operation: residence.operation ?? '', 
-  //           category: residence.category ?? '', 
-  //           location: residence.location ?? '', 
-  //           subLocation: residence.subLocation ?? '', 
-  //           amenities: residence.amenities ?? '', 
-  //         };
-  //       });
-  //       filterResidences(mappedResidences, criteria);
-  //       setLoading(false);
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error fetching residences:", error);
-  //       setLoading(false);
-  //     });
-  // };
-  
-
-  // const filterResidences = (residences: Residence[], criteria: any) => {
-  //   const filtered = residences.filter((residence) => {
-  //     return (
-  //       (!criteria.category || residence.category === criteria.category) &&
-  //       (!criteria.location || residence.location === criteria.location) &&
-  //       (!criteria.subLocation || residence.subLocation === criteria.subLocation) &&
-  //       (!criteria.operation || residence.operation === criteria.operation) &&
-  //       (!criteria.priceMax  || parseFloat(residence.price) <= parseFloat(criteria.priceMax)) &&
-  //       (!criteria.priceMin  || parseFloat(residence.price) >= parseFloat(criteria.priceMin))
-
-  //     );
-  //   });
-  //   setFilteredResidences(filtered);
-  // };
 
   if (loading) {
     return <Text>Loading...</Text>;
