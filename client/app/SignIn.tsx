@@ -4,7 +4,7 @@ import React from 'react';
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Input, Button } from 'react-native-elements';
-import { RootStackParamList } from './_layout'; // Update the path if necessary
+import { RootStackParamList } from './_layout';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
@@ -68,6 +68,7 @@ const Signin: React.FC<Props> = ({ navigation }) => {
                     value={value.email}
                     onChangeText={(text) => setValue({ ...value, email: text })}
                     leftIcon={<Icon name='envelope' size={16} />}
+                    autoCapitalize='none'
                 />
                 <Input
                     placeholder='Password'

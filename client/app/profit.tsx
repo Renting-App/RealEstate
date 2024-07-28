@@ -9,7 +9,7 @@ const Profit: React.FC = () => {
     useEffect(() => {
         const fetchProfits = async () => {
             try {
-                const response = await axios.get('http://your-server-endpoint/profits'); // Replace with your server endpoint
+                const response = await axios.get('http://your-server-endpoint/profits'); 
                 setProfits(response.data);
             } catch (error) {
                 console.error('Error fetching profits:', error);

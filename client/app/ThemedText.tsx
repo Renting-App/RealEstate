@@ -5,14 +5,14 @@ import { useTheme } from "./ThemeContext";
 interface ThemedTextProps {
   style?: TextStyle;
   children: React.ReactNode;
-  type: "title" | "subtitle" | "body"; 
+  type: "title" | "subtitle" | "body";
 }
 
 export const ThemedText: React.FC<ThemedTextProps> = ({ style, children, type }) => {
   const { isDarkMode } = useTheme();
   const themedStyle = {
     color: isDarkMode ? "#fff" : "#000",
-    
+   
     ...style,
   };
 

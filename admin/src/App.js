@@ -23,16 +23,7 @@ useEffect(() => {
   }
 
     return (
-//         <Router>
-//             <Routes>
-//                 <Route path="/signin" component={SignIn} />
-//                 <Route path="/signin" component={SignIn} />
-//                 <Route path="/" element={<SignIn />} />
-//                 <Route path="/tour-request" element={<TourRequestsList />} />
-//             </Routes>
-//         </Router>
-//     );
-// };
+
     <Router>
     <div>
       {loading ? (
@@ -51,7 +42,6 @@ useEffect(() => {
       )}
     </div>
   </Router>
-
     )
 }
 

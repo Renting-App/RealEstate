@@ -461,16 +461,14 @@ const PostProperty = () => {
                 handleDayPress={handleDayPress}
                 showCalendar={showCalendar}
                 setShowCalendar={setShowCalendar}
+                handleQueryChange={handleQueryChange} 
+                handleSuggestionSelect={handleSuggestionSelect} 
+                suggestions={suggestions} 
+                setSuggestions={setSuggestions}
               />
               <TouchableOpacity onPress={handleImageSelection}>
                 <Text style={styles.imageButton}>Upload Images</Text>
               </TouchableOpacity>
-              <TextInput
-                style={styles.input}
-                value={propertyData.address}
-                onChangeText={handleQueryChange}
-                placeholder="Enter address"
-              />
             </View>
           </>
         }
