@@ -17,8 +17,8 @@ import { RootStackParamList } from "../constants/types";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useFavorites } from "./FavoritesContext";
 
-interface Property {
-  _id: number;
+export interface Property {
+  _id: string;
   address: string;
   size: string;
   category: "apartment" | "house" | "office" | "studio" | "penthouse";
@@ -74,7 +74,6 @@ const PropertyDetails: React.FC = () => {
         const parsedResidence = JSON.parse(residence);
         setResidenceData(parsedResidence);
         setIsFavourite(parsedResidence.favourite);
-        console.log("Residence data:", parsedResidence);
       } catch (error) {
         console.error("Error parsing residence data:", error);
       }
@@ -119,7 +118,7 @@ const PropertyDetails: React.FC = () => {
         <View style={styles.header}>
           <Text style={styles.title}>{residenceData.title}</Text>
           <Text style={styles.price}>${residenceData.price}</Text>
-          <Text style={styles.adminFee}>Admin Fee: ${adminFee}</Text>
+          <Text style={styles.adminFee}>Admin Fee : {adminFee} DT</Text>
           <TouchableOpacity onPress={toggleFavourite}>
             <Ionicons
               name={isFavourite ? "heart" : "heart-outline"}
@@ -204,30 +203,28 @@ const PropertyDetails: React.FC = () => {
           </View>
         </View>
 
-        {residenceData.map &&
-          residenceData.map.latitude &&
-          residenceData.map.longitude && (
-            <View style={styles.mapContainer}>
-              <MapView
-                style={styles.map}
-                initialRegion={{
+        {residenceData.map?.latitude && residenceData.map?.longitude && (
+          <View style={styles.mapContainer}>
+            <MapView
+              style={styles.map}
+              initialRegion={{
+                latitude: residenceData.map.latitude,
+                longitude: residenceData.map.longitude,
+                latitudeDelta: 0.05,
+                longitudeDelta: 0.05,
+              }}
+            >
+              <Marker
+                coordinate={{
                   latitude: residenceData.map.latitude,
                   longitude: residenceData.map.longitude,
-                  latitudeDelta: 0.05,
-                  longitudeDelta: 0.05,
                 }}
-              >
-                <Marker
-                  coordinate={{
-                    latitude: residenceData.map.latitude,
-                    longitude: residenceData.map.longitude,
-                  }}
-                  title={residenceData.map.title}
-                  description={residenceData.map.description}
-                />
-              </MapView>
-            </View>
-          )}
+                title={residenceData.map.title}
+                description={residenceData.map.description}
+              />
+            </MapView>
+          </View>
+        )}
 
         <Button
           title="Request a Tour"

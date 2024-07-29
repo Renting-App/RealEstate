@@ -42,24 +42,59 @@ const PostProperty = () => {
   } | null>(null);
   const mapRef = useRef<MapView>(null);
   const [suggestions, setSuggestions] = useState<any[]>([]);
-  const [propertyData, setPropertyData] = useState({
+  
+  interface Property {
+    address: string;
+    size: number;
+    category: string;
+    title: string;
+    favourite: boolean;
+    description: string;
+    images: string[];
+    operation: string;
+    condition: string;
+    location: string;
+    subLocation: string;
+    date_of_creation: string;
+    rooms: number;
+    price: number;
+    bathrooms: number;
+    visits: string[]; // Update this line
+    amenities: {
+      parking: boolean;
+      ac: boolean;
+      furnished: boolean;
+      pool: boolean;
+      microwave: boolean;
+      near_subway: boolean;
+      beach_view: boolean;
+      alarm: boolean;
+      garden: boolean;
+    };
+    contact_info: string;
+    status: string;
+    notification: string;
+    iduser: string;
+    map: { latitude: number; longitude: number };
+  }
+
+  const initialPropertyData: Property = {
     address: "",
-    size: 120,
+    size: 0,
     category: "apartment",
-    title: "Modern Apartment in City Center",
+    title: "",
     favourite: false,
-    description:
-      "Spacious and modern apartment located in the heart of the city. Close to amenities and public transportation.",
+    description: "",
     images: [],
     operation: "rent",
     condition: "new",
     location: "Ariana",
     subLocation: "Ariana Essoughra",
     date_of_creation: getCurrentDate(),
-    rooms: 2,
-    price: 1000,
-    bathrooms: 1,
-    visits: [],
+    rooms: 0,
+    price: 0,
+    bathrooms: 0,
+    visits: [], // Initialize as an empty array of strings
     amenities: {
       parking: false,
       ac: false,
@@ -71,13 +106,12 @@ const PostProperty = () => {
       alarm: false,
       garden: false,
     },
-    contact_info: "contact@example.com",
+    contact_info: "",
     status: "pending",
     notification: "",
     iduser: "",
-    map: { latitude: 33.8869, longitude: 9.5375 },
-  });
-
+    map: { latitude: 0, longitude: 0 },
+  };
   const auth = getAuth();
 
   const fetchUserId = async () => {
@@ -99,7 +133,7 @@ const PostProperty = () => {
   useEffect(() => {
     fetchUserId();
   }, []);
-
+  const [propertyData, setPropertyData] = useState<Property>(initialPropertyData);
   const handleDayPress = (day: any) => {
     const date = day.dateString;
     const isSelected = selectedDates.includes(date);
@@ -132,14 +166,13 @@ const PostProperty = () => {
       Alert.alert("Sorry, we need camera roll permissions to make this work!");
       return;
     }
-
-    const options = {
+    const options: ImagePicker.ImagePickerOptions = {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [4, 3],
+      aspect: [4, 3] as [number, number], // Explicitly define as a tuple
       quality: 1,
     };
-
+    
     Alert.alert(
       "Select Image",
       "Would you like to take a photo or select from the library?",
@@ -152,6 +185,7 @@ const PostProperty = () => {
         { text: "Cancel", style: "cancel" },
       ]
     );
+    
   };
 
   const launchCamera = async (options: ImagePicker.ImagePickerOptions) => {
@@ -168,137 +202,132 @@ const PostProperty = () => {
 
   const handleImageResult = (result: ImagePicker.ImagePickerResult) => {
     if (!result.canceled) {
-      const file = {
-        uri: result.assets[0].uri,
-        type: "image/jpeg",
-        name: `photo-${propertyData.images.length}.jpg`,
-      };
-
+      const file = createImageFile(result.assets[0].uri);
       uploadToCloudinary(file);
     }
   };
+  
+  const createImageFile = (uri: string) => ({
+    uri,
+    type: "image/jpeg",
+    name: `photo-${propertyData.images.length}.jpg`,
+  });
+
 
   const uploadToCloudinary = async (file: any) => {
-    try {
-      setLoading(true);
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("upload_preset", CLOUDINARY_PRESET);
+  try {
+    setLoading(true);
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", CLOUDINARY_PRESET);
 
-      const response = await axios.post(CLOUDINARY_URL, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+    const response = await axios.post(CLOUDINARY_URL, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
 
-      if (response.data && response.data.secure_url) {
-        setPropertyData((prevData) => ({
-          ...prevData,
-          images: [...prevData.images, response.data.secure_url],
-        }));
-      } else {
-        console.error("Failed to upload image to Cloudinary");
-      }
-    } catch (error) {
-      console.error("Error uploading image:", error);
-      Alert.alert("Error", `Error uploading image: ${error.message}`);
-    } finally {
-      setLoading(false);
+    if (response.data && response.data.secure_url) {
+      setPropertyData((prevData) => ({
+        ...prevData,
+        images: [...prevData.images, response.data.secure_url],
+      }));
+    } else {
+      console.error("Failed to upload image to Cloudinary");
     }
-  };
+  } catch (error) {
+    const errorMessage = (error as Error).message;
+    console.error("Error uploading image:", errorMessage);
+    Alert.alert("Error", `Error uploading image: ${errorMessage}`);
+  } finally {
+    setLoading(false);
+  }
+};
 
-  const handleSubmit = async () => {
-    const adminFee = propertyData.price * 0.1;
-    Alert.alert(
-      "Confirmation",
-      `Are you sure you want to post this property? The admin fee is $${adminFee}.`,
-      [
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
-        {
-          text: "OK",
-          onPress: async () => {
-            try {
-              setLoading(true);
-              const response = await fetch(
-                "http://192.168.1.13:5800/addhouse",
-                {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify(propertyData),
-                }
-              );
-    try {
-      setLoading(true); 
-      const response = await fetch("http://192.168.1.105:5800/addhouse", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(propertyData),
-      });
 
-              setLoading(false);
+const handleSubmit = async () => {
+  const adminFee = propertyData.price * 0.01;
+  Alert.alert(
+    "Confirmation",
+    `Are you sure you want to post this property? The admin fee is $${adminFee}.`,
+    [
+      {
+        text: "Cancel",
+        style: "cancel",
+      },
+      {
+        text: "OK",
+        onPress: async () => {
+          try {
+            setLoading(true);
+            const response = await fetch("http://192.168.1.105:5800/addhouse", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(propertyData),
+            });
 
-              if (response.ok) {
-                const result = await response.json();
-                console.log("Property posted successfully:", result);
-                Alert.alert("Success", "Property posted successfully!");
-                setPropertyData({
-                  address: "",
-                  size: 0,
-                  category: "apartment",
-                  title: "",
-                  favourite: false,
-                  description: "",
-                  images: [],
-                  operation: "rent",
-                  condition: "new",
-                  location: "Ariana",
-                  subLocation: "Ariana Essoughra",
-                  date_of_creation: getCurrentDate(),
-                  rooms: 0,
-                  price: 0,
-                  bathrooms: 0,
-                  visits: [],
-                  amenities: {
-                    parking: false,
-                    ac: false,
-                    furnished: false,
-                    pool: false,
-                    microwave: false,
-                    near_subway: false,
-                    beach_view: false,
-                    alarm: false,
-                    garden: false,
-                  },
-                  contact_info: "",
-                  status: "pending",
-                  notification: "",
-                  iduser: "",
-                  map: { latitude: 0, longitude: 0 },
-                });
-              } else {
-                const error = await response.json();
-                console.error("Error posting property:", error);
-                Alert.alert(
-                  "Error",
-                  `Error posting property: ${error.message}`
-                );
-              }
-            } catch (error) {
+            setLoading(false);
+
+            if (response.ok) {
+              const result = await response.json();
+              console.log("Property posted successfully:", result);
+              Alert.alert("Success", "Property posted successfully!");
+              setPropertyData({
+               
+                address: "",
+                size: 0,
+                category: "apartment",
+                title: "",
+                favourite: false,
+                description: "",
+                images: [''],
+                operation: "rent",
+                condition: "new",
+                location: "Ariana",
+                subLocation: "Ariana Essoughra",
+                date_of_creation: getCurrentDate(),
+                rooms: 0,
+                price: 0,
+                bathrooms: 0,
+                visits: [],
+                amenities: {
+                  parking: false,
+                  ac: false,
+                  furnished: false,
+                  pool: false,
+                  microwave: false,
+                  near_subway: false,
+                  beach_view: false,
+                  alarm: false,
+                  garden: false,
+                },
+                contact_info: "",
+                status: "pending",
+                notification: "",
+                iduser: "",
+                map: { latitude: 0, longitude: 0 },
+              });
+            } else {
+              const error = await response.json();
               console.error("Error posting property:", error);
-              Alert.alert("Error", `Error posting property: ${error.message}`);
+              Alert.alert(
+                "Error",
+                `Error posting property: ${error.message}`
+              );
             }
-          },
+          } catch (error) {
+            const errorMessage = (error as Error).message;
+            console.error("Error posting property:", errorMessage);
+            Alert.alert("Error", `Error posting property: ${errorMessage}`);
+          }
         },
-      ]
-    );
-  };
+      },
+    ]
+  );
+};
+
 
   const handleInputChange = (
     name: keyof typeof propertyData,

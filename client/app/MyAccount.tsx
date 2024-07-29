@@ -1,4 +1,4 @@
-import React, { useState , useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   StyleSheet,
@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   ScrollView,
   Text,
-  Modal,
 } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { useRouter } from "expo-router";
@@ -22,7 +21,7 @@ interface User {
   email: string;
   phone_number: string;
   image: string;
-  notification: any[];
+  notification: { id: string; message: string }[]; // Replace with a more specific type if available
 }
 
 const MyAccount = () => {
@@ -38,20 +37,19 @@ const MyAccount = () => {
       try {
         const currentUser = auth.currentUser;
         if (currentUser) {
-          console.log("Authenticated user ID: ", currentUser.uid);
           const userDocRef = doc(firestore, "users", currentUser.uid);
           const userDoc = await getDoc(userDocRef);
           if (userDoc.exists()) {
-            console.log("User document data: ", userDoc.data());
             setUser(userDoc.data() as User);
+          } else {
+            setError("User document does not exist.");
           }
         } else {
-          console.log("No user is signed in!");
+          setError("No user is signed in!");
         }
         setLoading(false);
       } catch (error) {
-        console.error("Error fetching user data: ", error);
-        setError(error as string);
+        setError(error instanceof Error ? error.message : "Error fetching user data");
         setLoading(false);
       }
     };
@@ -70,8 +68,8 @@ const MyAccount = () => {
   if (error) {
     return (
       <View style={styles.container}>
-        <ThemedText type="title" style={styles.title}>
-          Error loading user data
+        <ThemedText type="title">
+          Error loading user data: {error}
         </ThemedText>
       </View>
     );
@@ -88,7 +86,7 @@ const MyAccount = () => {
             onPress={() => router.push("/NotificationList")}
           >
             <Ionicons name="notifications" size={24} color="#fff" />
-            {user?.notification.length > 0 && (
+            {user?.notification && user.notification.length > 0 && (
               <View style={styles.notificationBadge}>
                 <Text style={styles.notificationBadgeText}>
                   {user.notification.length}
@@ -104,10 +102,10 @@ const MyAccount = () => {
           />
           <View style={styles.profileInfo}>
             <ThemedText type="subtitle" style={styles.profileName}>
-              {user?.username}
+              {user?.username || "Username"}
             </ThemedText>
             <ThemedText type="subtitle" style={styles.profileEmail}>
-              {user?.email}
+              {user?.email || "Email"}
             </ThemedText>
           </View>
         </View>

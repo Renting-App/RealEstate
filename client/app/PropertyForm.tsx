@@ -21,15 +21,14 @@ type DateObject = {
 };
 
 interface PropertyData {
-  _id: string;
   address: string;
   size: number;
-  category: "apartment" | "house" | "office" | "studio" | "penthouse";
+  category: "apartment" | "house" | "office" | "studio" | "penthouse" | string;
   title: string;
   favourite: boolean;
   description: string;
   images: string[];
-  operation: "rent" | "sale";
+  operation: "rent" | "sale"| string;
   location: string;
   subLocation: string;
   date_of_creation: string;
@@ -49,10 +48,10 @@ interface PropertyData {
     garden: boolean;
   };
   contact_info: string;
-  status: "pending" | "approved" | "declined";
+  status: "pending" | "approved" | "declined"| string;
   notification: string;
   iduser: string;
-  condition: "new" | "occasion";
+  condition: "new" | "occasion"| string;
   map?: any;
 }
 
