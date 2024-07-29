@@ -117,7 +117,7 @@ const PropertyDetails: React.FC = () => {
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.title}>{residenceData.title}</Text>
-          <Text style={styles.price}>${residenceData.price}</Text>
+          <Text style={styles.price}>{residenceData.price} DT</Text>
           <Text style={styles.adminFee}>Admin Fee : {adminFee} DT</Text>
           <TouchableOpacity onPress={toggleFavourite}>
             <Ionicons

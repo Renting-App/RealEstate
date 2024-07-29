@@ -89,21 +89,7 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
 
   useEffect(() => {
     fetchResidences();
-  }, []);
-
-  useFocusEffect(
-    React.useCallback(() => {
-      fetchResidences();
-    }, [])
-  );
-
-  useEffect(() => {
-    handleSearch();
-  }, [searchQuery]);
-
-  useEffect(() => {
-    filterResidences(residences, criteria);
-  }, [criteria, residences]);
+  }, [criteria]);
 
   const fetchResidences = () => {
     setLoading(true);
@@ -137,6 +123,8 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
         }));
         setResidences(mappedResidences);
         filterResidences(mappedResidences, criteria);
+        console.log('f',filteredResidences);
+        
         setLoading(false);
       })
       .catch((error) => {
