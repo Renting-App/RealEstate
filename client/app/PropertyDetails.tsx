@@ -244,7 +244,7 @@ const PropertyDetails: React.FC = () => {
       backgroundColor: "#f7f7f7",
     },
     container: {
-      padding: 14,
+      padding: 15,
       backgroundColor: "#ffffff",
       flex: 1,
       borderRadius: 10,
@@ -257,7 +257,6 @@ const PropertyDetails: React.FC = () => {
     },
     header: {
       marginBottom: 20,
-      marginTop: 45,
     },
     title: {
       fontSize: 24,
