@@ -75,6 +75,7 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ navigation }) => {
 
   const handleSubmit = () => {
     const criteria = { category, location, subLocation, operation, priceMin,priceMax, amenities: selectedAmenities };
+   console.log(criteria); 
     navigation.navigate('HousesScreen', { criteria });
   };
 
@@ -86,7 +87,7 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ navigation }) => {
         onValueChange={(itemValue) => setCategory(itemValue.toString())}
         style={styles.picker}
       >
-        <Picker.Item label="Select category" value="" />
+        <Picker.Item label="Select category" value="house" />
         <Picker.Item label="House" value="house" />
         <Picker.Item label="Apartment" value="apartment" />
         <Picker.Item label="Studio" value="studio" />
@@ -99,7 +100,7 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ navigation }) => {
         onValueChange={(itemValue) => handleLocationChange(itemValue.toString())}
         style={styles.picker}
       >
-        <Picker.Item label="Select location" value="" />
+        <Picker.Item label="Select location" value="Ariana" />
         {Object.keys(locations).map((loc) => (
           <Picker.Item key={loc} label={loc} value={loc} />
         ))}
@@ -113,7 +114,7 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ navigation }) => {
             onValueChange={(itemValue) => setSubLocation(itemValue.toString())}
             style={styles.picker}
           >
-            <Picker.Item label="Select sub-location" value="" />
+            <Picker.Item label="Select sub-location" value="Ariana Essoughra" />
             {locations[location].map((subLoc) => (
               <Picker.Item key={subLoc} label={subLoc} value={subLoc} />
             ))}
@@ -127,7 +128,7 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ navigation }) => {
         onValueChange={(itemValue) => setOperation(itemValue.toString())}
         style={styles.picker}
       >
-        <Picker.Item label="Select operation" value="" />
+        <Picker.Item label="Select operation" value="rent" />
         <Picker.Item label="Rent" value="rent" />
         <Picker.Item label="Sale" value="sale" />
       </Picker>

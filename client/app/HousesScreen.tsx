@@ -50,7 +50,7 @@ interface Residence {
   contact_info: string;
   images: string[];
   operation: "rent" | "sale";
-  visits: string[];
+  visits: [];
   favourite: boolean;
   date_of_creation: string;
   amenities: {
@@ -71,13 +71,13 @@ interface Residence {
   map: {
     latitude: number;
     longitude: number;
-
   };
   __v: number;
 }
 
 const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
   const { criteria = {} } = route.params || {};
+  // console.log("Received criteria:", criteria); // Debugging
   const [residences, setResidences] = useState<Residence[]>([]);
   const [loading, setLoading] = useState(true);
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
@@ -100,6 +100,10 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
   useEffect(() => {
     handleSearch();
   }, [searchQuery]);
+
+  useEffect(() => {
+    filterResidences(residences, criteria);
+  }, [criteria, residences]);
 
   const fetchResidences = () => {
     setLoading(true);
@@ -131,9 +135,8 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
           condition: residence.condition ?? "",
           map: residence.map ?? {},
         }));
-        filterResidences(mappedResidences, criteria);
         setResidences(mappedResidences);
-        setFilteredResidences(mappedResidences);
+        filterResidences(mappedResidences, criteria);
         setLoading(false);
       })
       .catch((error) => {
@@ -143,21 +146,30 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
   };
 
   const filterResidences = (residences: Residence[], criteria: any) => {
+    // console.log("Filtering with criteria:", criteria); // Debugging
     const filtered = residences.filter((residence) => {
-      return (
-        (!criteria.category || residence.category === criteria.category) &&
-        (!criteria.location || residence.location === criteria.location) &&
-        (!criteria.subLocation ||
-          residence.subLocation === criteria.subLocation) &&
-        (!criteria.operation || residence.operation === criteria.operation) &&
-        (!criteria.priceMax ||
-          parseFloat(residence.price) <= parseFloat(criteria.priceMax)) &&
-        (!criteria.priceMin ||
-          parseFloat(residence.price) >= parseFloat(criteria.priceMin))
-      );
+      const meetsCategory = !criteria.category || residence.category === criteria.category;
+      const meetsLocation = !criteria.location || residence.location === criteria.location;
+      const meetsSubLocation = !criteria.subLocation || residence.subLocation === criteria.subLocation;
+      const meetsOperation = !criteria.operation || residence.operation === criteria.operation;
+      const meetsPriceMax = !criteria.priceMax || parseFloat(residence.price) <= parseFloat(criteria.priceMax);
+      const meetsPriceMin = !criteria.priceMin || parseFloat(residence.price) >= parseFloat(criteria.priceMin);
+
+      // console.log(`Residence: ${residence.title}`, {
+      //   meetsCategory,
+      //   meetsLocation,
+      //   meetsSubLocation,
+      //   meetsOperation,
+      //   meetsPriceMax,
+      //   meetsPriceMin
+      // }); // Debugging
+
+      return meetsCategory && meetsLocation && meetsSubLocation && meetsOperation && meetsPriceMax && meetsPriceMin;
     });
+    // console.log("Filtered Residences:", filtered); // Debugging
     setFilteredResidences(filtered);
   };
+
 
   const handleSearch = () => {
     if (searchQuery === "") {
