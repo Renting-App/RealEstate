@@ -6,6 +6,7 @@ import { RootStackParamList } from "../constants/types";
 import { getAuth } from "firebase/auth";
 import { doc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
 import { firestore } from "../config/firebase";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 type NotificationDetailsRouteProp = RouteProp<
   RootStackParamList,
@@ -102,18 +103,21 @@ const NotificationDetails: React.FC = () => {
             style={[styles.button, styles.approveButton]}
             onPress={() => handleResponse("approved")}
           >
+            <Ionicons name="checkmark-circle-outline" size={24} color="#fff" />
             <Text style={styles.buttonText}>Approve</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.button, styles.rejectButton]}
             onPress={() => handleResponse("rejected")}
           >
+            <Ionicons name="close-circle-outline" size={24} color="#fff" />
             <Text style={styles.buttonText}>Reject</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.button, styles.deleteButton]}
             onPress={handleDeleteNotification}
           >
+            <Ionicons name="trash-outline" size={24} color="#fff" />
             <Text style={styles.buttonText}>Delete Notification</Text>
           </TouchableOpacity>
         </>
@@ -125,6 +129,7 @@ const NotificationDetails: React.FC = () => {
             style={[styles.button, styles.deleteButton]}
             onPress={handleDeleteNotification}
           >
+            <Ionicons name="trash-outline" size={24} color="#fff" />
             <Text style={styles.buttonText}>Delete Notification</Text>
           </TouchableOpacity>
         </>
@@ -151,16 +156,20 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   button: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     paddingVertical: 12,
     paddingHorizontal: 20,
-    borderRadius: 5,
-    alignItems: "center",
+    borderRadius: 8,
     marginVertical: 10,
+    elevation: 3,
   },
   buttonText: {
     color: "#fff",
     fontSize: 16,
     fontWeight: "bold",
+    marginLeft: 8,
   },
   approveButton: {
     backgroundColor: "#4CAF50",

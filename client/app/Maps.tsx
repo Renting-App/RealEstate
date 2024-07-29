@@ -51,7 +51,7 @@ const Maps: React.FC = () => {
   useEffect(() => {
     const fetchPlaces = async () => {
       try {
-        const response = await axios.get("http://192.168.1.13:5800/houses");
+        const response = await axios.get("http://192.168.1.105:5800/houses");
         setPlaces(response.data);
       } catch (error) {
         console.error("Error fetching places:", error);

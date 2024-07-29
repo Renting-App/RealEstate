@@ -5,9 +5,9 @@ import {
   ActivityIndicator,
   Image,
   Text,
-  Button,
   Alert,
   StyleSheet,
+  TouchableOpacity,
 } from "react-native";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { ThemedText } from "@/components/ThemedText";
@@ -16,6 +16,7 @@ import importedStyles from "./styles";
 import { RootStackParamList } from "./_layout";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { getAuth } from "firebase/auth";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 interface Property {
   _id: string;
@@ -73,7 +74,7 @@ const MyProperties: React.FC = () => {
           iduser: property.iduser,
         }));
 
-        // Filter properties by current user's UID
+      
         const userProperties = mappedProperties.filter(
           (property: Property) => property.iduser === userId
         );
@@ -90,7 +91,7 @@ const MyProperties: React.FC = () => {
   const handleDelete = async (_id: string) => {
     try {
       const response = await fetch(
-        `http://192.168.1.13:5800/deletehouse/${_id}`,
+        `http://192.168.1.105:5800/deletehouse/${_id}`,
         {
           method: "DELETE",
         }
@@ -148,12 +149,20 @@ const MyProperties: React.FC = () => {
           Address: {item.address}
         </ThemedText>
         <View style={localStyles.buttonContainer}>
-          <View style={localStyles.button}>
-            <Button title="Delete" onPress={() => handleDelete(item._id)} />
-          </View>
-          <View style={localStyles.button}>
-            <Button title="Update" onPress={() => navigateToUpdateForm(item)} />
-          </View>
+          <TouchableOpacity
+            style={[localStyles.button, localStyles.deleteButton]}
+            onPress={() => handleDelete(item._id)}
+          >
+            <Ionicons name="trash-outline" size={20} color="#fff" />
+            <Text style={localStyles.buttonText}>Delete</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[localStyles.button, localStyles.updateButton]}
+            onPress={() => navigateToUpdateForm(item)}
+          >
+            <Ionicons name="create-outline" size={20} color="#fff" />
+            <Text style={localStyles.buttonText}>Update</Text>
+          </TouchableOpacity>
         </View>
       </ThemedView>
     );
@@ -164,7 +173,7 @@ const MyProperties: React.FC = () => {
       <ThemedView
         style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
       >
-        <ActivityIndicator size="large" color="#0007ff" />
+        <ActivityIndicator size="large" color="#0000ff" />
       </ThemedView>
     );
   }
@@ -200,8 +209,34 @@ const localStyles = StyleSheet.create({
     marginTop: 10,
   },
   button: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     flex: 1,
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+    borderRadius: 8,
     marginHorizontal: 5,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  deleteButton: {
+    backgroundColor: "#dc3545",
+  },
+  updateButton: {
+    backgroundColor: "#007bff",
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
+    marginLeft: 5,
   },
 });
 

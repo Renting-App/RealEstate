@@ -72,7 +72,7 @@ const Dashboard = () => {
                     <li><Link to="#"><img src={profileIcon} alt="Profile" />Profile</Link></li>
                     <li><Link to="/tour-request"><img src={messageIcon} alt="Tour Request" />Tour Request</Link></li>
                     <li><Link to="#"><img src={paymentIcon} alt="Payment" />Payment</Link></li>
-                    <li><Link to="#"><img src={postRequestIcon} alt="Post Request" />Post Request</Link></li>
+                    <li><Link to="/ManagePosts"><img src={postRequestIcon} alt="Post Request" />Post Request</Link></li>
                     <li><Link to="#"><img src={supportIcon} alt="Support" />Support</Link></li>
                     <li><Link to="#"><img src={privacyIcon} alt="Privacy" />Privacy</Link></li>
                 </ul>

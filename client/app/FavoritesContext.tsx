@@ -1,7 +1,7 @@
 import React, { createContext, useState, useContext, ReactNode } from 'react';
 
 interface Property {
-  _id: number;
+  _id: string;
   address: string;
   size: string;
   category: 'apartment' | 'house' | 'office' | 'studio' | 'penthouse';
@@ -31,7 +31,7 @@ interface Property {
 interface FavoritesContextProps {
   favorites: Property[];
   addToFavorites: (property: Property) => void;
-  removeFromFavorites: (propertyId: number) => void;
+  removeFromFavorites: (propertyId: string) => void;
 }
 
 interface FavoritesProviderProps {
@@ -47,7 +47,7 @@ export const FavoritesProvider: React.FC<FavoritesProviderProps> = ({ children }
     setFavorites((prevFavorites) => [...prevFavorites, property]);
   };
 
-  const removeFromFavorites = (propertyId: number) => {
+  const removeFromFavorites = (propertyId: string) => {
     setFavorites((prevFavorites) => prevFavorites.filter((property) => property._id !== propertyId));
   };
 
