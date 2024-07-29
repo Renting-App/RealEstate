@@ -4,9 +4,7 @@ import {
   FlatList,
   ActivityIndicator,
   Image,
-  Button,
-  Pressable,
-  TextInput,
+  TouchableOpacity,
   StyleSheet,
   Text,
 } from "react-native";
@@ -201,7 +199,7 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
       <Image
         source={{ uri: item.images[0] }}
         style={styles.image}
-        resizeMode="contain"
+        resizeMode="cover"
       />
       <ThemedText type="subtitle" style={styles.title}>
         {item.title}
@@ -213,7 +211,13 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
       <ThemedText type="default" style={styles.contact}>
         Address: {item.address}
       </ThemedText>
-      <Button title="Details" onPress={() => handleDetailsPress(item)} />
+      <TouchableOpacity
+        style={styles.detailsButton}
+        onPress={() => handleDetailsPress(item)}
+      >
+        <Ionicons name="information-circle-outline" size={24} color="#fff" />
+        <Text style={styles.detailsButtonText}>Details</Text>
+      </TouchableOpacity>
     </ThemedView>
   );
 
@@ -222,7 +226,7 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
       <ThemedView
         style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
       >
-        <ActivityIndicator size="large" color="#0007ff" />
+        <ActivityIndicator size="large" color="#0000ff" />
       </ThemedView>
     );
   }
@@ -252,9 +256,9 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
               navigation={navigation}
             />
             <View style={styles.header}>
-              <Pressable onPress={() => setIsSidebarVisible(true)}>
+              <TouchableOpacity onPress={() => setIsSidebarVisible(true)}>
                 <Ionicons name="menu" style={styles.menuIcon} size={24} />
-              </Pressable>
+              </TouchableOpacity>
               <ThemedText
                 type="title"
                 style={[
@@ -276,6 +280,7 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
                 source={require("../assets/images/banner01.jpg")}
                 style={styles.bannerImage}
               />
+              <View style={styles.bannerOverlay} />
               <View style={styles.bannerContent}>
                 <ThemedText type="title" style={styles.bannerTitle}>
                   Discover Your New Home
@@ -283,11 +288,13 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
                 <ThemedText type="subtitle" style={styles.bannerSubtitle}>
                   Helping 100 thousand renters and sellers
                 </ThemedText>
-                <Search
-                  searchQuery={searchQuery}
-                  setSearchQuery={setSearchQuery}
-                  onSearch={handleSearch}
-                />
+                <View style={styles.searchContainer}>
+                  <Search
+                    searchQuery={searchQuery}
+                    setSearchQuery={setSearchQuery}
+                    onSearch={handleSearch}
+                  />
+                </View>
               </View>
             </View>
             {filteredResidences.length === 0 ? (
@@ -303,7 +310,6 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
                   )}
                   renderItem={renderItem}
                   keyExtractor={(item) => item._id}
-                  contentContainerStyle={styles.cardsContainer}
                 />
                 <Pagination
                   currentPage={currentPage}
@@ -339,13 +345,17 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   banner: {
-    flexDirection: "row",
     height: 200,
     marginBottom: 10,
+    position: "relative",
   },
   bannerImage: {
     width: "100%",
     height: "100%",
+  },
+  bannerOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   bannerContent: {
     position: "absolute",
@@ -353,6 +363,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     padding: 20,
+    alignItems: "center",
   },
   bannerTitle: {
     fontSize: 24,
@@ -362,9 +373,12 @@ const styles = StyleSheet.create({
   bannerSubtitle: {
     fontSize: 16,
     color: "#fff",
+    marginVertical: 5,
   },
-  cardsContainer: {
-    padding: 10,
+  searchContainer: {
+    marginTop: 15,
+    width: "100%",
+    alignItems: "center",
   },
   card: {
     backgroundColor: "#fff",
@@ -372,6 +386,11 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     padding: 10,
     elevation: 2,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 8,
+    overflow: "hidden",
   },
   typeContainer: {
     borderRadius: 4,
@@ -379,6 +398,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 10,
     left: 10,
+    zIndex: 1,
   },
   rent: {
     backgroundColor: "#ffcccc",
@@ -407,6 +427,23 @@ const styles = StyleSheet.create({
   contact: {
     fontSize: 14,
     color: "#999",
+    marginBottom: 10,
+  },
+  detailsButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#007bff",
+    paddingVertical: 10,
+    borderRadius: 5,
+    marginTop: 10,
+    elevation: 3,
+  },
+  detailsButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
+    marginLeft: 5,
   },
   noDataText: {
     textAlign: "center",
