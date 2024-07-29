@@ -93,7 +93,11 @@ const NotificationList: React.FC = () => {
   };
 
   if (loading) {
-    return <ActivityIndicator size="large" color="#0000ff" />;
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
   }
 
   const combinedNotifications = [
@@ -108,7 +112,10 @@ const NotificationList: React.FC = () => {
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }) => (
           <View style={styles.notificationItem}>
-            <TouchableOpacity onPress={() => handleNotificationPress(item)}>
+            <TouchableOpacity
+              style={styles.notificationContent}
+              onPress={() => handleNotificationPress(item)}
+            >
               <Text style={styles.notificationText}>
                 {item.type === "request"
                   ? `Tour Request: ${item.residenceTitle}`
@@ -116,9 +123,10 @@ const NotificationList: React.FC = () => {
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
+              style={styles.deleteButton}
               onPress={() => handleDeleteNotification(item, item.type)}
             >
-              <Text style={styles.deleteButton}>Delete</Text>
+              <Ionicons name="trash-outline" size={20} color="red" />
             </TouchableOpacity>
           </View>
         )}
@@ -134,12 +142,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+    backgroundColor: "#f9f9f9",
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   notificationItem: {
     backgroundColor: "#fff",
     padding: 10,
     marginVertical: 5,
-    borderRadius: 5,
+    borderRadius: 8,
     shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 2 },
@@ -149,14 +163,15 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
+  notificationContent: {
+    flex: 1,
+  },
   notificationText: {
     fontSize: 16,
     color: "#333",
   },
   deleteButton: {
-    fontSize: 14,
-    color: "red",
-    textAlign: "right",
+    padding: 10,
   },
   noNotificationsText: {
     fontSize: 16,

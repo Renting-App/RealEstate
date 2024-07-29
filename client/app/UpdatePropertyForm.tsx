@@ -75,7 +75,7 @@ const initializePropertyData = (property: PropertyData): PropertyData => {
     contact_info: property.contact_info || "",
     status: property.status || "pending",
     notification: property.notification || "",
-    iduser: property.iduser?._id || "", 
+    iduser: property.iduser?._id || "",
     condition: property.condition || "new",
     map: property.map || { latitude: 0, longitude: 0 },
   };
@@ -233,10 +233,10 @@ const UpdatePropertyForm: React.FC<Props> = ({ route, navigation }) => {
 
       console.log("Submitting Property Data:", propertyData);
 
-      const { iduser, ...dataToUpdate } = propertyData; 
+      const { iduser, ...dataToUpdate } = propertyData;
 
       const response = await fetch(
-        `http://192.168.1.22:5800/houses/${propertyData.idhouses}`,
+        `http://192.168.1.13:5800/houses/${propertyData.idhouses}`,
         {
           method: "PUT",
           headers: {
@@ -246,13 +246,13 @@ const UpdatePropertyForm: React.FC<Props> = ({ route, navigation }) => {
         }
       );
 
-      const text = await response.text(); 
+      const text = await response.text();
       if (!response.ok) {
         console.error("Server response not OK:", text);
         throw new Error(text);
       }
 
-      const result = JSON.parse(text); 
+      const result = JSON.parse(text);
       console.log("Property updated successfully:", result);
       setPropertyData(result);
       if (onUpdate) {
@@ -266,7 +266,7 @@ const UpdatePropertyForm: React.FC<Props> = ({ route, navigation }) => {
       Alert.alert(
         "Error",
         (error as Error).message ||
-        "An error occurred while updating the property."
+          "An error occurred while updating the property."
       );
     }
   };
