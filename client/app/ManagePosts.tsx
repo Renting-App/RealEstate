@@ -3,14 +3,14 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
-import { RootStackParamList, Residence } from './_layout'; // Adjust the import path
+import { RootStackParamList, Residence } from './_layout';
 
 const ManagePosts: React.FC = () => {
     const [posts, setPosts] = useState<Residence[]>([]);
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
     const fetchResidences = () => {
-        fetch("http://192.168.1.13:5800/houses")
+        fetch("http://192.168.1.22:5800/houses")
             .then((response) => response.json())
             .then((data) => {
                 const mappedResidences = data.map((residence: any) => ({
@@ -45,7 +45,7 @@ const ManagePosts: React.FC = () => {
 
     const handleDelete = async (postId: string) => {
         try {
-            await fetch(`http://192.168.1.13:5800/api/deletehouse/${postId}`, {
+            await fetch(`http://192.168.1.22:5800/api/deletehouse/${postId}`, {
                 method: 'DELETE',
             });
             setPosts(posts.filter(post => post._id !== postId));

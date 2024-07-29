@@ -4,15 +4,17 @@ import {
   FlatList,
   ActivityIndicator,
   Image,
-  Button,
-  Pressable,
-  Text,
+  TouchableOpacity,
   StyleSheet,
+  Text,
 } from "react-native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { RouteProp } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RootStackParamList } from "./_layout";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import { Link, useNavigation, useFocusEffect } from "expo-router";
 import DrawerContent from "@/app/DrawerContent";
 import Search from "./Search";
 import Pagination from "./Pagination";
@@ -21,9 +23,6 @@ import {
   Directions,
   State,
 } from "react-native-gesture-handler";
-import { RouteProp } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
-import { RootStackParamList } from "./_layout";
 
 type HousesScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -51,6 +50,29 @@ interface Residence {
   contact_info: string;
   images: string[];
   operation: "rent" | "sale";
+  visits: string[];
+  favourite: boolean;
+  date_of_creation: string;
+  amenities: {
+    parking: boolean;
+    ac: boolean;
+    furnished: boolean;
+    pool: boolean;
+    microwave: boolean;
+    near_subway: boolean;
+    beach_view: boolean;
+    alarm: boolean;
+    garden: boolean;
+  };
+  status: string;
+  notification: string;
+  iduser: string;
+  condition: string;
+  map: {
+    latitude: number;
+    longitude: number;
+  };
+  __v: number;
 }
 
 const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
@@ -87,10 +109,10 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
           _id: residence._id ?? `id_${Date.now()}`,
           title: residence.title ?? "",
           address: residence.address ?? "",
-          size: residence.size ?? "",
-          price: residence.price ?? "",
-          rooms: residence.rooms ?? "",
-          bathrooms: residence.bathrooms ?? "",
+          size: residence.size ?? 0,
+          price: residence.price ?? 0,
+          rooms: residence.rooms ?? 0,
+          bathrooms: residence.bathrooms ?? 0,
           description: residence.description ?? "",
           contact_info: residence.contact_info ?? "",
           images: residence.images ?? [],
@@ -98,6 +120,15 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
           category: residence.category ?? "",
           location: residence.location ?? "",
           subLocation: residence.subLocation ?? "",
+          visits: residence.visits ?? [],
+          favourite: residence.favourite ?? false,
+          date_of_creation: residence.date_of_creation ?? "",
+          amenities: residence.amenities ?? {},
+          status: residence.status ?? "",
+          notification: residence.notification ?? "",
+          iduser: residence.iduser ?? "",
+          condition: residence.condition ?? "",
+          map: residence.map ?? {},
         }));
         filterResidences(mappedResidences, criteria);
         setResidences(mappedResidences);
@@ -147,6 +178,12 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
     }
   };
 
+  const handleDetailsPress = (residence: Residence) => {
+    navigation.navigate("PropertyDetails", {
+      residence: JSON.stringify(residence),
+    });
+  };
+
   const renderItem = ({ item }: { item: Residence }) => (
     <ThemedView style={styles.card}>
       <View
@@ -162,7 +199,7 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
       <Image
         source={{ uri: item.images[0] }}
         style={styles.image}
-        resizeMode="contain"
+        resizeMode="cover"
       />
       <ThemedText type="subtitle" style={styles.title}>
         {item.title}
@@ -174,15 +211,13 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
       <ThemedText type="default" style={styles.contact}>
         Address: {item.address}
       </ThemedText>
-      <Link
-        href={{
-          pathname: "/PropertyDetails",
-          params: { residence: JSON.stringify(item) },
-        }}
-        asChild
+      <TouchableOpacity
+        style={styles.detailsButton}
+        onPress={() => handleDetailsPress(item)}
       >
-        <Button title="Details" />
-      </Link>
+        <Ionicons name="information-circle-outline" size={24} color="#fff" />
+        <Text style={styles.detailsButtonText}>Details</Text>
+      </TouchableOpacity>
     </ThemedView>
   );
 
@@ -191,7 +226,7 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
       <ThemedView
         style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
       >
-        <ActivityIndicator size="large" color="#0007ff" />
+        <ActivityIndicator size="large" color="#0000ff" />
       </ThemedView>
     );
   }
@@ -221,9 +256,9 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
               navigation={navigation}
             />
             <View style={styles.header}>
-              <Pressable onPress={() => setIsSidebarVisible(true)}>
+              <TouchableOpacity onPress={() => setIsSidebarVisible(true)}>
                 <Ionicons name="menu" style={styles.menuIcon} size={24} />
-              </Pressable>
+              </TouchableOpacity>
               <ThemedText
                 type="title"
                 style={[
@@ -245,6 +280,7 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
                 source={require("../assets/images/banner01.jpg")}
                 style={styles.bannerImage}
               />
+              <View style={styles.bannerOverlay} />
               <View style={styles.bannerContent}>
                 <ThemedText type="title" style={styles.bannerTitle}>
                   Discover Your New Home
@@ -252,11 +288,13 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
                 <ThemedText type="subtitle" style={styles.bannerSubtitle}>
                   Helping 100 thousand renters and sellers
                 </ThemedText>
-                <Search
-                  searchQuery={searchQuery}
-                  setSearchQuery={setSearchQuery}
-                  onSearch={handleSearch}
-                />
+                <View style={styles.searchContainer}>
+                  <Search
+                    searchQuery={searchQuery}
+                    setSearchQuery={setSearchQuery}
+                    onSearch={handleSearch}
+                  />
+                </View>
               </View>
             </View>
             {filteredResidences.length === 0 ? (
@@ -274,7 +312,6 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
                   )}
                   renderItem={renderItem}
                   keyExtractor={(item) => item._id}
-                  contentContainerStyle={styles.cardsContainer}
                 />
                 <Pagination
                   currentPage={currentPage}
@@ -310,13 +347,17 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   banner: {
-    flexDirection: "row",
     height: 200,
     marginBottom: 10,
+    position: "relative",
   },
   bannerImage: {
     width: "100%",
     height: "100%",
+  },
+  bannerOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   bannerContent: {
     position: "absolute",
@@ -324,6 +365,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     padding: 20,
+    alignItems: "center",
   },
   bannerTitle: {
     fontSize: 24,
@@ -333,9 +375,12 @@ const styles = StyleSheet.create({
   bannerSubtitle: {
     fontSize: 16,
     color: "#fff",
+    marginVertical: 5,
   },
-  cardsContainer: {
-    padding: 10,
+  searchContainer: {
+    marginTop: 15,
+    width: "100%",
+    alignItems: "center",
   },
   card: {
     backgroundColor: "#fff",
@@ -343,6 +388,11 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     padding: 10,
     elevation: 2,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 8,
+    overflow: "hidden",
   },
   typeContainer: {
     borderRadius: 4,
@@ -350,6 +400,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 10,
     left: 10,
+    zIndex: 1,
   },
   rent: {
     backgroundColor: "#ffcccc",
@@ -378,6 +429,23 @@ const styles = StyleSheet.create({
   contact: {
     fontSize: 14,
     color: "#999",
+    marginBottom: 10,
+  },
+  detailsButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#007bff",
+    paddingVertical: 10,
+    borderRadius: 5,
+    marginTop: 10,
+    elevation: 3,
+  },
+  detailsButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
+    marginLeft: 5,
   },
   noDataText: {
     textAlign: "center",

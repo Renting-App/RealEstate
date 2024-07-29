@@ -19,6 +19,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { firestore } from "../config/firebase";
 import PropertyForm from "./PropertyForm";
 import * as ImagePicker from "expo-image-picker";
+
 const CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/dw1sxdmac/upload";
 const CLOUDINARY_PRESET = "hotel_preset";
 const MAPBOX_GEOCODING_URL =
@@ -135,7 +136,7 @@ const PostProperty = () => {
     const options = {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [9, 12],
+      aspect: [4, 3],
       quality: 1,
     };
 
@@ -200,6 +201,7 @@ const PostProperty = () => {
       }
     } catch (error) {
       console.error("Error uploading image:", error);
+      Alert.alert("Error", `Error uploading image: ${error.message}`);
     } finally {
       setLoading(false);
     }
@@ -344,7 +346,7 @@ const PostProperty = () => {
         const address = response.data.features[0].place_name;
         setPropertyData((prevData) => ({
           ...prevData,
-          address: address,
+          address: `${prevData.subLocation}, ${prevData.location}, ${address}`,
         }));
       }
     } catch (error) {
@@ -399,7 +401,7 @@ const PostProperty = () => {
         const address = response.data.features[0].place_name;
         setPropertyData((prevData) => ({
           ...prevData,
-          address: address,
+          address: `${prevData.subLocation}, ${prevData.location}, ${address}`,
         }));
       }
     } catch (error) {
@@ -470,16 +472,14 @@ const PostProperty = () => {
                 handleDayPress={handleDayPress}
                 showCalendar={showCalendar}
                 setShowCalendar={setShowCalendar}
+                handleQueryChange={handleQueryChange}
+                handleSuggestionSelect={handleSuggestionSelect}
+                suggestions={suggestions}
+                setSuggestions={setSuggestions}
               />
               <TouchableOpacity onPress={handleImageSelection}>
                 <Text style={styles.imageButton}>Upload Images</Text>
               </TouchableOpacity>
-              <TextInput
-                style={styles.input}
-                value={propertyData.address}
-                onChangeText={handleQueryChange}
-                placeholder="Enter address"
-              />
             </View>
           </>
         }
@@ -495,15 +495,10 @@ const PostProperty = () => {
             {propertyData.images.length > 0 && (
               <View style={styles.imageContainer}>
                 {propertyData.images.map((image, index) => (
-                  <Image
-                    key={index}
-                    source={{ uri: image }}
-                    style={styles.image}
-                  />
-                ))}{" "}
-                <TouchableOpacity onPress={handleImageSelection}>
-                  <Text style={styles.imageButton}>Upload Images</Text>
-                </TouchableOpacity>
+                  <View key={index} style={styles.imageWrapper}>
+                    <Image source={{ uri: image }} style={styles.image} />
+                  </View>
+                ))}
               </View>
             )}
 
@@ -565,10 +560,13 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     justifyContent: "center",
   },
+  imageWrapper: {
+    position: "relative",
+    margin: 5,
+  },
   image: {
     width: 100,
     height: 100,
-    margin: 5,
   },
   map: {
     height: 300,

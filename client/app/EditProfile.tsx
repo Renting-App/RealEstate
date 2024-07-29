@@ -18,6 +18,7 @@ import {
 } from "firebase/auth";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { firestore } from "../config/firebase";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 const EditProfile = () => {
   const [user, setUser] = useState({
@@ -27,7 +28,7 @@ const EditProfile = () => {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [editField, setEditField] = useState(null); 
+  const [editField, setEditField] = useState(null);
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -141,11 +142,16 @@ const EditProfile = () => {
         </ThemedText>
 
         <View style={styles.formGroup}>
-          <TouchableOpacity onPress={() => setEditField("username")}>
+          <TouchableOpacity
+            style={styles.formGroupHeader}
+            onPress={() =>
+              setEditField(editField === "username" ? null : "username")
+            }
+          >
+            <Ionicons name="person" size={20} color="#007bff" />
             <ThemedText type="label" style={styles.label}>
               Username
             </ThemedText>
-            <ThemedText style={styles.valueText}>{user.username}</ThemedText>
           </TouchableOpacity>
           {editField === "username" && (
             <TextInput
@@ -158,11 +164,14 @@ const EditProfile = () => {
         </View>
 
         <View style={styles.formGroup}>
-          <TouchableOpacity onPress={() => setEditField("email")}>
+          <TouchableOpacity
+            style={styles.formGroupHeader}
+            onPress={() => setEditField(editField === "email" ? null : "email")}
+          >
+            <Ionicons name="mail" size={20} color="#007bff" />
             <ThemedText type="label" style={styles.label}>
               Email
             </ThemedText>
-            <ThemedText style={styles.valueText}>{user.email}</ThemedText>
           </TouchableOpacity>
           {editField === "email" && (
             <TextInput
@@ -175,12 +184,15 @@ const EditProfile = () => {
         </View>
 
         <View style={styles.formGroup}>
-          <TouchableOpacity onPress={() => setEditField("phone_number")}>
+          <TouchableOpacity
+            style={styles.formGroupHeader}
+            onPress={() =>
+              setEditField(editField === "phone_number" ? null : "phone_number")
+            }
+          >
+            <Ionicons name="call" size={20} color="#007bff" />
             <ThemedText type="label" style={styles.label}>
               Phone Number
-            </ThemedText>
-            <ThemedText style={styles.valueText}>
-              {user.phone_number}
             </ThemedText>
           </TouchableOpacity>
           {editField === "phone_number" && (
@@ -194,7 +206,13 @@ const EditProfile = () => {
         </View>
 
         <View style={styles.formGroup}>
-          <TouchableOpacity onPress={() => setEditField("password")}>
+          <TouchableOpacity
+            style={styles.formGroupHeader}
+            onPress={() =>
+              setEditField(editField === "password" ? null : "password")
+            }
+          >
+            <Ionicons name="lock-closed" size={20} color="#007bff" />
             <ThemedText type="label" style={styles.label}>
               Change Password
             </ThemedText>
@@ -260,10 +278,15 @@ const styles = StyleSheet.create({
   formGroup: {
     marginBottom: 15,
   },
+  formGroupHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 5,
+  },
   label: {
     fontSize: 14,
     color: "#495057",
-    marginBottom: 5,
+    marginLeft: 10,
   },
   valueText: {
     fontSize: 16,
