@@ -134,7 +134,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
         placeholder="Enter price"
         keyboardType="numeric"
       />
-      <Text style={styles.label}>Admin Fee: ${adminFee}</Text>
+      <Text style={styles.label}>Admin Fee: {adminFee} DT</Text>
 
       <Text style={styles.label}>Address:</Text>
       <TextInput
@@ -193,7 +193,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
           ))}
       </Picker>
 
-      <Text style={styles.label}>Size (sq m):</Text>
+      <Text style={styles.label}>Size (m²):</Text>
       <TextInput
         style={styles.input}
         value={propertyData.size.toString()}

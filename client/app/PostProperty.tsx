@@ -249,7 +249,7 @@ const handleSubmit = async () => {
   const adminFee = propertyData.price * 0.01;
   Alert.alert(
     "Confirmation",
-    `Are you sure you want to post this property? The admin fee is $${adminFee}.`,
+    `Are you sure you want to post this property? The admin fee is ${adminFee} DT.`,
     [
       {
         text: "Cancel",
