@@ -127,12 +127,14 @@ const PostProperty = () => {
       }
     
   } else {
-      console.log("User document does not exist!");
+      console.log("No data found for the user!");
     }
-  }else {
+  }
+   else {
     console.log("No user is signed in!");
   }
-};
+} 
+
 
   useEffect(() => {
     fetchUserId();
