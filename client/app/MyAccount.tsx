@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Text,
+  Alert
 } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { useRouter } from "expo-router";
@@ -22,6 +23,7 @@ interface User {
   phone_number: string;
   image: string;
   notification: { id: string; message: string }[]; // Replace with a more specific type if available
+  isPremium: boolean;
 }
 
 const MyAccount = () => {
@@ -125,6 +127,25 @@ const MyAccount = () => {
           style={styles.sectionButton}
           onPress={() => router.push("/MyProperties")}
         >
+
+<Ionicons name="person" size={20} color="#007bff" />
+          <ThemedText style={styles.sectionButtonText}>Edit Profile</ThemedText>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.sectionButton}
+          onPress={() => {
+            if (user?.isPremium) {
+              router.push("/PostProperty");
+            } else {Alert
+              .alert(
+                "Upgrade Required",
+                "You need a premium account to post properties. Please upgrade your account.",
+                [{ text: "OK" }]
+              );
+            }
+          }}
+        >
+
           <Ionicons name="home" size={20} color="#007bff" />
           <ThemedText style={styles.sectionButtonText}>
             Manage My Properties
