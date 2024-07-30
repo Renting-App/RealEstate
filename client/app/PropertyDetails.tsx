@@ -140,7 +140,7 @@ const PropertyDetails: React.FC = () => {
               key={index}
               source={{ uri: image }}
               style={styles.image}
-              resizeMode="contain" // Use cover to ensure the image fills the container
+              resizeMode="contain"
             />
           ))}
         </ScrollView>
