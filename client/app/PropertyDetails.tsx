@@ -117,9 +117,9 @@ const PropertyDetails: React.FC = () => {
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.title}>{residenceData.title}</Text>
-          <Text style={styles.price}>${residenceData.price}</Text>
-          <Text style={styles.adminFee}>Admin Fee : {adminFee} DT</Text>
-          <TouchableOpacity onPress={toggleFavourite}>
+          <Text style={styles.price}>{residenceData.price} DT</Text>
+          <Text style={styles.adminFee}>Admin Fee: {adminFee} DT</Text>
+          <TouchableOpacity onPress={toggleFavourite} style={styles.favouriteButton}>
             <Ionicons
               name={isFavourite ? "heart" : "heart-outline"}
               size={24}
@@ -127,45 +127,43 @@ const PropertyDetails: React.FC = () => {
             />
           </TouchableOpacity>
         </View>
-        <View style={styles.imageWrapper}>
-          <ScrollView
-            horizontal
-            pagingEnabled
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.imageContainer}
-          >
-            {residenceData.images &&
-              residenceData.images.map((image, index) => (
-                <Image
-                  key={index}
-                  source={{ uri: image }}
-                  style={styles.image}
-                  resizeMode="contain"
-                />
-              ))}
-          </ScrollView>
-        </View>
-
+         
+      <View style={styles.imageWrapper}>
+        <ScrollView
+          horizontal
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.imageContainer}
+        >
+          {residenceData.images && residenceData.images.map((image, index) => (
+            <Image
+              key={index}
+              source={{ uri: image }}
+              style={styles.image}
+              resizeMode="contain"
+            />
+          ))}
+        </ScrollView>
+      </View>
+  
         <View style={styles.details}>
           <View style={styles.detailItem}>
-            <Ionicons name="resize" size={24} color="white" />
+            <Ionicons name="resize" size={24} color="#ffffff" />
             <Text style={styles.detailText}>{residenceData.size} m²</Text>
           </View>
           <View style={styles.detailItem}>
-            <Ionicons name="bed" size={24} color="white" />
+            <Ionicons name="bed" size={24} color="#ffffff" />
             <Text style={styles.detailText}>{residenceData.rooms} Rooms</Text>
           </View>
           <View style={styles.detailItem}>
-            <Ionicons name="water" size={24} color="white" />
-            <Text style={styles.detailText}>
-              {residenceData.bathrooms} Bathrooms
-            </Text>
+            <Ionicons name="water" size={24} color="#ffffff" />
+            <Text style={styles.detailText}>{residenceData.bathrooms} Bathrooms</Text>
           </View>
         </View>
-
+  
         <Text style={styles.description}>{residenceData.description}</Text>
         <Text style={styles.address}>Address: {residenceData.address}</Text>
-
+  
         <View style={styles.amenities}>
           <Text style={styles.amenitiesTitle}>Amenities</Text>
           <View style={styles.amenitiesList}>
@@ -174,17 +172,13 @@ const PropertyDetails: React.FC = () => {
                 <View key={key} style={styles.amenity}>
                   <Ionicons
                     name={
-                      residenceData.amenities[
-                        key as keyof Property["amenities"]
-                      ]
+                      residenceData.amenities[key as keyof Property["amenities"]]
                         ? "checkbox"
                         : "square-outline"
                     }
                     size={24}
                     color={
-                      residenceData.amenities[
-                        key as keyof Property["amenities"]
-                      ]
+                      residenceData.amenities[key as keyof Property["amenities"]]
                         ? "#4CAF50"
                         : "#ccc"
                     }
@@ -193,7 +187,7 @@ const PropertyDetails: React.FC = () => {
                     name={amenityIcons[key as keyof Property["amenities"]]}
                     size={24}
                     color="#666"
-                    style={{ marginLeft: 8 }}
+                    style={styles.amenityIcon}
                   />
                   <Text style={styles.amenityText}>
                     {key.replace("_", " ")}
@@ -202,7 +196,7 @@ const PropertyDetails: React.FC = () => {
               ))}
           </View>
         </View>
-
+  
         {residenceData.map?.latitude && residenceData.map?.longitude && (
           <View style={styles.mapContainer}>
             <MapView
@@ -225,7 +219,7 @@ const PropertyDetails: React.FC = () => {
             </MapView>
           </View>
         )}
-
+  
         <Button
           title="Request a Tour"
           onPress={() => {
@@ -233,133 +227,139 @@ const PropertyDetails: React.FC = () => {
               residence: JSON.stringify(residenceData),
             });
           }}
+          color="#4CAF50"
+         
         />
       </View>
     </ScrollView>
   );
-};
+}
+  const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
+  
+  const styles = StyleSheet.create({
+    scrollContainer: {
+      flexGrow: 1,
+      paddingVertical: 20,
+      paddingHorizontal: 16,
+      backgroundColor: "#f7f7f7",
+    },
+    container: {
+      padding: 15,
+      backgroundColor: "#ffffff",
+      flex: 1,
+      borderRadius: 10,
+      margin: 4,
+      shadowColor: "#000000",
+      shadowOpacity: 0.1,
+      shadowOffset: { width: 0, height: 2 },
+      shadowRadius: 8,
+      elevation: 5,
+    },
+    header: {
+      marginBottom: 20,
+    },
+    title: {
+      fontSize: 24,
+      fontWeight: "bold",
+      color: "#333333",
+    },
+    price: {
+      fontSize: 24,
+      fontWeight: "bold",
+      color: "#4CAF50",
+    },
+    adminFee: {
+      fontSize: 16,
+      color: "#FF5722",
+      marginTop: 5,
+    },
+    favouriteButton: {
+      marginTop: 10,
+    },
+    imageWrapper: {
+      height: screenHeight * 0.4,
+      marginBottom: 10,
+    },
+    imageContainer: {
+      display:'flex',
+      flexDirection: "row",
+      
+    },
+    image: {
+      width: screenWidth-70 ,
+      height: screenHeight * 0.4,
+      margin :2
+    },
+    details: {
+      flexDirection: "row",
+      justifyContent: "space-evenly",
+      marginBottom: 20,
+    },
+    detailItem: {
+      flexDirection: "row",
+      alignItems: "center",
+      backgroundColor: "#4CAF50",
+      borderRadius: 5,
+      margin: 10,
+      padding:5
+    },
+    detailText: {
+      fontSize: 16,
+      color: "#ffffff",
+      marginLeft: 5,
+    },
+    description: {
+      fontSize: 16,
+      color: "#666666",
+      marginBottom: 20,
+    },
+    address: {
+      fontSize: 16,
+      fontWeight: "bold",
+      color: "#333333",
+      marginBottom: 20,
+    },
+    amenities: {
+      marginBottom: 20,
+    },
+    amenitiesTitle: {
+      fontSize: 20,
+      fontWeight: "bold",
+      color: "#333333",
+      marginBottom: 10,
+    },
+    amenitiesList: {
+      flexDirection: "row",
+      flexWrap: "wrap",
+    },
+    amenity: {
+      flexDirection: "row",
+      alignItems: "center",
+      marginRight: 15,
+      marginBottom: 10,
+    },
+    amenityIcon: {
+      marginLeft: 8,
+    },
+    amenityText: {
+      fontSize: 14,
+      color: "#666666",
+      marginLeft: 5,
+      textTransform: "capitalize",
+    },
+    mapContainer: {
+      height: 300,
+      borderRadius: 10,
+      overflow: "hidden",
+      marginTop: 20,
+      marginBottom: 20,
+    },
+    map: {
+      ...StyleSheet.absoluteFillObject,
+    },
+    button: {
+      marginTop: 20,
+    },
+  });
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
-
-const styles = StyleSheet.create({
-  scrollContainer: {
-    flexGrow: 1,
-    paddingVertical: 20,
-    paddingHorizontal: 16,
-    backgroundColor: "#f7f7f7",
-  },
-  container: {
-    padding: 14,
-    backgroundColor: "#fff",
-    flex: 1,
-    borderRadius: 10,
-    margin: 4,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 8,
-    elevation: 5,
-  },
-  header: {
-    flexDirection: "column",
-    justifyContent: "flex-start",
-    alignItems: "flex-start",
-    marginBottom: 20,
-    marginTop: 45,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#333",
-  },
-  price: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#4CAF50",
-  },
-  adminFee: {
-    fontSize: 16,
-    color: "#FF5722",
-    marginTop: 5,
-  },
-  imageWrapper: {
-    height: screenHeight * 0.4,
-    marginBottom: 20,
-  },
-  imageContainer: {
-    flexGrow: 1,
-    alignItems: "center",
-  },
-  image: {
-    width: screenWidth - 32,
-    height: screenHeight * 0.4,
-    marginBottom: 10,
-    borderRadius: 10,
-  },
-  details: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 20,
-    marginTop: 20,
-  },
-  detailItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#4CAF50",
-    borderRadius: 5,
-    padding: 10,
-  },
-  detailText: {
-    fontSize: 16,
-    color: "white",
-    marginLeft: 5,
-  },
-  description: {
-    fontSize: 16,
-    color: "#666",
-    marginBottom: 20,
-  },
-  address: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#333",
-    marginBottom: 20,
-  },
-  amenities: {
-    marginBottom: 20,
-  },
-  amenitiesTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#333",
-    marginBottom: 10,
-  },
-  amenitiesList: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-  },
-  amenity: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginRight: 15,
-    marginBottom: 10,
-  },
-  amenityText: {
-    fontSize: 14,
-    color: "#666",
-    marginLeft: 5,
-    textTransform: "capitalize",
-  },
-  mapContainer: {
-    height: 200,
-    borderRadius: 10,
-    overflow: "hidden",
-    marginTop: 20,
-    marginBottom: 20,
-  },
-  map: {
-    ...StyleSheet.absoluteFillObject,
-  },
-});
-
-export default PropertyDetails;
+  export default PropertyDetails;

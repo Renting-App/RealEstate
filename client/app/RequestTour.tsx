@@ -229,6 +229,8 @@ const styles = StyleSheet.create({
   messageInput: {
     height: 100,
     textAlignVertical: "top",
+    marginTop:30,
+    paddingTop:20
   },
   datesContainer: {
     marginTop: 16,

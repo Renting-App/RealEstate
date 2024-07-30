@@ -8,7 +8,7 @@ import {
   StyleSheet,
   Text,
 } from "react-native";
-import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import { useNavigation} from "@react-navigation/native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -91,20 +91,6 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
     fetchResidences();
   }, []);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      fetchResidences();
-    }, [])
-  );
-
-  useEffect(() => {
-    handleSearch();
-  }, [searchQuery]);
-
-  useEffect(() => {
-    filterResidences(residences, criteria);
-  }, [criteria, residences]);
-
   const fetchResidences = () => {
     setLoading(true);
     fetch("http://192.168.1.13:5800/houses")
@@ -137,6 +123,8 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
         }));
         setResidences(mappedResidences);
         filterResidences(mappedResidences, criteria);
+        console.log('f',filteredResidences);
+        
         setLoading(false);
       })
       .catch((error) => {
@@ -212,7 +200,7 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
       <Image
         source={{ uri: item.images[0] }}
         style={styles.image}
-        resizeMode="cover"
+        resizeMode="contain"
       />
       <ThemedText type="subtitle" style={styles.title}>
         {item.title}
@@ -398,7 +386,7 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: "#fff",
     borderRadius: 8,
-    marginBottom: 15,
+    marginBottom: 10,
     padding: 10,
     elevation: 2,
     shadowColor: "#000",
@@ -426,10 +414,11 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   image: {
-    width: "100%",
-    height: 150,
+    width: "90%",
+    height: 200,
     borderRadius: 4,
     marginBottom: 10,
+    alignSelf:"center"
   },
   title: {
     fontSize: 18,

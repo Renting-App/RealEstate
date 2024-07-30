@@ -91,7 +91,7 @@ const MyProperties: React.FC = () => {
   const handleDelete = async (_id: string) => {
     try {
       const response = await fetch(
-        `http://192.168.1.105:5800/deletehouse/${_id}`,
+        `http://192.168.1.13:5800/deletehouse/${_id}`,
         {
           method: "DELETE",
         }
