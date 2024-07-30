@@ -24,6 +24,7 @@ const PostProperty = () => {
   const [selectedDates, setSelectedDates] = useState<string[]>([]);
   const [showCalendar, setShowCalendar] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isPremium, setIsPremium] = useState(false);
   const [map, setMap] = useState<{
     latitude: number;
     longitude: number;
@@ -31,6 +32,8 @@ const PostProperty = () => {
   const mapRef = useRef(null);
   const [suggestions, setSuggestions] = useState<any[]>([]);
   const [showMap, setShowMap] = useState(false);
+  
+
 
   interface Property {
     address: string;
@@ -49,6 +52,7 @@ const PostProperty = () => {
     price: number;
     bathrooms: number;
     visits: string[];
+    isPremium:boolean;
     amenities: {
       parking: boolean;
       ac: boolean;
@@ -84,6 +88,7 @@ const PostProperty = () => {
     price: 0,
     bathrooms: 0,
     visits: [],
+    isPremium:false,
     amenities: {
       parking: false,
       ac: false,
@@ -110,15 +115,24 @@ const PostProperty = () => {
       const userDocRef = doc(firestore, "users", currentUser.uid);
       const userDoc = await getDoc(userDocRef);
       if (userDoc.exists()) {
+        const userData = userDoc.data(); 
+
+         if (userData) {
         setPropertyData((prevData) => ({
           ...prevData,
           iduser: currentUser.uid,
         }));
+
+        setIsPremium(userData.isPremium || false);
       }
-    } else {
-      console.log("No user is signed in!");
+    
+  } else {
+      console.log("User document does not exist!");
     }
-  };
+  }else {
+    console.log("No user is signed in!");
+  }
+};
 
   useEffect(() => {
     fetchUserId();
@@ -236,6 +250,13 @@ const PostProperty = () => {
   };
 
   const handleSubmit = async () => {
+    if (!isPremium) {
+      Alert.alert(
+        "Upgrade Required",
+        "Only premium users can post properties. Please upgrade your account."
+      );
+      return;
+    }
     const adminFee = propertyData.price * 0.01;
     Alert.alert(
       "Confirmation",
