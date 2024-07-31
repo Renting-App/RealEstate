@@ -9,8 +9,10 @@ import {
   StyleSheet,
   Text,
 } from "react-native";
-import { useNavigation} from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "./_layout";
@@ -19,11 +21,6 @@ import { ThemedView } from "@/components/ThemedView";
 import DrawerContent from "@/app/DrawerContent";
 import Search from "./Search";
 import Pagination from "./Pagination";
-import {
-  FlingGestureHandler,
-  Directions,
-  State,
-} from "react-native-gesture-handler";
 
 type HousesScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -34,7 +31,7 @@ type HousesScreenProps = {
   route: RouteProp<RootStackParamList, "HousesScreen">;
 };
 
-const itemsPerPage = 3;
+const itemsPerFetch = 3;
 
 interface Residence {
   _id: string;
@@ -78,13 +75,16 @@ interface Residence {
 
 const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
   const { criteria = {} } = route.params || {};
-  // console.log("Received criteria:", criteria); // Debugging
   const [residences, setResidences] = useState<Residence[]>([]);
   const [loading, setLoading] = useState(true);
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredResidences, setFilteredResidences] = useState<Residence[]>([]);
+  const [displayedResidences, setDisplayedResidences] = useState<Residence[]>(
+    []
+  );
+  const [showPagination, setShowPagination] = useState(false);
 
   const navigation = useNavigation<HousesScreenNavigationProp>();
 
@@ -123,9 +123,8 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
           map: residence.map ?? {},
         }));
         setResidences(mappedResidences);
-        filterResidences(mappedResidences, criteria);
-        console.log('f',filteredResidences);
-        
+        setFilteredResidences(mappedResidences);
+        setDisplayedResidences(mappedResidences.slice(0, itemsPerFetch));
         setLoading(false);
       })
       .catch((error) => {
@@ -135,48 +134,61 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
   };
 
   const filterResidences = (residences: Residence[], criteria: any) => {
-    // console.log("Filtering with criteria:", criteria); // Debugging
     const filtered = residences.filter((residence) => {
-      const meetsCategory = !criteria.category || residence.category === criteria.category;
-      const meetsLocation = !criteria.location || residence.location === criteria.location;
-      const meetsSubLocation = !criteria.subLocation || residence.subLocation === criteria.subLocation;
-      const meetsOperation = !criteria.operation || residence.operation === criteria.operation;
-      const meetsPriceMax = !criteria.priceMax || parseFloat(residence.price) <= parseFloat(criteria.priceMax);
-      const meetsPriceMin = !criteria.priceMin || parseFloat(residence.price) >= parseFloat(criteria.priceMin);
+      const meetsCategory =
+        !criteria.category || residence.category === criteria.category;
+      const meetsLocation =
+        !criteria.location || residence.location === criteria.location;
+      const meetsSubLocation =
+        !criteria.subLocation || residence.subLocation === criteria.subLocation;
+      const meetsOperation =
+        !criteria.operation || residence.operation === criteria.operation;
+      const meetsPriceMax =
+        !criteria.priceMax ||
+        parseFloat(residence.price) <= parseFloat(criteria.priceMax);
+      const meetsPriceMin =
+        !criteria.priceMin ||
+        parseFloat(residence.price) >= parseFloat(criteria.priceMin);
 
-      // console.log(`Residence: ${residence.title}`, {
-      //   meetsCategory,
-      //   meetsLocation,
-      //   meetsSubLocation,
-      //   meetsOperation,
-      //   meetsPriceMax,
-      //   meetsPriceMin
-      // }); // Debugging
-
-      return meetsCategory && meetsLocation && meetsSubLocation && meetsOperation && meetsPriceMax && meetsPriceMin;
+      return (
+        meetsCategory &&
+        meetsLocation &&
+        meetsSubLocation &&
+        meetsOperation &&
+        meetsPriceMax &&
+        meetsPriceMin
+      );
     });
-    // console.log("Filtered Residences:", filtered); // Debugging
     setFilteredResidences(filtered);
+    setDisplayedResidences(filtered.slice(0, itemsPerFetch));
   };
 
-
-  const handleSearch = () => {
-    if (searchQuery === "") {
+  const handleSearch = (query: string) => {
+    if (query === "") {
       setFilteredResidences(residences);
+      setDisplayedResidences(residences.slice(0, itemsPerFetch));
     } else {
       const filteredData = residences.filter((residence) =>
-        residence.title.toLowerCase().includes(searchQuery.toLowerCase())
+        residence.title.toLowerCase().includes(query.toLowerCase())
       );
       setFilteredResidences(filteredData);
+      setDisplayedResidences(filteredData.slice(0, itemsPerFetch));
     }
     setCurrentPage(1);
   };
 
-  const totalPages = Math.ceil(filteredResidences.length / itemsPerPage);
-
   const handlePageChange = (page: number) => {
-    if (page > 0 && page <= totalPages) {
-      setCurrentPage(page);
+    setCurrentPage(page);
+    const start = (page - 1) * itemsPerFetch;
+    const end = start + itemsPerFetch;
+    setDisplayedResidences(filteredResidences.slice(start, end));
+  };
+
+  const handleShowMore = () => {
+    const newDisplayedCount = displayedResidences.length + itemsPerFetch;
+    setDisplayedResidences(filteredResidences.slice(0, newDisplayedCount));
+    if (newDisplayedCount >= 9) {
+      setShowPagination(true);
     }
   };
 
@@ -186,8 +198,25 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
     });
   };
 
+  const handleFilterPress = () => {
+    navigation.navigate("FilterComponent");
+  };
+
+  const handleRentPress = () => {
+    const rentCriteria = { ...criteria, operation: "rent" };
+    filterResidences(residences, rentCriteria);
+  };
+
+  const handleSalePress = () => {
+    const saleCriteria = { ...criteria, operation: "sale" };
+    filterResidences(residences, saleCriteria);
+  };
+
   const renderItem = ({ item }: { item: Residence }) => (
-    <ThemedView style={styles.card}>
+    <TouchableOpacity
+      style={styles.card}
+      onPress={() => handleDetailsPress(item)}
+    >
       <View
         style={[
           styles.typeContainer,
@@ -201,26 +230,42 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
       <Image
         source={{ uri: item.images[0] }}
         style={styles.image}
-        resizeMode="contain"
+        resizeMode="cover"
       />
-      <ThemedText type="subtitle" style={styles.title}>
-        {item.title}
-      </ThemedText>
-
-      <ThemedText type="default" style={styles.price}>
-        Price: {item.price}DT
-      </ThemedText>
-      <ThemedText type="default" style={styles.contact}>
-        Address: {item.address}
-      </ThemedText>
-      <TouchableOpacity
-        style={styles.detailsButton}
-        onPress={() => handleDetailsPress(item)}
-      >
-        <Ionicons name="information-circle-outline" size={24} color="#fff" />
-        <Text style={styles.detailsButtonText}>Details</Text>
-      </TouchableOpacity>
-    </ThemedView>
+      <View style={styles.cardContent}>
+        <View style={styles.titleContainer}>
+          <ThemedText type="subtitle" style={styles.title}>
+            {item.title}
+          </ThemedText>
+          <ThemedText type="default" style={styles.price}>
+            {item.price} DT
+          </ThemedText>
+        </View>
+        <ThemedText type="default" style={styles.address}>
+          {item.address}
+        </ThemedText>
+        <View style={styles.detailsContainer}>
+          <View style={styles.detailItem}>
+            <MaterialCommunityIcons name="resize" size={16} color="#666" />
+            <ThemedText type="default" style={styles.detailText}>
+              {item.size} m²
+            </ThemedText>
+          </View>
+          <View style={styles.detailItem}>
+            <Ionicons name="bed" size={16} color="#666" />
+            <ThemedText type="default" style={styles.detailText}>
+              {item.rooms} Rooms
+            </ThemedText>
+          </View>
+          <View style={styles.detailItem}>
+            <Ionicons name="water" size={16} color="#666" />
+            <ThemedText type="default" style={styles.detailText}>
+              {item.bathrooms} Bathrooms
+            </ThemedText>
+          </View>
+        </View>
+      </View>
+    </TouchableOpacity>
   );
 
   if (loading) {
@@ -234,98 +279,92 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
   }
 
   return (
-    <FlingGestureHandler
-      direction={Directions.LEFT}
-      onHandlerStateChange={({ nativeEvent }) => {
-        if (nativeEvent.state === State.END) {
-          handlePageChange(currentPage + 1);
-        }
-      }}
-    >
-      <FlingGestureHandler
-        direction={Directions.RIGHT}
-        onHandlerStateChange={({ nativeEvent }) => {
-          if (nativeEvent.state === State.END) {
-            handlePageChange(currentPage - 1);
-          }
-        }}
-      >
-        <View style={{ flex: 1 }}>
+    <View style={{ flex: 1 }}>
+      <DrawerContent
+        isVisible={isSidebarVisible}
+        onClose={() => setIsSidebarVisible(false)}
+        navigation={navigation}
+      />
+      <FlatList
+        ListHeaderComponent={
           <ThemedView style={styles.container}>
-            <DrawerContent
-              isVisible={isSidebarVisible}
-              onClose={() => setIsSidebarVisible(false)}
-              navigation={navigation}
-            />
             <View style={styles.header}>
               <TouchableOpacity onPress={() => setIsSidebarVisible(true)}>
                 <Ionicons name="menu" style={styles.menuIcon} size={24} />
               </TouchableOpacity>
-              <ThemedText
-                type="title"
-                style={[
-                  styles.bgContainer,
-                  {
-                    fontSize: 22,
-                    fontWeight: "bold",
-                    color: "#333",
-                    textTransform: "uppercase",
-                    letterSpacing: 1,
-                  },
-                ]}
-              >
-                Rent&Sell
-              </ThemedText>
-            </View>
-            <View style={styles.banner}>
-              <Image
-                source={require("../assets/images/banner01.jpg")}
-                style={styles.bannerImage}
-              />
-              <View style={styles.bannerOverlay} />
-              <View style={styles.bannerContent}>
-                <ThemedText type="title" style={styles.bannerTitle}>
-                  Discover Your New Home
-                </ThemedText>
-                <ThemedText type="subtitle" style={styles.bannerSubtitle}>
-                  Helping 100 thousand renters and sellers
-                </ThemedText>
-                <View style={styles.searchContainer}>
-                  <Search
-                    searchQuery={searchQuery}
-                    setSearchQuery={setSearchQuery}
-                    onSearch={handleSearch}
-                  />
-                </View>
+              <View style={styles.profileContainer}>
+                <Text style={styles.profileName}>John Doe</Text>
+                <Image
+                  source={{ uri: "https://via.placeholder.com/40" }}
+                  style={styles.profileImage}
+                />
               </View>
             </View>
-            {filteredResidences.length === 0 ? (
-              <ThemedText 
-              // style={styles.noDataText}
+            <View style={styles.searchContainer}>
+              <Search
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+                onSearch={handleSearch}
+                placeholder="Search properties"
+                style={styles.searchInput}
+              />
+              <TouchableOpacity onPress={handleFilterPress}>
+                <FontAwesome
+                  name="sliders"
+                  size={24}
+                  color="#333"
+                  style={styles.filterIcon}
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.filterContainer}>
+              <TouchableOpacity
+                style={styles.filterCard}
+                onPress={handleRentPress}
               >
-                No matching properties found.
-              </ThemedText>
-            ) : (
-              <>
-                <FlatList
-                  data={filteredResidences.slice(
-                    (currentPage - 1) * itemsPerPage,
-                    currentPage * itemsPerPage
-                  )}
-                  renderItem={renderItem}
-                  keyExtractor={(item) => item._id}
+                <Image
+                  source={{
+                    uri: "https://st4.depositphotos.com/1002256/21825/i/380/depositphotos_218252750-stock-photo-real-estate-rent-concept-old.jpg",
+                  }}
+                  style={styles.filterCardImage}
                 />
-                <Pagination
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  onPageChange={handlePageChange}
+                <Text style={styles.filterCardText}>For Rent</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.filterCard}
+                onPress={handleSalePress}
+              >
+                <Image
+                  source={{
+                    uri: "https://st.depositphotos.com/1194063/2151/i/380/depositphotos_21515189-stock-photo-agent-with-house-model-and.jpg",
+                  }}
+                  style={styles.filterCardImage}
                 />
-              </>
-            )}
+                <Text style={styles.filterCardText}>For Sale</Text>
+              </TouchableOpacity>
+            </View>
           </ThemedView>
-        </View>
-      </FlingGestureHandler>
-    </FlingGestureHandler>
+        }
+        data={displayedResidences}
+        renderItem={renderItem}
+        keyExtractor={(item) => item._id}
+        ListFooterComponent={
+          displayedResidences.length < filteredResidences.length ? (
+            <TouchableOpacity
+              style={styles.showMoreButton}
+              onPress={handleShowMore}
+            >
+              <Text style={styles.showMoreText}>Show More</Text>
+            </TouchableOpacity>
+          ) : null
+        }
+        onScroll={(e) => {
+          const offsetY = e.nativeEvent.contentOffset.y;
+          setShowPagination(offsetY > 200 && displayedResidences.length >= 9);
+        }}
+        ListFooterComponentStyle={styles.footer}
+      />
+    </View>
   );
 };
 
@@ -341,60 +380,78 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   menuIcon: {
-    marginLeft: 10,
     color: "#333",
   },
-  bgContainer: {
-    marginRight: 10,
+  profileContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  profileImage: {
+    width: 45,
+    height: 45,
+    borderRadius: 20,
     marginLeft: 10,
   },
-  banner: {
-    height: 200,
-    marginBottom: 10,
-    position: "relative",
-  },
-  bannerImage: {
-    width: "100%",
-    height: "100%",
-  },
-  bannerOverlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-  },
-  bannerContent: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    padding: 20,
-    alignItems: "center",
-  },
-  bannerTitle: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#fff",
-  },
-  bannerSubtitle: {
+  profileName: {
     fontSize: 16,
-    color: "#fff",
-    marginVertical: 5,
+    color: "#333",
   },
   searchContainer: {
-    marginTop: 15,
-    width: "100%",
+    flexDirection: "row",
     alignItems: "center",
+    paddingHorizontal: 10,
+    marginBottom: 10,
   },
-  card: {
+  searchInput: {
+    backgroundColor: "#fff",
+    flex: 1,
+    borderRadius: 5,
+    padding: 8,
+    marginRight: 10,
+  },
+  filterIcon: {
+    marginLeft: 10,
+  },
+  filterContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 10,
+    marginBottom: 10,
+  },
+  filterCard: {
+    flex: 1,
     backgroundColor: "#fff",
     borderRadius: 8,
-    marginBottom: 10,
-    padding: 10,
+    overflow: "hidden",
+    marginHorizontal: 5,
+    alignItems: "center",
     elevation: 2,
     shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 8,
+  },
+  filterCardImage: {
+    width: "100%",
+    height: 100,
+  },
+  filterCardText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    padding: 10,
+  },
+  card: {
+    backgroundColor: "#fff",
+    borderRadius: 8,
+    marginBottom: 10,
     overflow: "hidden",
+    elevation: 4,
+    shadowColor: "#000",
+    shadowOpacity: 0.2,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 8,
+    width: "90%",
+    alignSelf: "center",
   },
   typeContainer: {
     borderRadius: 4,
@@ -415,39 +472,42 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   image: {
-    width: "90%",
-    height: 200,
-    borderRadius: 4,
-    marginBottom: 10,
-    alignSelf:"center"
+    width: "100%",
+    height: 150,
+  },
+  cardContent: {
+    padding: 10,
+  },
+  titleContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   title: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "bold",
   },
   price: {
-    fontSize: 16,
+    fontSize: 14,
     color: "#666",
   },
-  contact: {
+  address: {
     fontSize: 14,
     color: "#999",
-    marginBottom: 10,
+    marginVertical: 5,
   },
-  detailsButton: {
+  detailsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  detailItem: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#007bff",
-    paddingVertical: 10,
-    borderRadius: 5,
-    marginTop: 10,
-    elevation: 3,
+    marginRight: 10,
   },
-  detailsButtonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold",
+  detailText: {
+    fontSize: 12,
+    color: "#666",
     marginLeft: 5,
   },
   noDataText: {
@@ -455,6 +515,18 @@ const styles = StyleSheet.create({
     marginTop: 20,
     fontSize: 18,
     color: "#666",
+  },
+  showMoreButton: {
+    padding: 15,
+    alignItems: "center",
+  },
+  showMoreText: {
+    color: "#007BFF",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  footer: {
+    padding: 20,
   },
 });
 

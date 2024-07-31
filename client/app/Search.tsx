@@ -6,13 +6,13 @@ import { ThemedView } from "@/components/ThemedView";
 interface Props {
   searchQuery: string;
   setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
-  onSearch: () => void;
+  onSearch: (query: string) => void;
 }
 
 const Search: React.FC<Props> = ({ searchQuery, setSearchQuery, onSearch }) => {
   const handleSearch = (query: string) => {
     setSearchQuery(query);
-    onSearch();
+    onSearch(query);
   };
 
   return (
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#cccccccc",
+    backgroundColor: "#E8E8E8",
     borderRadius: 6,
     paddingVertical: 8,
     paddingHorizontal: 16,
