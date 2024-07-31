@@ -21,7 +21,7 @@ import { ThemedView } from "@/components/ThemedView";
 import DrawerContent from "@/app/DrawerContent";
 import Search from "./Search";
 import Pagination from "./Pagination";
-
+import Profile from "./Profile";
 type HousesScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
   "HousesScreen"
@@ -293,11 +293,7 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
                 <Ionicons name="menu" style={styles.menuIcon} size={24} />
               </TouchableOpacity>
               <View style={styles.profileContainer}>
-                <Text style={styles.profileName}>John Doe</Text>
-                <Image
-                  source={{ uri: "https://via.placeholder.com/40" }}
-                  style={styles.profileImage}
-                />
+               <Profile/>
               </View>
             </View>
             <View style={styles.searchContainer}>
