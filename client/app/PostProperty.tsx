@@ -259,7 +259,7 @@ const PostProperty = () => {
       );
       return;
     }
-    const adminFee = propertyData.price * 0.01;
+    const adminFee = propertyData.price * 0.05;
     Alert.alert(
       "Confirmation",
       `Are you sure you want to post this property? The admin fee is ${adminFee} DT.`,
@@ -469,29 +469,29 @@ const PostProperty = () => {
 
   return (
     <View style={styles.container}>
-      <PropertyForm
-        propertyData={propertyData}
-        handleInputChange={handleInputChange}
-        toggleCheckbox={toggleCheckbox}
-        handleImageSelection={handleImageSelection}
-        getMarkedDates={getMarkedDates}
-        handleDayPress={handleDayPress}
-        showCalendar={showCalendar}
-        setShowCalendar={setShowCalendar}
-        handleQueryChange={handleQueryChange}
-        handleSuggestionSelect={handleSuggestionSelect}
-        suggestions={suggestions}
-        setSuggestions={setSuggestions}
-        handleSubmit={handleSubmit}
-        handleMapPress={handleMapPress}
-        handleUseCurrentLocation={handleUseCurrentLocation}
-        map={map}
-        mapRef={mapRef}
-        loading={loading}
-        showMap={showMap}
-        setShowMap={setShowMap}
-      />
-    </View>
+    <PropertyForm
+      propertyData={propertyData}
+      handleInputChange={handleInputChange}
+      toggleCheckbox={toggleCheckbox}
+      handleImageSelection={handleImageSelection}
+      getMarkedDates={getMarkedDates}
+      handleDayPress={handleDayPress}
+      showCalendar={showCalendar}
+      setShowCalendar={setShowCalendar}
+      handleQueryChange={handleQueryChange}
+      handleSuggestionSelect={handleSuggestionSelect}
+      suggestions={suggestions}
+      setSuggestions={setSuggestions}
+      handleSubmit={handleSubmit}
+      handleMapPress={handleMapPress}
+      handleUseCurrentLocation={handleUseCurrentLocation}
+      map={map}
+      mapRef={mapRef}
+      loading={loading}
+      showMap={showMap}
+      setShowMap={setShowMap}
+    />
+  </View>
   );
 };
 
