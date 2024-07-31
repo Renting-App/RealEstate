@@ -156,7 +156,7 @@ const PropertyDetails: React.FC = () => {
             <Text style={styles.detailText}>{residenceData.rooms} Rooms</Text>
           </View>
           <View style={styles.detailItem}>
-            <Ionicons name="water" size={24} color="#ffffff" />
+            <MaterialCommunityIcons name="toilet" size={24} color="#ffffff" />
             <Text style={styles.detailText}>{residenceData.bathrooms} Bathrooms</Text>
           </View>
         </View>

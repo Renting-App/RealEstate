@@ -17,6 +17,7 @@ import { RootStackParamList } from "./_layout";
 import { locations } from "./FilterComponent";
 import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
+import { API_BASE_URL } from "@/assets/IPaddress";
 
 type UpdatePropertyFormNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -236,7 +237,7 @@ const UpdatePropertyForm: React.FC<Props> = ({ route, navigation }) => {
       const { iduser, ...dataToUpdate } = propertyData;
 
       const response = await fetch(
-        `http://192.168.1.13:5800/houses/${propertyData.idhouses}`,
+        `${API_BASE_URL}/houses/${propertyData.idhouses}`,
         {
           method: "PUT",
           headers: {
