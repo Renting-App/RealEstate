@@ -1,5 +1,5 @@
 import React from "react";
-import { TextInput, StyleSheet } from "react-native";
+import { TextInput, StyleSheet, ViewStyle, TextStyle } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { ThemedView } from "@/components/ThemedView";
 
@@ -7,9 +7,11 @@ interface Props {
   searchQuery: string;
   setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
   onSearch: (query: string) => void;
+  placeholder: string;
+  style?: ViewStyle | TextStyle;
 }
 
-const Search: React.FC<Props> = ({ searchQuery, setSearchQuery, onSearch }) => {
+const Search: React.FC<Props> = ({ searchQuery, setSearchQuery, onSearch, placeholder, style }) => {
   const handleSearch = (query: string) => {
     setSearchQuery(query);
     onSearch(query);
@@ -19,8 +21,8 @@ const Search: React.FC<Props> = ({ searchQuery, setSearchQuery, onSearch }) => {
     <ThemedView style={styles.container}>
       <Ionicons name="search" size={24} color="black" style={styles.icon} />
       <TextInput
-        style={styles.input}
-        placeholder="Search for properties"
+        style={[styles.input, style]} // Combine default styles with the passed style
+        placeholder={placeholder}
         value={searchQuery}
         onChangeText={handleSearch}
       />

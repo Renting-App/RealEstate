@@ -59,11 +59,10 @@ export type RootStackParamList = {
   Maps: undefined;
   FilterComponent: undefined;
   adminPage: undefined;
-  PropertyDetails: any;
+  PropertyDetails: { residence: string };
   RequestTour: undefined;
   PostProperty: undefined;
   Favorite: undefined;
-  FilteredDataComponent: undefined;
   ManagePosts: undefined;
   PostDetail: { post: Residence };
   MyProperties: undefined;
@@ -73,7 +72,15 @@ export type RootStackParamList = {
   AccountCreated: undefined;
   NotificationDetails: undefined;
   NotificationList:undefined
-
+  FilteredDataComponent: { criteria: {
+    category: string;
+    location: string;
+    subLocation: string;
+    operation: string;
+    priceMin: string;
+    priceMax: string;
+    amenities: string[];
+  }};
 };
 
 const Stack = createStackNavigator<RootStackParamList>();

@@ -71,7 +71,7 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ navigation }) => {
   };
 
   const handleAmenityChange = (amenity: string) => {
-    const isSelected = selectedAmenities.includes(amenity.value);
+    const isSelected = selectedAmenities.includes(amenity);
     if (isSelected) {
       setSelectedAmenities(
         selectedAmenities.filter((item) => item !== amenity)
@@ -80,6 +80,7 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ navigation }) => {
       setSelectedAmenities([...selectedAmenities, amenity]);
     }
   };
+  
 
   const handleSubmit = () => {
     const criteria = {

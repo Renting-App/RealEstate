@@ -8,7 +8,11 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { RouteProp, useNavigation } from "@react-navigation/native";
-import { RootStackParamList } from "./_layout";
+import { API_BASE_URL } from "@/assets/IPaddress";
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from './_layout';
+
+type NavigationProp = StackNavigationProp<RootStackParamList, 'PropertyDetails'>;
 
 type FilteredDataComponentProps = {
   route: RouteProp<RootStackParamList, "FilteredDataComponent">;
@@ -30,34 +34,23 @@ export type Residence = {
   location: string;
   subLocation: string;
   amenities: {
-    join(arg0: string): React.ReactNode;
-    ac: boolean;
-    pool: boolean;
-    alarm: boolean;
-    garden: boolean;
-    parking: boolean;
-    furnished: boolean;
-    microwave: boolean;
-    beach_view: boolean;
-    near_subway: boolean;
+    [key: string]: boolean; // Allow dynamic property access
   };
 };
 
-const FilteredDataComponent: React.FC<FilteredDataComponentProps> = ({
-  route,
-}) => {
+const FilteredDataComponent: React.FC<FilteredDataComponentProps> = ({ route }) => {
   const { criteria } = route.params;
   const [residences, setResidences] = useState<Residence[]>([]);
   const [filteredResidences, setFilteredResidences] = useState<Residence[]>([]);
   const [loading, setLoading] = useState(true);
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp>();
 
   useEffect(() => {
     fetchResidences();
   }, []);
 
   const fetchResidences = () => {
-    fetch("http://192.168.1.13:5800/houses")
+    fetch(`${API_BASE_URL}/houses`)
       .then((response) => response.json())
       .then((data) => {
         const mappedResidences = data.map((residence: any) => ({
@@ -75,7 +68,17 @@ const FilteredDataComponent: React.FC<FilteredDataComponentProps> = ({
           category: residence.category ?? "",
           location: residence.location ?? "",
           subLocation: residence.subLocation ?? "",
-          amenities: residence.amenities ?? "",
+          amenities: residence.amenities ?? {
+            ac: false,
+            pool: false,
+            alarm: false,
+            garden: false,
+            parking: false,
+            furnished: false,
+            microwave: false,
+            beach_view: false,
+            near_subway: false,
+          },
         }));
         setResidences(mappedResidences);
         filterResidences(mappedResidences, criteria);
@@ -104,13 +107,18 @@ const FilteredDataComponent: React.FC<FilteredDataComponentProps> = ({
         !criteria.priceMin ||
         parseFloat(residence.price) >= parseFloat(criteria.priceMin);
 
+      const meetsAmenities = criteria.amenities.every((amenity: string) =>
+        residence.amenities[amenity] === true
+      );
+
       return (
         meetsCategory &&
         meetsLocation &&
         meetsSubLocation &&
         meetsOperation &&
         meetsPriceMax &&
-        meetsPriceMin
+        meetsPriceMin &&
+        meetsAmenities
       );
     });
     setFilteredResidences(filtered);

@@ -258,7 +258,7 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
             </ThemedText>
           </View>
           <View style={styles.detailItem}>
-            <Ionicons name="water" size={16} color="#666" />
+            <MaterialCommunityIcons name="toilet" size={16} color="#666" />
             <ThemedText type="default" style={styles.detailText}>
               {item.bathrooms} Bathrooms
             </ThemedText>
