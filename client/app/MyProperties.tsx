@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { API_BASE_URL } from "@/assets/IPaddress";
 import {
   View,
   FlatList,
@@ -62,7 +63,7 @@ const MyProperties: React.FC = () => {
 
   const fetchProperties = () => {
     setLoading(true);
-    fetch("http://192.168.1.13:5800/houses")
+    fetch(`${API_BASE_URL}/houses`)
       .then((response) => response.json())
       .then((data) => {
         const mappedProperties = data.map((property: any) => ({
@@ -91,7 +92,7 @@ const MyProperties: React.FC = () => {
   const handleDelete = async (_id: string) => {
     try {
       const response = await fetch(
-        `http://192.168.1.13:5800/deletehouse/${_id}`,
+        `${API_BASE_URL}/deletehouse/${_id}`,
         {
           method: "DELETE",
         }

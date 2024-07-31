@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { API_BASE_URL } from "@/assets/IPaddress";
 import {
   View,
   FlatList,
@@ -93,7 +94,7 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
 
   const fetchResidences = () => {
     setLoading(true);
-    fetch("http://192.168.1.13:5800/houses")
+    fetch(`${API_BASE_URL}/houses`)
       .then((response) => response.json())
       .then((data) => {
         const mappedResidences = data.map((residence: any) => ({

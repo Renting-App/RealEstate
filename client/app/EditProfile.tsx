@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
+  Image,
 } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { useRouter } from "expo-router";
@@ -19,16 +20,27 @@ import {
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { firestore } from "../config/firebase";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import * as ImagePicker from "expo-image-picker";
+
+interface User {
+  username: string;
+  password:string;
+  email: string;
+  phone_number: string;
+  image?: string; // Optional because the image may not be set
+}
 
 const EditProfile = () => {
-  const [user, setUser] = useState({
+  const [user, setUser] = useState<User>({
+    password:'',
     username: "",
     email: "",
     phone_number: "",
+    image: '', // Add this state for the profile image
   });
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [editField, setEditField] = useState(null);
+  const [error, setError] = useState<any>(null); // Use any or a more specific type if known
+  const [editField, setEditField] = useState<string | null>(null);
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -40,12 +52,10 @@ const EditProfile = () => {
       try {
         const currentUser = auth.currentUser;
         if (currentUser) {
-          console.log("Authenticated user ID: ", currentUser.uid);
           const userDocRef = doc(firestore, "users", currentUser.uid);
           const userDoc = await getDoc(userDocRef);
           if (userDoc.exists()) {
-            console.log("User document data: ", userDoc.data());
-            setUser(userDoc.data());
+            setUser(userDoc.data() as User); // Cast to User type
           } else {
             console.log("No such user document!");
           }
@@ -73,12 +83,12 @@ const EditProfile = () => {
         Alert.alert("Error", "New passwords do not match");
         return;
       }
-
+  
       try {
         const currentUser = auth.currentUser;
         if (currentUser && oldPassword) {
           const credential = EmailAuthProvider.credential(
-            currentUser.email,
+            currentUser.email!,
             oldPassword
           );
           await reauthenticateWithCredential(currentUser, credential);
@@ -92,10 +102,9 @@ const EditProfile = () => {
         return;
       }
     }
-
-    const updatedUser = { ...user };
-    delete updatedUser.password;
-
+  
+    const { password, ...updatedUser } = user; // Exclude password field
+  
     setLoading(true);
     try {
       const currentUser = auth.currentUser;
@@ -115,7 +124,21 @@ const EditProfile = () => {
       Alert.alert("Error", "Failed to update profile");
     }
   };
+  
 
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+  
+    if (!result.canceled && result.assets && result.assets.length > 0) {
+      setUser({ ...user, image: result.assets[0].uri });
+    }
+  };
+  
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
@@ -140,6 +163,17 @@ const EditProfile = () => {
         <ThemedText type="title" style={styles.title}>
           Edit Profile
         </ThemedText>
+
+        <TouchableOpacity
+          style={styles.imageContainer}
+          onPress={pickImage}
+        >
+          <Image
+            source={{ uri: user.image || 'https://via.placeholder.com/150' }}
+            style={styles.image}
+          />
+          <Ionicons name="camera" size={30} color="#007bff" style={styles.cameraIcon} />
+        </TouchableOpacity>
 
         <View style={styles.formGroup}>
           <TouchableOpacity
@@ -288,10 +322,20 @@ const styles = StyleSheet.create({
     color: "#495057",
     marginLeft: 10,
   },
-  valueText: {
-    fontSize: 16,
-    color: "#495057",
-    marginBottom: 10,
+  imageContainer: {
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  image: {
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    backgroundColor: "#e9ecef",
+  },
+  cameraIcon: {
+    position: "absolute",
+    bottom: 10,
+    right: 10,
   },
   input: {
     height: 50,

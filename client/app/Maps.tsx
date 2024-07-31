@@ -15,6 +15,7 @@ import axios from "axios";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import debounce from "lodash.debounce";
+import { API_BASE_URL } from "@/assets/IPaddress";
 
 interface Place {
   id: string;
@@ -51,7 +52,7 @@ const Maps: React.FC = () => {
   useEffect(() => {
     const fetchPlaces = async () => {
       try {
-        const response = await axios.get("http://192.168.1.13:5800/houses");
+        const response = await axios.get(`${API_BASE_URL}/houses`);
         setPlaces(response.data);
       } catch (error) {
         console.error("Error fetching places:", error);

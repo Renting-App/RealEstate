@@ -1,62 +1,50 @@
-
+// ThemedText.tsx
 import React from 'react';
-import { Text, type TextProps, StyleSheet } from 'react-native';
+import { Text, TextProps, StyleSheet } from 'react-native';
 
-import { useThemeColor } from '@/hooks/useThemeColor';
-
-export type ThemedTextProps = TextProps & {
-  lightColor?: string;
-  darkColor?: string;
-  type?: 'default' | 'title' | 'defaultSemiBold' | 'subtitle' | 'link';
-};
-
-export function ThemedText({
-  style,
-  lightColor,
-  darkColor,
-  type = 'default',
-  ...rest
-}: ThemedTextProps) {
-  const color = useThemeColor({ light: lightColor, dark: darkColor }, 'text');
-
-  return (
-    <Text
-      style={[
-        { color },
-        type === 'default' ? styles.default : undefined,
-        type === 'title' ? styles.title : undefined,
-        type === 'defaultSemiBold' ? styles.defaultSemiBold : undefined,
-        type === 'subtitle' ? styles.subtitle : undefined,
-        type === 'link' ? styles.link : undefined,
-        style,
-      ]}
-      {...rest}
-    />
-  );
+interface ThemedTextProps extends TextProps {
+  type?: 'title' | 'label' | 'default' | 'subtitle'; // Define the types
 }
+
+const ThemedText: React.FC<ThemedTextProps> = ({ type, style, ...props }) => {
+  let textStyle = styles.default;
+
+  switch (type) {
+    case 'title':
+      textStyle = styles.title;
+      break;
+    case 'label':
+      textStyle = styles.label;
+      break;
+    case 'subtitle':
+      textStyle = styles.subtitle;
+      break;
+    default:
+      textStyle = styles.default;
+  }
+
+  return <Text style={[textStyle, style]} {...props} />;
+};
 
 const styles = StyleSheet.create({
   default: {
-    fontSize: 16,
-    lineHeight: 24,
-  },
-  defaultSemiBold: {
-    fontSize: 16,
-    lineHeight: 24,
-    fontWeight: '600',
+    fontSize: 14,
+    color: '#000',
   },
   title: {
-    fontSize: 32,
+    fontSize: 26,
     fontWeight: 'bold',
-    lineHeight: 32,
+    color: '#343a40',
+  },
+  label: {
+    fontSize: 14,
+    color: '#495057',
   },
   subtitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  link: {
-    lineHeight: 30,
     fontSize: 16,
-    color: '#0a7ea4',
+    fontWeight: '500',
+    color: '#6c757d',
   },
 });
+
+export { ThemedText };

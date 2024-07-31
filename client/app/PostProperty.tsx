@@ -7,6 +7,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { firestore } from "../config/firebase";
 import PropertyForm from "./PropertyForm";
 import * as ImagePicker from "expo-image-picker";
+import { API_BASE_URL } from "@/assets/IPaddress";
 
 const CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/dw1sxdmac/upload";
 const CLOUDINARY_PRESET = "hotel_preset";
@@ -251,7 +252,7 @@ const PostProperty = () => {
             try {
               setLoading(true);
               const response = await fetch(
-                "http://192.168.1.13:5800/addhouse",
+                `${API_BASE_URL}/addhouse`,
                 {
                   method: "POST",
                   headers: {
