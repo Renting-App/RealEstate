@@ -134,6 +134,8 @@ const MyAccount = () => {
         <TouchableOpacity
           style={styles.sectionButton}
           onPress={() => {
+
+            //Premium 
             if (user?.isPremium) {
               router.push("/PostProperty");
             } else {Alert

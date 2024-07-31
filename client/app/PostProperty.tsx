@@ -8,6 +8,14 @@ import { firestore } from "../config/firebase";
 import PropertyForm from "./PropertyForm";
 import * as ImagePicker from "expo-image-picker";
 import { API_BASE_URL } from "@/assets/IPaddress";
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from './_layout';
+
+//premium
+type PaymentScreenNavigationProp = StackNavigationProp<RootStackParamList, 'PaymentScreen'>;
+
+const navigation = useNavigation<PaymentScreenNavigationProp>();
 
 const CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/dw1sxdmac/upload";
 const CLOUDINARY_PRESET = "hotel_preset";
@@ -70,6 +78,7 @@ const PostProperty = () => {
     notification: string;
     iduser: string;
     map: { latitude: number; longitude: number };
+    adminFee:number;
   }
 
   const initialPropertyData: Property = {
@@ -106,6 +115,7 @@ const PostProperty = () => {
     notification: "",
     iduser: "",
     map: { latitude: 0, longitude: 0 },
+    adminFee:0.05
   };
 
   const auth = getAuth();
@@ -124,7 +134,7 @@ const PostProperty = () => {
           iduser: currentUser.uid,
         }));
 
-        setIsPremium(userData.isPremium || false);
+        setIsPremium(userData.isPremium || false); //premium
       }
     
   } else {
@@ -252,6 +262,10 @@ const PostProperty = () => {
     }
   };
 
+
+  
+    
+//premium
   const handleSubmit = async () => {
     if (!isPremium) {
       Alert.alert(
@@ -270,9 +284,12 @@ const PostProperty = () => {
           style: "cancel",
         },
         {
-          text: "OK",
+          text: "Proceed to Payment",
           onPress: async () => {
             try {
+              // Navigate to PaymentScreen with adminFee
+              navigation.navigate('PaymentScreen', { adminFee }); //adminFee
+
               setLoading(true);
               const response = await fetch(
                 `${API_BASE_URL}/addhouse`,
@@ -313,7 +330,7 @@ const PostProperty = () => {
 
   const handleInputChange = (
     name: keyof typeof propertyData,
-    value: string | boolean
+    value: string | boolean | number
   ) => {
     setPropertyData((prevData) => ({
       ...prevData,

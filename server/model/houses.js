@@ -167,6 +167,7 @@ const houseSchema = new mongoose.Schema(
     iduser: { type: String, required: true },
     condition: { type: String, enum: ["new", "occasion"], default: "new" },
     map: { type: Map, of: mongoose.Schema.Types.Mixed },
+    adminFee:{type:Number , required: true }
   },
   {
     timestamps: false,

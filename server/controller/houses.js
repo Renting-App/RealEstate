@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require ("mongoose");
 const House = require("../model/houses.js");
 
 exports.createHouse = async (req, res) => {
