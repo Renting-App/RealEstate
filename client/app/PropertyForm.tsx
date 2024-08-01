@@ -135,10 +135,10 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
         return (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>
-              <Icon name="info-circle" size={20} color="#007bff" /> Basic Info
+              <Icon name="info-circle" size={20} color="black" /> Basic Info
             </Text>
             <View style={styles.inputContainer}>
-              <Icon name="pencil" size={20} color="#007bff" />
+              <Icon name="pencil" size={20} color="black" />
               <TextInput
                 style={styles.input}
                 value={propertyData.title}
@@ -147,7 +147,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
               />
             </View>
             <View style={styles.inputContainer}>
-              <Icon name="align-left" size={20} color="#007bff" />
+              <Icon name="align-left" size={20} color="black" />
               <TextInput
                 style={[styles.input, styles.textArea]}
                 value={propertyData.description}
@@ -158,7 +158,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
               />
             </View>
             <View style={styles.inputContainer}>
-              <Icon name="dollar" size={20} color="#007bff" />
+              <Icon name="dollar" size={20} color="black" />
               <TextInput
                 style={styles.input}
                 value={propertyData.price.toString()}
@@ -174,11 +174,11 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
         return (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>
-              <Icon name="list" size={20} color="#007bff" /> Details
+              <Icon name="list" size={20} color="black" /> Details
             </Text>
             <Text style={styles.label}>Address:</Text>
             <View style={styles.inputContainer}>
-              <Icon name="map-marker" size={20} color="#007bff" />
+              <Icon name="map-marker" size={20} color="black" />
               <TextInput
                 style={styles.input}
                 value={propertyData.address}
@@ -192,7 +192,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
               />
             </View>
             <Text style={styles.mapLink} onPress={() => setShowMap(true)}>
-              <Icon name="map" size={20} color="#007bff" /> Or select from the
+              <Icon name="map" size={20} color="black" /> Or select from the
               map
             </Text>
             {showMap && (
@@ -214,7 +214,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
                   style={styles.locationButton}
                   onPress={handleUseCurrentLocation}
                 >
-                  <Ionicons name="locate" size={24} color="#fff" />
+                  <Ionicons name="locate" size={24} color="black" />
                 </TouchableOpacity>
               </View>
             )}
@@ -229,7 +229,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
             />
             <Text style={styles.label}>Location:</Text>
             <View style={styles.inputContainer}>
-              <Icon name="location-arrow" size={20} color="#007bff" />
+              <Icon name="location-arrow" size={20} color="black" />
               <Picker
                 style={styles.picker}
                 selectedValue={propertyData.location}
@@ -248,7 +248,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
             </View>
             <Text style={styles.label}>Sub-location:</Text>
             <View style={styles.inputContainer}>
-              <Icon name="location-arrow" size={20} color="#007bff" />
+              <Icon name="location-arrow" size={20} color="black" />
               <Picker
                 style={styles.picker}
                 selectedValue={propertyData.subLocation}
@@ -272,7 +272,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
             </View>
             <Text style={styles.label}>Size (m²):</Text>
             <View style={styles.inputContainer}>
-              <Icon name="arrows-alt" size={20} color="#007bff" />
+              <Icon name="arrows-alt" size={20} color="black" />
               <TextInput
                 style={styles.input}
                 value={propertyData.size.toString()}
@@ -283,7 +283,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
             </View>
             <Text style={styles.label}>Category:</Text>
             <View style={styles.inputContainer}>
-              <Icon name="building" size={20} color="#007bff" />
+              <Icon name="building" size={20} color="black" />
               <Picker
                 style={styles.picker}
                 selectedValue={propertyData.category}
@@ -300,7 +300,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
             </View>
             <Text style={styles.label}>Number of Rooms:</Text>
             <View style={styles.inputContainer}>
-              <Icon name="bed" size={20} color="#007bff" />
+              <Icon name="bed" size={20} color="black" />
               <TextInput
                 style={styles.input}
                 value={propertyData.rooms.toString()}
@@ -311,7 +311,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
             </View>
             <Text style={styles.label}>Number of Bathrooms:</Text>
             <View style={styles.inputContainer}>
-              <Icon name="bath" size={20} color="#007bff" />
+              <Icon name="bath" size={20} color="black" />
               <TextInput
                 style={styles.input}
                 value={propertyData.bathrooms.toString()}
@@ -326,7 +326,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
         return (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>
-              <Icon name="calendar" size={20} color="#007bff" /> Visit Dates
+              <Icon name="calendar" size={20} color="black" /> Visit Dates
             </Text>
             <TouchableOpacity onPress={() => setShowCalendar(true)}>
               <Text style={styles.calendarLabel}>Select Dates</Text>
@@ -345,7 +345,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
         return (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>
-              <Icon name="check-square-o" size={20} color="#007bff" /> Amenities
+              <Icon name="check-square-o" size={20} color="black" /> Amenities
             </Text>
             <View style={styles.amenitiesContainer}>
               {Object.keys(amenityIcons).map((amenity) => (
@@ -393,11 +393,11 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
         return (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>
-              <Icon name="camera" size={20} color="#007bff" /> Images
+              <Icon name="camera" size={20} color="black" /> Images
             </Text>
             <TouchableOpacity onPress={handleImageSelection}>
               <Text style={styles.imageButton}>
-                <Icon name="upload" size={20} color="#007bff" /> Upload Images
+                <Icon name="upload" size={20} color="black" /> Upload Images
               </Text>
             </TouchableOpacity>
             {propertyData.images.length > 0 && (
@@ -446,7 +446,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
 
 const styles = StyleSheet.create({
   scrollViewContainer: {
-    backgroundColor: "#E0F2F1", // Light green background
+   
     paddingBottom: 20,
   },
   formContainer: {
