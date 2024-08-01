@@ -20,8 +20,11 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import DrawerContent from "@/app/DrawerContent";
 import Search from "./Search";
+import RefreshButton from './RefreshButton'; // Import the RefreshButton component
 import Pagination from "./Pagination";
 import Profile from "./Profile";
+
+
 type HousesScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
   "HousesScreen"
@@ -121,6 +124,10 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
         console.error("Error fetching residences:", error);
         setLoading(false);
       });
+  };
+
+  const handleRefresh = () => {
+    fetchResidences(); // Call fetchResidences to refresh the data
   };
 
   const filterResidences = (residences: Residence[], criteria: any) => {
@@ -278,10 +285,11 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
       <FlatList
         ListHeaderComponent={
           <ThemedView style={styles.container}>
-            <View style={styles.header}>
+            <View style={styles.header}> 
               <TouchableOpacity onPress={() => setIsSidebarVisible(true)}>
                 <Ionicons name="menu" style={styles.menuIcon} size={24} />
               </TouchableOpacity>
+              <RefreshButton onRefresh={handleRefresh} />
               <View style={styles.profileContainer}>
                <Profile/>
               </View>
