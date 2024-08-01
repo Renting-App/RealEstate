@@ -77,7 +77,7 @@ export type RootStackParamList = {
   AccountCreated: undefined;
   NotificationDetails: undefined;
   NotificationList:undefined;
-  PaymentScreen:{ adminFee: number }
+  PaymentScreen:{ adminFee: number, isPremium: boolean  }
   FilteredDataComponent: { criteria: {
     category: string;
     location: string;

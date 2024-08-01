@@ -1,46 +1,94 @@
 import React from 'react';
-import { View, Text, Button, Alert } from 'react-native';
-import { useStripe } from '@stripe/stripe-react-native';
-import { RouteProp, useRoute } from '@react-navigation/native';
-import { RootStackParamList } from './_layout'; // Import RootStackParamList
+import { View, Text, Button, Alert, StyleSheet } from 'react-native';
+import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 
-type PaymentScreenRouteProp = RouteProp<RootStackParamList, 'PaymentScreen'>;
+type PaymentScreenRouteParams = {
+  isPremium: boolean;
+  adminFee: number;
+};
 
-const PaymentScreen: React.FC = () => {
-  const route = useRoute<PaymentScreenRouteProp>();
-  const { adminFee } = route.params;
+const PaymentScreen = () => {
+  const route = useRoute<RouteProp<{ params: PaymentScreenRouteParams }, 'params'>>();
+  const navigation = useNavigation();
+  const { isPremium, adminFee } = route.params;
 
-  const { initPaymentSheet, presentPaymentSheet } = useStripe();
+  const handleUpgradeToPremium = async () => {
+    try {
+      
+      await fakeUpgradeToPremiumAPI();
+      Alert.alert('Success', 'Your account has been upgraded to premium!');
+      navigation.goBack();
+    } catch (error) {
+      console.error("Error upgrading to premium:", error);
+      Alert.alert('Error', 'Failed to upgrade to premium. Please try again.');
+    }
+  };
 
-  const handlePayment = async () => {
-    // Initialize the payment sheet
-    const { error } = await initPaymentSheet({
-      paymentIntentClientSecret: 'your_payment_intent_client_secret', // From your backend
-      merchantDisplayName: 'Your Merchant Name', // Required
-      // Include any other required parameters here
-    });
-
-    if (!error) {
-      // Present the payment sheet to the user
-      const { error: paymentError } = await presentPaymentSheet();
-
-      if (paymentError) {
-        Alert.alert('Error', `Payment failed: ${paymentError.message}`);
-      } else {
-        // Payment was successful
-        Alert.alert('Success', 'Payment successful!');
-      }
+  const handlePayment = () => {
+    if (!isPremium) {
+      Alert.alert(
+        "Upgrade Required",
+        "To post properties, you need a premium account.",
+        [
+          {
+            text: "Upgrade to Premium",
+            onPress: handleUpgradeToPremium,
+          },
+          {
+            text: "Cancel",
+            style: "cancel",
+          },
+        ]
+      );
     } else {
-      Alert.alert('Error', `Initialization failed: ${error.message}`);
+      Alert.alert('Payment', `Proceeding with payment of ${adminFee} DT.`);
     }
   };
 
   return (
-    <View>
-      <Text>Admin Fee: {adminFee.toFixed(2)} DT</Text>
-      <Button title="Pay Now" onPress={handlePayment} />
+    <View style={styles.container}>
+      <Text style={styles.header}>Payment Screen</Text>
+      {isPremium ? (
+        <Text style={styles.info}>Admin Fee: {adminFee} DT</Text>
+      ) : (
+        <Text style={styles.info}>
+          Your account is not premium. Upgrade to post properties.
+        </Text>
+      )}
+
+      <Button
+        title={isPremium ? "Pay Admin Fee" : "Upgrade to Premium"}
+        onPress={handlePayment}
+      />
     </View>
   );
 };
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 16,
+  },
+  header: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 16,
+  },
+  info: {
+    fontSize: 18,
+    marginBottom: 24,
+  },
+});
+
 export default PaymentScreen;
+
+// Mock function to simulate API call for upgrading to premium
+const fakeUpgradeToPremiumAPI = async () => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve(true);
+    }, 2000);
+  });
+};

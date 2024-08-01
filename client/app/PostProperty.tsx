@@ -285,10 +285,11 @@ const PostProperty = () => {
         },
         {
           text: "Proceed to Payment",
+
           onPress: async () => {
             try {
               // Navigate to PaymentScreen with adminFee
-              navigation.navigate('PaymentScreen', { adminFee }); //adminFee
+               //adminFee
 
               setLoading(true);
               const response = await fetch(
@@ -307,6 +308,7 @@ const PostProperty = () => {
               if (response.ok) {
                 const result = await response.json();
                 console.log("Property posted successfully:", result);
+                navigation.navigate('PaymentScreen', {isPremium, adminFee });
                 Alert.alert("Success", "Property posted successfully!");
                 setPropertyData(initialPropertyData);
               } else {
