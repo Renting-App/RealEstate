@@ -51,17 +51,7 @@ interface Residence {
   visits: [];
   favourite: boolean;
   date_of_creation: string;
-  amenities: {
-    parking: boolean;
-    ac: boolean;
-    furnished: boolean;
-    pool: boolean;
-    microwave: boolean;
-    near_subway: boolean;
-    beach_view: boolean;
-    alarm: boolean;
-    garden: boolean;
-  };
+  amenities:any;
   status: string;
   notification: string;
   iduser: string;

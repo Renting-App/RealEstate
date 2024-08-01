@@ -4,6 +4,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import Welcome from "./Welcome";
 import Signin from "./SignIn";
 import Signup from "./SignUp";
+import HomeButton from './HomeButton';
 import HousesScreen from "./HousesScreen";
 import AdminPage from "./adminPage";
 import FAQ from "./FAQ";
@@ -98,19 +99,6 @@ const slideFromBottom = ({ current }: any) => {
   };
 };
 
-const slideUp = ({ current }: any) => {
-  const translateY = current.progress.interpolate({
-    inputRange: [0, 1],
-    outputRange: [600, 0], // Slide up from bottom
-  });
-
-  return {
-    cardStyle: {
-      transform: [{ translateY }],
-    },
-  };
-};
-
 
 export default function App() {
   return (
@@ -150,6 +138,9 @@ export default function App() {
           <Stack.Screen
             name="FilteredDataComponent"
             component={FilteredDataComponent}
+            options={{
+              headerRight: () => <HomeButton />, // Add the HomeButton to the right of the header
+            }}
           />
           <Stack.Screen name="Maps" component={Maps} />
           <Stack.Screen name="RequestTour" component={RequestTour} />

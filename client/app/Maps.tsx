@@ -40,9 +40,7 @@ const MAPBOX_ACCESS_TOKEN =
 const Maps: React.FC = () => {
   const [places, setPlaces] = useState<Place[]>([]);
   const [loading, setLoading] = useState(true);
-  const [currentLocation, setCurrentLocation] = useState<LocationCoords | null>(
-    null
-  );
+  const [currentLocation, setCurrentLocation] = useState<LocationCoords | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [suggestions, setSuggestions] = useState<any[]>([]);
   const [suggestionsLoading, setSuggestionsLoading] = useState(false);
@@ -171,7 +169,7 @@ const Maps: React.FC = () => {
   if (loading) {
     return (
       <View style={styles.container}>
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator size="large" color="#007bff" />
       </View>
     );
   }
@@ -184,16 +182,17 @@ const Maps: React.FC = () => {
           value={searchQuery}
           onChangeText={handleQueryChange}
           placeholder="Search for places"
+          placeholderTextColor="#888"
         />
         {searchQuery.length > 0 && (
           <TouchableOpacity style={styles.clearButton} onPress={clearSearch}>
-            <Ionicons name="close-circle" size={24} color="#ccc" />
+            <Ionicons name="close-circle" size={24} color="#007bff" />
           </TouchableOpacity>
         )}
       </View>
       {suggestionsLoading && (
         <View style={styles.loadingIndicator}>
-          <ActivityIndicator size="small" color="#0000ff" />
+          <ActivityIndicator size="small" color="#007bff" />
         </View>
       )}
       <FlatList
@@ -259,6 +258,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#f0f0f0",
   },
   map: {
     width: "100%",
@@ -282,14 +282,20 @@ const styles = StyleSheet.create({
     right: 20,
     flexDirection: "row",
     backgroundColor: "#fff",
-    borderRadius: 5,
-    padding: 10,
+    borderRadius: 25,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
     elevation: 5,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
     zIndex: 1,
   },
   searchInput: {
     flex: 1,
     fontSize: 16,
+    color: "#333",
   },
   clearButton: {
     marginLeft: 10,
@@ -300,26 +306,40 @@ const styles = StyleSheet.create({
     left: 20,
     right: 20,
     backgroundColor: "#fff",
-    borderRadius: 5,
+    borderRadius: 10,
     elevation: 5,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
     zIndex: 1,
   },
   suggestionItem: {
-    padding: 10,
+    padding: 15,
     borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
+    borderBottomColor: "#ddd",
   },
   noResultsText: {
-    padding: 10,
+    padding: 15,
     textAlign: "center",
-    color: "#ccc",
+    color: "#888",
   },
   loadingIndicator: {
     position: "absolute",
     top: 80,
     left: 20,
     right: 20,
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    elevation: 5,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
     zIndex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 15,
   },
 });
 

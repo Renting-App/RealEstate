@@ -234,6 +234,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     marginVertical: 30,
     marginHorizontal: 40,
+   
   },
 });
 
