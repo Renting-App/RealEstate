@@ -20,8 +20,11 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import DrawerContent from "@/app/DrawerContent";
 import Search from "./Search";
+import RefreshButton from './RefreshButton'; // Import the RefreshButton component
 import Pagination from "./Pagination";
 import Profile from "./Profile";
+
+
 type HousesScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
   "HousesScreen"
@@ -51,17 +54,7 @@ interface Residence {
   visits: [];
   favourite: boolean;
   date_of_creation: string;
-  amenities: {
-    parking: boolean;
-    ac: boolean;
-    furnished: boolean;
-    pool: boolean;
-    microwave: boolean;
-    near_subway: boolean;
-    beach_view: boolean;
-    alarm: boolean;
-    garden: boolean;
-  };
+  amenities:any;
   status: string;
   notification: string;
   iduser: string;
@@ -131,6 +124,10 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
         console.error("Error fetching residences:", error);
         setLoading(false);
       });
+  };
+
+  const handleRefresh = () => {
+    fetchResidences(); // Call fetchResidences to refresh the data
   };
 
   const filterResidences = (residences: Residence[], criteria: any) => {
@@ -230,7 +227,7 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
       <Image
         source={{ uri: item.images[0] }}
         style={styles.image}
-        resizeMode="cover"
+        resizeMode="contain"
       />
       <View style={styles.cardContent}>
         <View style={styles.titleContainer}>
@@ -246,19 +243,19 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
         </ThemedText>
         <View style={styles.detailsContainer}>
           <View style={styles.detailItem}>
-            <MaterialCommunityIcons name="resize" size={16} color="#666" />
+            <MaterialCommunityIcons name="resize" size={16}  color="black" />
             <ThemedText type="default" style={styles.detailText}>
               {item.size} m²
             </ThemedText>
           </View>
           <View style={styles.detailItem}>
-            <Ionicons name="bed" size={16} color="#666" />
+            <Ionicons name="bed" size={16}  color="black" />
             <ThemedText type="default" style={styles.detailText}>
               {item.rooms} Rooms
             </ThemedText>
           </View>
           <View style={styles.detailItem}>
-            <MaterialCommunityIcons name="toilet" size={16} color="#666" />
+            <MaterialCommunityIcons name="toilet" size={16}  color="black" />
             <ThemedText type="default" style={styles.detailText}>
               {item.bathrooms} Bathrooms
             </ThemedText>
@@ -288,10 +285,11 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
       <FlatList
         ListHeaderComponent={
           <ThemedView style={styles.container}>
-            <View style={styles.header}>
+            <View style={styles.header}> 
               <TouchableOpacity onPress={() => setIsSidebarVisible(true)}>
                 <Ionicons name="menu" style={styles.menuIcon} size={24} />
               </TouchableOpacity>
+              <RefreshButton onRefresh={handleRefresh} />
               <View style={styles.profileContainer}>
                <Profile/>
               </View>
@@ -308,7 +306,7 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
                 <FontAwesome
                   name="sliders"
                   size={24}
-                  color="#333"
+                  color="black"
                   style={styles.filterIcon}
                 />
               </TouchableOpacity>
@@ -319,10 +317,8 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
                 onPress={handleRentPress}
               >
                 <Image
-                  source={{
-                    uri: "https://st4.depositphotos.com/1002256/21825/i/380/depositphotos_218252750-stock-photo-real-estate-rent-concept-old.jpg",
-                  }}
-                  style={styles.filterCardImage}
+                  source={require('../assets/images/rent.png')}
+                   style={styles.filterCardImage}
                 />
                 <Text style={styles.filterCardText}>For Rent</Text>
               </TouchableOpacity>
@@ -331,9 +327,7 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
                 onPress={handleSalePress}
               >
                 <Image
-                  source={{
-                    uri: "https://st.depositphotos.com/1194063/2151/i/380/depositphotos_21515189-stock-photo-agent-with-house-model-and.jpg",
-                  }}
+                  source={require('../assets/images/sale.png')}
                   style={styles.filterCardImage}
                 />
                 <Text style={styles.filterCardText}>For Sale</Text>
@@ -367,13 +361,14 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 20,
+    marginTop: 30,
+    padding:20
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    padding: 10,
+    
   },
   menuIcon: {
     color: "#333",
@@ -386,7 +381,7 @@ const styles = StyleSheet.create({
     width: 45,
     height: 45,
     borderRadius: 20,
-    marginLeft: 10,
+    
   },
   profileName: {
     fontSize: 16,
@@ -395,6 +390,7 @@ const styles = StyleSheet.create({
   searchContainer: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "space-evenly",
     paddingHorizontal: 10,
     marginBottom: 10,
   },
@@ -403,7 +399,7 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: 5,
     padding: 8,
-    marginRight: 10,
+    
   },
   filterIcon: {
     marginLeft: 10,
@@ -439,7 +435,7 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: "#fff",
     borderRadius: 8,
-    marginBottom: 10,
+    marginBottom: 12,
     overflow: "hidden",
     elevation: 4,
     shadowColor: "#000",
@@ -451,7 +447,7 @@ const styles = StyleSheet.create({
   },
   typeContainer: {
     borderRadius: 4,
-    padding: 5,
+    padding: 10,
     position: "absolute",
     top: 10,
     left: 10,
@@ -495,6 +491,7 @@ const styles = StyleSheet.create({
   detailsContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
+    padding: 5,
   },
   detailItem: {
     flexDirection: "row",
@@ -517,7 +514,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   showMoreText: {
-    color: "#007BFF",
+    color: "black",
     fontSize: 16,
     fontWeight: "bold",
   },

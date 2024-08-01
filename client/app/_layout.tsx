@@ -4,6 +4,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import Welcome from "./Welcome";
 import Signin from "./SignIn";
 import Signup from "./SignUp";
+import HomeButton from './HomeButton';
 import HousesScreen from "./HousesScreen";
 import AdminPage from "./adminPage";
 import FAQ from "./FAQ";
@@ -93,6 +94,20 @@ export type RootStackParamList = {
 
 const Stack = createStackNavigator<RootStackParamList>();
 
+const slideFromBottom = ({ current }: any) => {
+  const translateY = current.progress.interpolate({
+    inputRange: [0, 1],
+    outputRange: [600, 0], // Adjust the height to match your screen height
+  });
+
+  return {
+    cardStyle: {
+      transform: [{ translateY }],
+    },
+  };
+};
+
+
 export default function App() {
   return (
 
@@ -101,8 +116,12 @@ export default function App() {
          <NavigationContainer> 
         <StripeProvider publishableKey={publishableKey}>
         <Stack.Navigator
-          initialRouteName="Welcome"
-          screenOptions={{ headerShown: true }}
+         initialRouteName="Welcome"
+         screenOptions={({ route }) => ({
+           // Apply the slideFromBottom transition only for 'SignIn' and 'SignUp'
+           cardStyleInterpolator: route.name === 'SignIn' || route.name === 'SignUp' ? slideFromBottom : undefined,
+           headerShown: true,
+         })}
         >
           <Stack.Screen
             name="Welcome"
@@ -130,6 +149,9 @@ export default function App() {
           <Stack.Screen
             name="FilteredDataComponent"
             component={FilteredDataComponent}
+            options={{
+              headerRight: () => <HomeButton />, // Add the HomeButton to the right of the header
+            }}
           />
           <Stack.Screen name="Maps" component={Maps} />
           <Stack.Screen name="RequestTour" component={RequestTour} />

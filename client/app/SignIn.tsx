@@ -1,10 +1,9 @@
 import React from "react";
-import { View, Text, StyleSheet, Dimensions } from "react-native";
+import { View, Text, StyleSheet, Dimensions, Image, ScrollView } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { Input, Button } from "react-native-elements";
-import { RootStackParamList } from "./_layout";
 import Icon from "react-native-vector-icons/FontAwesome";
-
+import { RootStackParamList } from "./_layout";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { auth, firestore } from "../config/firebase";
 import { doc, getDoc } from "firebase/firestore";
@@ -47,7 +46,7 @@ const Signin: React.FC<Props> = ({ navigation }) => {
       if (userData && userData.role === "admin") {
         navigation.navigate("adminPage");
       } else {
-        navigation.navigate("HousesScreen");
+        navigation.navigate("HousesScreen", { criteria: {} });
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -65,8 +64,15 @@ const Signin: React.FC<Props> = ({ navigation }) => {
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Sign in</Text>
+    <ScrollView contentContainerStyle={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.title}>Sign in</Text>
+        <Image
+          source={require('../assets/images/signin.png')}
+          style={styles.image}
+          resizeMode="center"
+        />
+      </View>
       <View style={styles.inputContainer}>
         <Input
           placeholder="Email"
@@ -91,9 +97,7 @@ const Signin: React.FC<Props> = ({ navigation }) => {
             />
           }
         />
-        {value.error ? (
-          <Text style={styles.errorText}>{value.error}</Text>
-        ) : null}
+        {value.error ? <Text style={styles.errorText}>{value.error}</Text> : null}
         <Button title="Submit" buttonStyle={styles.button} onPress={signIn} />
         <Button
           title="Sign up"
@@ -101,37 +105,54 @@ const Signin: React.FC<Props> = ({ navigation }) => {
           onPress={() => navigation.navigate("SignUp")}
         />
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 50,
-    backgroundColor: "#f5f5f5",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: "#E0F2F1", // Light green background
+    padding: 50,
+    paddingBottom:0,
+    alignItems: 'center',
+    justifyContent:"center",
+    
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent:"center"
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 20,
+    color: "#004D40", // Dark green color for text
+    position:"absolute",
+    top: -90,
+    right:70
+  },
+  image: {
+    position:"absolute",
+    top: -320,
+    width: Dimensions.get('window').width , // 60% of screen width
+    height: Dimensions.get('window').height * 0.5, // 30% of screen height
   },
   inputContainer: {
-    width: "80%",
+    width: "100%",
   },
   input: {
     marginBottom: 20,
+    marginTop:10
   },
   button: {
-    backgroundColor: "#007BFF",
+    backgroundColor: "#00796B", // Medium green for button
     borderRadius: 5,
     paddingVertical: 15,
     marginTop: 20,
   },
   signupButton: {
-    backgroundColor: "#28a745",
+    backgroundColor: "#004D40", // Darker green for signup button
     marginTop: 10,
   },
   errorText: {

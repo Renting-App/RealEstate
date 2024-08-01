@@ -5,15 +5,17 @@ import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet } from "react-native";
 import { RootStackParamList } from "./_layout";
 
+// Define and export the HomeButton component
 export function HomeButton() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
   return (
     <Pressable
       onPress={() => {
-        navigation.navigate("HousesScreen");
+        navigation.navigate("HousesScreen", { criteria: {} });
       }}
       style={({ pressed }) => [
-        buttonstyles.homeButton,
+        styles.homeButton,
         { opacity: pressed ? 0.5 : 1 },
       ]}
     >
@@ -22,13 +24,11 @@ export function HomeButton() {
   );
 }
 
-const buttonstyles = StyleSheet.create({
+// Define styles for the HomeButton component
+const styles = StyleSheet.create({
   homeButton: {
-    position: "absolute",
-    top: 10,
-    left: 10,
-    zIndex: 1
+    marginRight: 15, // Adjust margin to position correctly in the header
   },
 });
 
-export default buttonstyles;
+export default HomeButton;

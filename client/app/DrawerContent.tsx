@@ -111,7 +111,7 @@ const DrawerContent: React.FC<SidebarProps> = ({ isVisible, onClose, navigation 
 const styles = StyleSheet.create({
   overlay: {
     position: "absolute",
-    top: 0,
+    top: 30,
     bottom: 0,
     left: 0,
     right: 0,
@@ -141,10 +141,10 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   linksContainer: {
-    marginTop: 20,
+    margin: 20,
   },
   link: {
-    marginBottom: 10,
+    marginBottom: 35,
     textDecorationLine: "none",
     color: "#333",
   },

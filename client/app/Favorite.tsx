@@ -40,7 +40,7 @@ const Favorite: React.FC = () => {
     return (
       <View style={styles.noFavoritesContainer}>
         <Image
-          source={{ uri: 'https://example.com/empty-favorites-image.png' }} // Replace with your image URL
+          source={require('../assets/images/fav.png')}
           style={styles.noFavoritesImage}
         />
         <Text style={styles.noFavoritesMessage}>You have no favorites yet</Text>
@@ -112,15 +112,16 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   noFavoritesContainer: {
-    flex: 1,
+    display:'flex',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
     backgroundColor: '#F4F4F4',
+    
   },
   noFavoritesImage: {
     width: 200,
-    height: 200,
+    height: 400,
     marginBottom: 20,
   },
   noFavoritesMessage: {

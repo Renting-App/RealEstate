@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from "react";
 import {
   View,
-  Text,
-  FlatList,
   Image,
   StyleSheet,
   TouchableOpacity,
+  FlatList,
+  ActivityIndicator,
 } from "react-native";
 import { RouteProp, useNavigation } from "@react-navigation/native";
-import { API_BASE_URL } from "@/assets/IPaddress";
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from './_layout';
+import { ThemedText } from "@/components/ThemedText";
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { API_BASE_URL } from "@/assets/IPaddress";
 
 type NavigationProp = StackNavigationProp<RootStackParamList, 'PropertyDetails'>;
 
@@ -19,24 +22,34 @@ type FilteredDataComponentProps = {
 };
 
 export type Residence = {
-  _id: number;
+  _id: string;
   title: string;
   address: string;
-  size: number;
   price: string;
-  rooms: number;
-  bathrooms: number;
-  description: string;
-  contact_info: string;
-  images: string[];
-  operation: string;
+  rooms: string;
+  bathrooms: string;
+  size: string;
   category: string;
   location: string;
   subLocation: string;
-  amenities: {
-    [key: string]: boolean; // Allow dynamic property access
+  description: string;
+  contact_info: string;
+  images: string[];
+  operation: "rent" | "sale";
+  visits: [];
+  favourite: boolean;
+  date_of_creation: string;
+  amenities: any;
+  status: string;
+  notification: string;
+  iduser: string;
+  condition: string;
+  map: {
+    latitude: number;
+    longitude: number;
   };
-};
+  __v: number;
+}
 
 const FilteredDataComponent: React.FC<FilteredDataComponentProps> = ({ route }) => {
   const { criteria } = route.params;
@@ -54,13 +67,13 @@ const FilteredDataComponent: React.FC<FilteredDataComponentProps> = ({ route }) 
       .then((response) => response.json())
       .then((data) => {
         const mappedResidences = data.map((residence: any) => ({
-          _id: residence._id,
+          _id: residence._id ?? `id_${Date.now()}`,
           title: residence.title ?? "",
           address: residence.address ?? "",
-          size: residence.size ?? "",
-          price: residence.price ?? "",
-          rooms: residence.rooms ?? "",
-          bathrooms: residence.bathrooms ?? "",
+          size: residence.size ?? 0,
+          price: residence.price ?? 0,
+          rooms: residence.rooms ?? 0,
+          bathrooms: residence.bathrooms ?? 0,
           description: residence.description ?? "",
           contact_info: residence.contact_info ?? "",
           images: residence.images ?? [],
@@ -68,17 +81,15 @@ const FilteredDataComponent: React.FC<FilteredDataComponentProps> = ({ route }) 
           category: residence.category ?? "",
           location: residence.location ?? "",
           subLocation: residence.subLocation ?? "",
-          amenities: residence.amenities ?? {
-            ac: false,
-            pool: false,
-            alarm: false,
-            garden: false,
-            parking: false,
-            furnished: false,
-            microwave: false,
-            beach_view: false,
-            near_subway: false,
-          },
+          visits: residence.visits ?? [],
+          favourite: residence.favourite ?? false,
+          date_of_creation: residence.date_of_creation ?? "",
+          amenities: residence.amenities ?? {},
+          status: residence.status ?? "",
+          notification: residence.notification ?? "",
+          iduser: residence.iduser ?? "",
+          condition: residence.condition ?? "",
+          map: residence.map ?? {},
         }));
         setResidences(mappedResidences);
         filterResidences(mappedResidences, criteria);
@@ -131,31 +142,81 @@ const FilteredDataComponent: React.FC<FilteredDataComponentProps> = ({ route }) 
   };
 
   if (loading) {
-    return <Text>Loading...</Text>;
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
   }
 
   return (
-    <View>
-      <FlatList
-        data={filteredResidences}
-        keyExtractor={(item) => item._id.toString()}
-        renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => handlePress(item)}>
-            <View style={styles.card}>
-              <Image source={{ uri: item.images[0] }} style={styles.image} />
-              <Text style={styles.title}>{item.title}</Text>
-              <Text>{item.address}</Text>
-              <Text>{item.description}</Text>
-              <Text>Price: {item.price}</Text>
+    <FlatList
+      data={filteredResidences}
+      keyExtractor={(item) => item._id.toString()}
+      renderItem={({ item }) => (
+        <TouchableOpacity onPress={() => handlePress(item)}>
+          <View style={styles.card}>
+            <View
+              style={[
+                styles.typeContainer,
+                item.operation === "rent" ? styles.rent : styles.sale,
+              ]}
+            >
+              <ThemedText type="subtitle" style={styles.typeText}>
+                {item.operation === "rent" ? "Rent" : "Sale"}
+              </ThemedText>
             </View>
-          </TouchableOpacity>
-        )}
-      />
-    </View>
+            <Image
+              source={{ uri: item.images[0] }}
+              style={styles.image}
+              resizeMode="contain"
+            />
+            <View style={styles.cardContent}>
+              <View style={styles.titleContainer}>
+                <ThemedText type="subtitle" style={styles.title}>
+                  {item.title}
+                </ThemedText>
+                <ThemedText type="default" style={styles.price}>
+                  {item.price} DT
+                </ThemedText>
+              </View>
+              <ThemedText type="default" style={styles.address}>
+                {item.address}
+              </ThemedText>
+              <View style={styles.detailsContainer}>
+                <View style={styles.detailItem}>
+                  <MaterialCommunityIcons name="resize" size={16} color="black" />
+                  <ThemedText type="default" style={styles.detailText}>
+                    {item.size} m²
+                  </ThemedText>
+                </View>
+                <View style={styles.detailItem}>
+                  <Ionicons name="bed" size={16} color="black" />
+                  <ThemedText type="default" style={styles.detailText}>
+                    {item.rooms} Rooms
+                  </ThemedText>
+                </View>
+                <View style={styles.detailItem}>
+                  <MaterialCommunityIcons name="toilet" size={16} color="black" />
+                  <ThemedText type="default" style={styles.detailText}>
+                    {item.bathrooms} Bathrooms
+                  </ThemedText>
+                </View>
+              </View>
+            </View>
+          </View>
+        </TouchableOpacity>
+      )}
+    />
   );
 };
 
 const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   card: {
     margin: 10,
     padding: 10,
@@ -166,13 +227,58 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     shadowOffset: { width: 0, height: 2 },
   },
+  typeContainer: {
+    padding: 5,
+    borderRadius: 4,
+    position: 'absolute',
+    top: 10,
+    left: 10,
+  },
+  rent: {
+    backgroundColor: "#ffcccc",
+  },
+  sale: {
+    backgroundColor: "#ccffcc",
+  },
+  typeText: {
+    color: "#666",
+    fontSize: 12,
+    fontWeight: "bold",
+  },
   image: {
     width: "100%",
     height: 200,
   },
+  cardContent: {
+    marginTop: 10,
+  },
+  titleContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
   title: {
     fontSize: 18,
     fontWeight: "bold",
+  },
+  price: {
+    fontSize: 16,
+    color: "#666",
+  },
+  address: {
+    fontSize: 14,
+    marginVertical: 5,
+  },
+  detailsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    padding: 10
+  },
+  detailItem: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  detailText: {
+    marginLeft: 5,
   },
 });
 

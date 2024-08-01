@@ -135,10 +135,10 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
         return (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>
-              <Icon name="info-circle" size={20} color="#007bff" /> Basic Info
+              <Icon name="info-circle" size={20} color="black" /> Basic Info
             </Text>
             <View style={styles.inputContainer}>
-              <Icon name="pencil" size={20} color="#007bff" />
+              <Icon name="pencil" size={20} color="black" />
               <TextInput
                 style={styles.input}
                 value={propertyData.title}
@@ -147,7 +147,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
               />
             </View>
             <View style={styles.inputContainer}>
-              <Icon name="align-left" size={20} color="#007bff" />
+              <Icon name="align-left" size={20} color="black" />
               <TextInput
                 style={[styles.input, styles.textArea]}
                 value={propertyData.description}
@@ -158,7 +158,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
               />
             </View>
             <View style={styles.inputContainer}>
-              <Icon name="dollar" size={20} color="#007bff" />
+              <Icon name="dollar" size={20} color="black" />
               <TextInput
                 style={styles.input}
                 value={propertyData.price.toString()}
@@ -174,11 +174,11 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
         return (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>
-              <Icon name="list" size={20} color="#007bff" /> Details
+              <Icon name="list" size={20} color="black" /> Details
             </Text>
             <Text style={styles.label}>Address:</Text>
             <View style={styles.inputContainer}>
-              <Icon name="map-marker" size={20} color="#007bff" />
+              <Icon name="map-marker" size={20} color="black" />
               <TextInput
                 style={styles.input}
                 value={propertyData.address}
@@ -192,7 +192,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
               />
             </View>
             <Text style={styles.mapLink} onPress={() => setShowMap(true)}>
-              <Icon name="map" size={20} color="#007bff" /> Or select from the
+              <Icon name="map" size={20} color="black" /> Or select from the
               map
             </Text>
             {showMap && (
@@ -214,7 +214,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
                   style={styles.locationButton}
                   onPress={handleUseCurrentLocation}
                 >
-                  <Ionicons name="locate" size={24} color="#fff" />
+                  <Ionicons name="locate" size={24} color="black" />
                 </TouchableOpacity>
               </View>
             )}
@@ -229,7 +229,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
             />
             <Text style={styles.label}>Location:</Text>
             <View style={styles.inputContainer}>
-              <Icon name="location-arrow" size={20} color="#007bff" />
+              <Icon name="location-arrow" size={20} color="black" />
               <Picker
                 style={styles.picker}
                 selectedValue={propertyData.location}
@@ -248,7 +248,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
             </View>
             <Text style={styles.label}>Sub-location:</Text>
             <View style={styles.inputContainer}>
-              <Icon name="location-arrow" size={20} color="#007bff" />
+              <Icon name="location-arrow" size={20} color="black" />
               <Picker
                 style={styles.picker}
                 selectedValue={propertyData.subLocation}
@@ -272,7 +272,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
             </View>
             <Text style={styles.label}>Size (m²):</Text>
             <View style={styles.inputContainer}>
-              <Icon name="arrows-alt" size={20} color="#007bff" />
+              <Icon name="arrows-alt" size={20} color="black" />
               <TextInput
                 style={styles.input}
                 value={propertyData.size.toString()}
@@ -283,7 +283,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
             </View>
             <Text style={styles.label}>Category:</Text>
             <View style={styles.inputContainer}>
-              <Icon name="building" size={20} color="#007bff" />
+              <Icon name="building" size={20} color="black" />
               <Picker
                 style={styles.picker}
                 selectedValue={propertyData.category}
@@ -300,7 +300,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
             </View>
             <Text style={styles.label}>Number of Rooms:</Text>
             <View style={styles.inputContainer}>
-              <Icon name="bed" size={20} color="#007bff" />
+              <Icon name="bed" size={20} color="black" />
               <TextInput
                 style={styles.input}
                 value={propertyData.rooms.toString()}
@@ -311,7 +311,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
             </View>
             <Text style={styles.label}>Number of Bathrooms:</Text>
             <View style={styles.inputContainer}>
-              <Icon name="bath" size={20} color="#007bff" />
+              <Icon name="bath" size={20} color="black" />
               <TextInput
                 style={styles.input}
                 value={propertyData.bathrooms.toString()}
@@ -326,7 +326,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
         return (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>
-              <Icon name="calendar" size={20} color="#007bff" /> Visit Dates
+              <Icon name="calendar" size={20} color="black" /> Visit Dates
             </Text>
             <TouchableOpacity onPress={() => setShowCalendar(true)}>
               <Text style={styles.calendarLabel}>Select Dates</Text>
@@ -345,7 +345,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
         return (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>
-              <Icon name="check-square-o" size={20} color="#007bff" /> Amenities
+              <Icon name="check-square-o" size={20} color="black" /> Amenities
             </Text>
             <View style={styles.amenitiesContainer}>
               {Object.keys(amenityIcons).map((amenity) => (
@@ -393,11 +393,11 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
         return (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>
-              <Icon name="camera" size={20} color="#007bff" /> Images
+              <Icon name="camera" size={20} color="black" /> Images
             </Text>
             <TouchableOpacity onPress={handleImageSelection}>
               <Text style={styles.imageButton}>
-                <Icon name="upload" size={20} color="#007bff" /> Upload Images
+                <Icon name="upload" size={20} color="black" /> Upload Images
               </Text>
             </TouchableOpacity>
             {propertyData.images.length > 0 && (
@@ -446,13 +446,13 @@ const PropertyForm: React.FC<PropertyFormProps> = ({
 
 const styles = StyleSheet.create({
   scrollViewContainer: {
-    backgroundColor: "#fff", 
+   
     paddingBottom: 20,
   },
   formContainer: {
     flex: 1,
     padding: 20,
-    backgroundColor: "#fff",
+    backgroundColor: "#FFFFFF", // White background for the form
   },
   header: {
     marginBottom: 20,
@@ -461,6 +461,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 5,
+    color: "#004D40", // Dark green header text color
   },
   headerSubText: {
     fontSize: 16,
@@ -473,38 +474,39 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 10,
-    color: "#007bff",
+    color: "#004D40", // Dark green section title color
   },
   label: {
     fontSize: 16,
     fontWeight: "bold",
     marginBottom: 5,
+    color: "#004D40", // Dark green label color
   },
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 15,
-    borderColor: "#ccc",
+    borderColor: "#004D40", // Dark green border color
     borderWidth: 1,
     borderRadius: 5,
     paddingLeft: 10,
-    backgroundColor: "#fff",
+    backgroundColor: "#FFFFFF", // White background for input container
   },
   input: {
     flex: 1,
     padding: 10,
     fontSize: 16,
-    backgroundColor: "#fff",
+    backgroundColor: "#FFFFFF", // White background for inputs
   },
   textArea: {
     height: 100,
   },
   picker: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#FFFFFF", // White background for picker
   },
   calendarLabel: {
-    color: "#007bff",
+    color: "#004D40", // Dark green calendar label color
     fontSize: 16,
     textDecorationLine: "underline",
     marginBottom: 15,
@@ -524,22 +526,22 @@ const styles = StyleSheet.create({
     width: "30%",
     padding: 10,
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: "#004D40", // Dark green border color for amenity buttons
     borderRadius: 5,
     marginBottom: 10,
   },
   amenityButtonSelected: {
-    backgroundColor: "#007bff",
+    backgroundColor: "#004D40", // Dark green background for selected amenities
   },
   amenityText: {
     marginTop: 5,
     textAlign: "center",
   },
   amenityTextSelected: {
-    color: "white",
+    color: "#FFFFFF", // White text color for selected amenities
   },
   imageButton: {
-    color: "#007bff",
+    color: "#004D40", // Dark green text color for image button
     textAlign: "center",
     marginVertical: 10,
     fontSize: 16,
@@ -559,7 +561,7 @@ const styles = StyleSheet.create({
     height: 100,
   },
   mapLink: {
-    color: "#007bff",
+    color: "#004D40", // Dark green map link color
     fontSize: 16,
     textDecorationLine: "underline",
     marginVertical: 10,
@@ -575,7 +577,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 20,
     right: 20,
-    backgroundColor: "#007bff",
+    backgroundColor: "#004D40", // Dark green background for location button
     borderRadius: 50,
     padding: 10,
     justifyContent: "center",
@@ -583,7 +585,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   submitButton: {
-    backgroundColor: "#007bff",
+    backgroundColor: "#004D40", // Dark green background for submit button
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
@@ -591,14 +593,14 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   submitButtonText: {
-    color: "#fff",
+    color: "#FFFFFF", // White text color for submit button
     fontSize: 16,
     fontWeight: "bold",
   },
   itemText: {
     padding: 10,
     borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
+    borderBottomColor: "#004D40", // Dark green border color for item text
   },
 });
 
