@@ -1,3 +1,5 @@
+// FAQ.tsx
+
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 
@@ -55,29 +57,34 @@ const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 20,
     paddingVertical: 30,
-    backgroundColor: '#fff',
+    backgroundColor: '#E0F2F1', // Light green background
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
+    color: '#004D40', // Dark green text
   },
   faqItem: {
     marginBottom: 20,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#ffffff', // White background for each FAQ item
     padding: 15,
-    borderRadius: 8,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#E0F2F1', // Light green border
     elevation: 2,
   },
   question: {
     fontSize: 18,
     fontWeight: 'bold',
+    color: '#004D40', // Dark green text
     marginBottom: 10,
   },
   answer: {
     fontSize: 16,
     lineHeight: 24,
+    color: '#333', // Dark text for readability
   },
 });
 

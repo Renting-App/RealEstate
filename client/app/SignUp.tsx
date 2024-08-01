@@ -212,7 +212,7 @@
 // export default Signup;
 
 import React from "react";
-import { View, Text, StyleSheet, Dimensions } from "react-native";
+import { View, Text, StyleSheet, Dimensions ,Image , ScrollView } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Input, Button } from "react-native-elements";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -304,76 +304,92 @@ const Signup: React.FC<Props> = ({ navigation }) => {
     };
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Sign up</Text>
-            <View style={styles.inputContainer}>
-                <Input
-                    placeholder='Username'
-                    containerStyle={styles.input}
-                    value={value.username}
-                    onChangeText={(text) => setValue({ ...value, username: text })}
-                    leftIcon={<Icon name='user' size={16} />}
-                />
-                <Input
-                    placeholder='Phone Number'
-                    containerStyle={styles.input}
-                    value={value.phoneNumber}
-                    onChangeText={(text) => setValue({ ...value, phoneNumber: text })}
-                    leftIcon={<Icon name='phone' size={16} />}
-                    keyboardType='numeric'
-                />
-                <Input
-                    placeholder='Email'
-                    containerStyle={styles.input}
-                    value={value.email}
-                    onChangeText={(text) => setValue({ ...value, email: text })}
-                    leftIcon={<Icon name='envelope' size={16} />}
-                    autoCapitalize='none'
-                />
-                <Input
-                    placeholder='Password'
-                    containerStyle={styles.input}
-                    value={value.password}
-                    onChangeText={(text) => setValue({ ...value, password: text })}
-                    secureTextEntry={true}
-                    leftIcon={<Icon name='key' size={16} />}
-                />
-                {value.error ? <Text style={styles.errorText}>{value.error}</Text> : null}
-                <Button title="Submit" buttonStyle={styles.button} onPress={signUp} />
-            </View>
-        </View>
-    );
-};
+        <ScrollView >
+          <View style={styles.container}>
 
-const styles = StyleSheet.create({
-    container: {
+             <Image
+        source={require('../assets/images/Signup.png')}
+        style={styles.image}
+        resizeMode="contain"
+      />
+          <Text style={styles.title}>Sign up</Text>
+          <View style={styles.inputContainer}>
+            <Input
+              placeholder="Username"
+              containerStyle={styles.input}
+              value={value.username}
+              onChangeText={(text) => setValue({ ...value, username: text })}
+              leftIcon={<Icon name="user" size={16} />}
+            />
+            <Input
+              placeholder="Phone Number"
+              containerStyle={styles.input}
+              value={value.phoneNumber}
+              onChangeText={(text) => setValue({ ...value, phoneNumber: text })}
+              leftIcon={<Icon name="phone" size={16} />}
+              keyboardType="numeric"
+            />
+            <Input
+              placeholder="Email"
+              containerStyle={styles.input}
+              value={value.email}
+              onChangeText={(text) => setValue({ ...value, email: text })}
+              leftIcon={<Icon name="envelope" size={16} />}
+              autoCapitalize="none"
+            />
+            <Input
+              placeholder="Password"
+              containerStyle={styles.input}
+              value={value.password}
+              onChangeText={(text) => setValue({ ...value, password: text })}
+              secureTextEntry={true}
+              leftIcon={<Icon name="key" size={16} />}
+            />
+            {value.error ? <Text style={styles.errorText}>{value.error}</Text> : null}
+            <Button title="Submit" buttonStyle={styles.button} onPress={signUp} />
+          </View>
+          </View>
+         
+        </ScrollView>
+      );
+    };
+    
+    const styles = StyleSheet.create({
+      container: {
         flex: 1,
-        paddingTop: 50,
-        backgroundColor: "#f5f5f5",
+        
+        paddingBottom:50,
+        backgroundColor: "#E0F2F1", // Light green background
         alignItems: "center",
         justifyContent: "center",
-    },
-    title: {
+      },
+      title: {
         fontSize: 24,
         fontWeight: "bold",
         marginBottom: 20,
-    },
-    inputContainer: {
+        color: "#004D40", // Dark green color for text
+      },
+      image: {
+        width: Dimensions.get('window').width * 0.7, 
+        height: Dimensions.get('window').height * 0.3, 
+        margin: 20,
+      },
+      inputContainer: {
         width: "80%",
-    },
-    input: {
+      },
+      input: {
         marginBottom: 20,
-    },
-    button: {
-        backgroundColor: "#007BFF",
+      },
+      button: {
+        backgroundColor: "#00796B", // Medium green for button
         borderRadius: 5,
         paddingVertical: 15,
         marginTop: 20,
-    },
-    errorText: {
+      },
+      errorText: {
         color: "#ff0000",
         marginBottom: 10,
-    },
-});
-
-export default Signup;
+      },
+    });
+    
+    export default Signup;

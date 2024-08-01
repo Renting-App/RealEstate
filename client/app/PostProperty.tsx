@@ -476,7 +476,61 @@ const PostProperty = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#E0F2F1", // Light green background
+    padding: 16,
+  },
+  formContainer: {
+    backgroundColor: "#FFFFFF", // White background for the form
+    borderRadius: 8,
+    padding: 16,
+    shadowColor: "#004D40", // Dark green shadow color
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 4, // For Android shadow effect
+    marginBottom: 16,
+  },
+  button: {
+    backgroundColor: "#004D40", // Dark green button background
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: "#E0F2F1", // Light green text color
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  input: {
+    borderColor: "#004D40", // Dark green border color
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 16,
+    backgroundColor: "#FFFFFF", // White background for inputs
+  },
+  mapContainer: {
+    height: 200,
+    borderRadius: 8,
+    marginBottom: 16,
+  },
+  calendarContainer: {
+    backgroundColor: "#FFFFFF", // White background for calendar
+    borderRadius: 8,
+    padding: 16,
+    shadowColor: "#004D40", // Dark green shadow color
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 4, // For Android shadow effect
+  },
+  suggestion: {
+    padding: 12,
+    borderBottomColor: "#004D40", // Dark green border color for suggestions
+    borderBottomWidth: 1,
   },
 });
+
 
 export default PostProperty;

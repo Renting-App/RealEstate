@@ -76,7 +76,6 @@ const MyAccount = () => {
   }
 
   const defaultImage = "https://via.placeholder.com/100?text=No+Image";
-
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
@@ -118,14 +117,14 @@ const MyAccount = () => {
           style={styles.sectionButton}
           onPress={() => router.push("/EditProfile")}
         >
-          <Ionicons name="person" size={20} color="#007bff" />
+          <Ionicons name="person" size={20} color="#004D40" />
           <ThemedText style={styles.sectionButtonText}>Edit Profile</ThemedText>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.sectionButton}
           onPress={() => router.push("/MyProperties")}
         >
-          <Ionicons name="home" size={20} color="#007bff" />
+          <Ionicons name="home" size={20} color="#004D40" />
           <ThemedText style={styles.sectionButtonText}>
             Manage My Properties
           </ThemedText>
@@ -139,7 +138,7 @@ const MyAccount = () => {
           style={styles.sectionButton}
           onPress={() => setIsModalVisible(true)}
         >
-          <Ionicons name="help-circle" size={20} color="#007bff" />
+          <Ionicons name="help-circle" size={20} color="#004D40" />
           <ThemedText style={styles.sectionButtonText}>
             Contact Support
           </ThemedText>
@@ -176,21 +175,21 @@ const MyAccount = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f8f9fa",
+    backgroundColor: "#E0F2F1", // Light green background
   },
   header: {
-    backgroundColor: "#007bff",
+    backgroundColor: "#004D40", // Dark green background
     padding: 20,
     position: "relative",
     alignItems: "center",
   },
   notificationIconContainer: {
     position: "absolute",
-    top: 10,
-    right: 10,
+    top: 15,
+    right: 15,
   },
   notificationButton: {
-    backgroundColor: "#007bff",
+    backgroundColor: "#004D40", // Dark green background
     padding: 10,
     borderRadius: 50,
     justifyContent: "center",
@@ -243,7 +242,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginBottom: 10,
     fontWeight: "bold",
-    color: "#343a40",
+    color: "#004D40", // Dark green color
   },
   sectionButton: {
     flexDirection: "row",
@@ -253,7 +252,7 @@ const styles = StyleSheet.create({
   sectionButtonText: {
     marginLeft: 10,
     fontSize: 16,
-    color: "#007bff",
+    color: "#004D40", // Dark green color
   },
   logoutButton: {
     marginTop: 20,

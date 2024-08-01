@@ -191,27 +191,27 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: "#f8f8f8",
+    backgroundColor: "#E0F2F1", // Light green background
   },
   label: {
     marginBottom: 8,
     fontSize: 16,
     fontWeight: "bold",
-    color: "#333",
+    color: "#004D40", // Dark green label color
   },
   picker: {
     marginBottom: 16,
     padding: 8,
-    backgroundColor: "#fff",
-    borderColor: "#ccc",
+    backgroundColor: "#FFFFFF", // White background for picker
+    borderColor: "#004D40", // Dark green border color
     borderWidth: 1,
     borderRadius: 8,
   },
   input: {
     marginBottom: 16,
     padding: 8,
-    backgroundColor: "#fff",
-    borderColor: "#ccc",
+    backgroundColor: "#FFFFFF", // White background for input
+    borderColor: "#004D40", // Dark green border color
     borderWidth: 1,
     borderRadius: 8,
   },
@@ -229,7 +229,7 @@ const styles = StyleSheet.create({
   checkboxLabel: {
     marginLeft: 8,
     fontSize: 16,
-    color: "#333",
+    color: "#004D40", // Dark green checkbox label color
   },
   buttonContainer: {
     marginVertical: 30,

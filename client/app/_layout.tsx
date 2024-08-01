@@ -85,14 +85,45 @@ export type RootStackParamList = {
 
 const Stack = createStackNavigator<RootStackParamList>();
 
+const slideFromBottom = ({ current }: any) => {
+  const translateY = current.progress.interpolate({
+    inputRange: [0, 1],
+    outputRange: [600, 0], // Adjust the height to match your screen height
+  });
+
+  return {
+    cardStyle: {
+      transform: [{ translateY }],
+    },
+  };
+};
+
+const slideUp = ({ current }: any) => {
+  const translateY = current.progress.interpolate({
+    inputRange: [0, 1],
+    outputRange: [600, 0], // Slide up from bottom
+  });
+
+  return {
+    cardStyle: {
+      transform: [{ translateY }],
+    },
+  };
+};
+
+
 export default function App() {
   return (
     <FavoritesProvider>
       <ThemeProvider>
         {/* <NavigationContainer> */}
         <Stack.Navigator
-          initialRouteName="Welcome"
-          screenOptions={{ headerShown: true }}
+         initialRouteName="Welcome"
+         screenOptions={({ route }) => ({
+           // Apply the slideFromBottom transition only for 'SignIn' and 'SignUp'
+           cardStyleInterpolator: route.name === 'SignIn' || route.name === 'SignUp' ? slideFromBottom : undefined,
+           headerShown: true,
+         })}
         >
           <Stack.Screen
             name="Welcome"

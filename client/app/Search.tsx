@@ -1,5 +1,5 @@
 import React from "react";
-import { TextInput, StyleSheet, ViewStyle, TextStyle } from "react-native";
+import { TextInput, StyleSheet, ViewStyle, TextStyle, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { ThemedView } from "@/components/ThemedView";
 
@@ -19,13 +19,16 @@ const Search: React.FC<Props> = ({ searchQuery, setSearchQuery, onSearch, placeh
 
   return (
     <ThemedView style={styles.container}>
-      <Ionicons name="search" size={24} color="black" style={styles.icon} />
       <TextInput
         style={[styles.input, style]} // Combine default styles with the passed style
         placeholder={placeholder}
+        placeholderTextColor="#888"
         value={searchQuery}
         onChangeText={handleSearch}
       />
+      <TouchableOpacity style={styles.iconContainer} onPress={() => onSearch(searchQuery)}>
+        <Ionicons name="search" size={20} color="black" />
+      </TouchableOpacity>
     </ThemedView>
   );
 };
@@ -34,20 +37,27 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#E8E8E8",
-    borderRadius: 6,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    margin: 10,
-    width: "65%",
+    backgroundColor: "#fff",
+    borderRadius: 8,
+    elevation: 3, // Add shadow for depth
+    paddingHorizontal: 12,
+    marginVertical: 10,
+    marginHorizontal: 16,
+    width: "80%", // Adjust width to fit most screens
+  },
+  iconContainer: {
+    padding: 8,
+    justifyContent: "center",
+    alignItems: "center",
   },
   icon: {
     marginRight: 10,
   },
   input: {
     flex: 1,
-    padding: 8,
+    padding: 12,
     fontSize: 16,
+    color: "#333",
   },
 });
 

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { View, Text, StyleSheet, Dimensions, Image } from 'react-native';
 import { Button } from 'react-native-elements';
@@ -14,9 +13,9 @@ type Props = {
 const Welcome: React.FC<Props> = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Find Your Home !</Text>
+      <Text style={styles.title}>Find Your Home!</Text>
       <Image
-        source={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/e/e6/Home_icon_black.png' }}
+        source={require('../assets/images/welcome.png')}
         style={styles.image}
         resizeMode="contain"
       />
@@ -31,7 +30,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 50,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#E0F2F1', // Light green background
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -39,10 +38,11 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
-  }
-  , image: {
-    width: Dimensions.get('window').width * 0.8, 
-    height: Dimensions.get('window').height * 0.3, 
+    color: '#004D40', // Dark green color for text
+  },
+  image: {
+    width: Dimensions.get('window').width * 0.9, 
+    height: Dimensions.get('window').height * 0.4, 
     marginBottom: 20,
   },
   buttons: {
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 20,
-    backgroundColor: '#007BFF',
+    backgroundColor: '#00796B', // Medium green for button
     borderRadius: 5,
     paddingVertical: 15,
   },

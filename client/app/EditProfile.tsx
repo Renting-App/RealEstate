@@ -24,7 +24,7 @@ import * as ImagePicker from "expo-image-picker";
 
 interface User {
   username: string;
-  password:string;
+  password: string;
   email: string;
   phone_number: string;
   image?: string; // Optional because the image may not be set
@@ -32,7 +32,7 @@ interface User {
 
 const EditProfile = () => {
   const [user, setUser] = useState<User>({
-    password:'',
+    password: '',
     username: "",
     email: "",
     phone_number: "",
@@ -83,7 +83,7 @@ const EditProfile = () => {
         Alert.alert("Error", "New passwords do not match");
         return;
       }
-  
+
       try {
         const currentUser = auth.currentUser;
         if (currentUser && oldPassword) {
@@ -102,9 +102,9 @@ const EditProfile = () => {
         return;
       }
     }
-  
+
     const { password, ...updatedUser } = user; // Exclude password field
-  
+
     setLoading(true);
     try {
       const currentUser = auth.currentUser;
@@ -124,7 +124,6 @@ const EditProfile = () => {
       Alert.alert("Error", "Failed to update profile");
     }
   };
-  
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -133,16 +132,16 @@ const EditProfile = () => {
       aspect: [4, 3],
       quality: 1,
     });
-  
+
     if (!result.canceled && result.assets && result.assets.length > 0) {
       setUser({ ...user, image: result.assets[0].uri });
     }
   };
-  
+
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator size="large" color="#4caf50" />
       </View>
     );
   }
@@ -172,7 +171,7 @@ const EditProfile = () => {
             source={{ uri: user.image || 'https://via.placeholder.com/150' }}
             style={styles.image}
           />
-          <Ionicons name="camera" size={30} color="#007bff" style={styles.cameraIcon} />
+          <Ionicons name="camera" size={30} color="#004D40" style={styles.cameraIcon} />
         </TouchableOpacity>
 
         <View style={styles.formGroup}>
@@ -182,7 +181,7 @@ const EditProfile = () => {
               setEditField(editField === "username" ? null : "username")
             }
           >
-            <Ionicons name="person" size={20} color="#007bff" />
+            <Ionicons name="person" size={20} color="#004D40" />
             <ThemedText type="label" style={styles.label}>
               Username
             </ThemedText>
@@ -202,7 +201,7 @@ const EditProfile = () => {
             style={styles.formGroupHeader}
             onPress={() => setEditField(editField === "email" ? null : "email")}
           >
-            <Ionicons name="mail" size={20} color="#007bff" />
+            <Ionicons name="mail" size={20} color="#004D40" />
             <ThemedText type="label" style={styles.label}>
               Email
             </ThemedText>
@@ -224,7 +223,7 @@ const EditProfile = () => {
               setEditField(editField === "phone_number" ? null : "phone_number")
             }
           >
-            <Ionicons name="call" size={20} color="#007bff" />
+            <Ionicons name="call" size={20} color="#004D40" />
             <ThemedText type="label" style={styles.label}>
               Phone Number
             </ThemedText>
@@ -246,7 +245,7 @@ const EditProfile = () => {
               setEditField(editField === "password" ? null : "password")
             }
           >
-            <Ionicons name="lock-closed" size={20} color="#007bff" />
+            <Ionicons name="lock-closed" size={20} color="#004D40" />
             <ThemedText type="label" style={styles.label}>
               Change Password
             </ThemedText>
@@ -294,20 +293,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: "#f8f9fa",
+    backgroundColor: "#E0F2F1", // Light green background
   },
   loadingContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#f8f9fa",
+    backgroundColor: "#E0F2F1", // Light green background
   },
   title: {
-    fontSize: 26,
-    marginBottom: 20,
+    fontSize: 24,
     fontWeight: "bold",
-    color: "#343a40",
-    textAlign: "center",
+    color: "#004D40", // Dark green
+    marginBottom: 20,
   },
   formGroup: {
     marginBottom: 15,
@@ -318,9 +316,27 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   label: {
-    fontSize: 14,
-    color: "#495057",
     marginLeft: 10,
+    fontSize: 16,
+    color: "#004D40", // Dark green
+  },
+  input: {
+    height: 40,
+    borderColor: "#4caf50", // Green border
+    borderBottomWidth: 1,
+    marginBottom: 10,
+    paddingHorizontal: 10,
+    color: "#004D40", // Dark green
+  },
+  button: {
+    backgroundColor: "#004D40", // Green
+    paddingVertical: 15,
+    borderRadius: 5,
+    alignItems: "center",
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 18,
   },
   imageContainer: {
     alignItems: "center",
@@ -330,34 +346,13 @@ const styles = StyleSheet.create({
     width: 150,
     height: 150,
     borderRadius: 75,
-    backgroundColor: "#e9ecef",
+    borderColor: "#004D40",
+    borderWidth: 2,
   },
   cameraIcon: {
     position: "absolute",
     bottom: 10,
     right: 10,
-  },
-  input: {
-    height: 50,
-    borderColor: "#ced4da",
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingLeft: 15,
-    backgroundColor: "#fff",
-    fontSize: 16,
-    marginBottom: 10,
-  },
-  button: {
-    backgroundColor: "#007bff",
-    paddingVertical: 15,
-    borderRadius: 8,
-    alignItems: "center",
-    marginTop: 20,
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "bold",
   },
 });
 
