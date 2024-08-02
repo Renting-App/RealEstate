@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Text,
+  RefreshControl,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -20,10 +21,7 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import DrawerContent from "@/app/DrawerContent";
 import Search from "./Search";
-import RefreshButton from './RefreshButton'; // Import the RefreshButton component
-import Pagination from "./Pagination";
 import Profile from "./Profile";
-
 
 type HousesScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -54,7 +52,7 @@ interface Residence {
   visits: [];
   favourite: boolean;
   date_of_creation: string;
-  amenities:any;
+  amenities: any;
   status: string;
   notification: string;
   iduser: string;
@@ -78,6 +76,7 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
     []
   );
   const [showPagination, setShowPagination] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   const navigation = useNavigation<HousesScreenNavigationProp>();
 
@@ -119,15 +118,18 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
         setFilteredResidences(mappedResidences);
         setDisplayedResidences(mappedResidences.slice(0, itemsPerFetch));
         setLoading(false);
+        setRefreshing(false);
       })
       .catch((error) => {
         console.error("Error fetching residences:", error);
         setLoading(false);
+        setRefreshing(false); 
       });
   };
 
   const handleRefresh = () => {
-    fetchResidences(); // Call fetchResidences to refresh the data
+    setRefreshing(true);
+    fetchResidences(); 
   };
 
   const filterResidences = (residences: Residence[], criteria: any) => {
@@ -227,7 +229,7 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
       <Image
         source={{ uri: item.images[0] }}
         style={styles.image}
-        resizeMode="contain"
+        resizeMode="cover"
       />
       <View style={styles.cardContent}>
         <View style={styles.titleContainer}>
@@ -243,19 +245,19 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
         </ThemedText>
         <View style={styles.detailsContainer}>
           <View style={styles.detailItem}>
-            <MaterialCommunityIcons name="resize" size={16}  color="black" />
+            <MaterialCommunityIcons name="resize" size={16} color="#666" />
             <ThemedText type="default" style={styles.detailText}>
               {item.size} m²
             </ThemedText>
           </View>
           <View style={styles.detailItem}>
-            <Ionicons name="bed" size={16}  color="black" />
+            <Ionicons name="bed" size={16} color="#666" />
             <ThemedText type="default" style={styles.detailText}>
               {item.rooms} Rooms
             </ThemedText>
           </View>
           <View style={styles.detailItem}>
-            <MaterialCommunityIcons name="toilet" size={16}  color="black" />
+            <Ionicons name="water" size={16} color="#666" />
             <ThemedText type="default" style={styles.detailText}>
               {item.bathrooms} Bathrooms
             </ThemedText>
@@ -285,13 +287,12 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
       <FlatList
         ListHeaderComponent={
           <ThemedView style={styles.container}>
-            <View style={styles.header}> 
+            <View style={styles.header}>
               <TouchableOpacity onPress={() => setIsSidebarVisible(true)}>
                 <Ionicons name="menu" style={styles.menuIcon} size={24} />
               </TouchableOpacity>
-              <RefreshButton onRefresh={handleRefresh} />
               <View style={styles.profileContainer}>
-               <Profile/>
+                <Profile />
               </View>
             </View>
             <View style={styles.searchContainer}>
@@ -317,8 +318,8 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
                 onPress={handleRentPress}
               >
                 <Image
-                  source={require('../assets/images/rent.png')}
-                   style={styles.filterCardImage}
+                  source={require("../assets/images/rent.png")}
+                  style={styles.filterCardImage}
                 />
                 <Text style={styles.filterCardText}>For Rent</Text>
               </TouchableOpacity>
@@ -327,7 +328,7 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
                 onPress={handleSalePress}
               >
                 <Image
-                  source={require('../assets/images/sale.png')}
+                  source={require("../assets/images/sale.png")}
                   style={styles.filterCardImage}
                 />
                 <Text style={styles.filterCardText}>For Sale</Text>
@@ -353,6 +354,9 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
           setShowPagination(offsetY > 200 && displayedResidences.length >= 9);
         }}
         ListFooterComponentStyle={styles.footer}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+        }
       />
     </View>
   );
@@ -361,14 +365,14 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 30,
-    padding:20
+    marginTop: 20,
+    padding: 20,
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    
+    padding: 10,
   },
   menuIcon: {
     color: "#333",
@@ -381,7 +385,7 @@ const styles = StyleSheet.create({
     width: 45,
     height: 45,
     borderRadius: 20,
-    
+    marginLeft: 10,
   },
   profileName: {
     fontSize: 16,
@@ -390,7 +394,6 @@ const styles = StyleSheet.create({
   searchContainer: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-evenly",
     paddingHorizontal: 10,
     marginBottom: 10,
   },
@@ -399,7 +402,7 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: 5,
     padding: 8,
-    
+    marginRight: 10,
   },
   filterIcon: {
     marginLeft: 10,
@@ -435,7 +438,7 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: "#fff",
     borderRadius: 8,
-    marginBottom: 12,
+    marginBottom: 10,
     overflow: "hidden",
     elevation: 4,
     shadowColor: "#000",
@@ -447,7 +450,7 @@ const styles = StyleSheet.create({
   },
   typeContainer: {
     borderRadius: 4,
-    padding: 10,
+    padding: 5,
     position: "absolute",
     top: 10,
     left: 10,
@@ -491,7 +494,6 @@ const styles = StyleSheet.create({
   detailsContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    padding: 5,
   },
   detailItem: {
     flexDirection: "row",
@@ -514,7 +516,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   showMoreText: {
-    color: "black",
+    color: "#00796B",
     fontSize: 16,
     fontWeight: "bold",
   },
