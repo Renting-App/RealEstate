@@ -165,23 +165,21 @@ const RequestTour: React.FC = () => {
       />
 
       {residenceData.visits && residenceData.visits.length > 0 ? (
-        <View style={styles.datesContainer}>
+        <View style={styles.pickerContainer}>
           <Text style={styles.datesTitle}>Available Visit Dates:</Text>
           <Text style={styles.instructionsText}>
             Please select a date from the options below:
           </Text>
-          <View style={styles.pickerContainer}>
-            <Picker
-              selectedValue={selectedVisitDate}
-              onValueChange={(itemValue) => setSelectedVisitDate(itemValue)}
-              style={styles.picker}
-            >
-              <Picker.Item label="Select a date" value="" />
-              {residenceData.visits.map((date, index) => (
-                <Picker.Item key={index} label={date} value={date} />
-              ))}
-            </Picker>
-          </View>
+          <Picker
+            selectedValue={selectedVisitDate}
+            onValueChange={(itemValue) => setSelectedVisitDate(itemValue)}
+            style={styles.picker}
+          >
+            <Picker.Item label="Select a date" value="" />
+            {residenceData.visits.map((date, index) => (
+              <Picker.Item key={index} label={date} value={date} />
+            ))}
+          </Picker>
         </View>
       ) : (
         <Text style={styles.noDatesText}>No available visit dates.</Text>
@@ -206,7 +204,7 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     padding: 16,
-    backgroundColor: "#f9f9f9",
+    backgroundColor: "#ffffff",
   },
   header: {
     fontSize: 24,
@@ -224,24 +222,21 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginBottom: 16,
     paddingHorizontal: 12,
-    backgroundColor: "#fff",
+    backgroundColor: "#ffffff",
   },
   messageInput: {
     height: 100,
     textAlignVertical: "top",
-    marginTop:30,
-    paddingTop:20
+    marginTop: 20,
+    paddingTop: 12,
   },
-  datesContainer: {
+  pickerContainer: {
     marginTop: 16,
     padding: 16,
-    backgroundColor: "#fff",
+    backgroundColor: "#ffffff",
     borderRadius: 8,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 4,
+    borderColor: "#ddd",
+    borderWidth: 1,
   },
   datesTitle: {
     fontSize: 18,
@@ -254,13 +249,6 @@ const styles = StyleSheet.create({
     color: "#666",
     marginBottom: 12,
   },
-  pickerContainer: {
-    borderColor: "#ddd",
-    borderWidth: 1,
-    borderRadius: 5,
-    overflow: "hidden",
-    backgroundColor: "#fff",
-  },
   picker: {
     height: 50,
     width: "100%",
@@ -270,14 +258,14 @@ const styles = StyleSheet.create({
     color: "red",
   },
   button: {
-    backgroundColor: "#007BFF",
+    backgroundColor: "#00796B",
     paddingVertical: 12,
     borderRadius: 5,
     alignItems: "center",
-    marginTop: 10,
+    marginTop: 20,
   },
   buttonText: {
-    color: "#fff",
+    color: "#ffffff",
     fontSize: 16,
     fontWeight: "bold",
   },
