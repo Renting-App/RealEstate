@@ -127,7 +127,7 @@ const MyProperties: React.FC = () => {
   const navigateToUpdateForm = (property: Property) => {
     navigation.navigate("UpdatePropertyForm", {
       property,
-      onUpdate: handleUpdate,
+      onUpdate: handleUpdate,////
     });
   };
 
