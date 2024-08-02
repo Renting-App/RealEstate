@@ -184,7 +184,7 @@ const PropertyDetails: React.FC = () => {
                   size={24}
                   color={
                     residenceData.amenities[key as keyof Property["amenities"]]
-                      ? "#4CAF50"
+                      ? "#000080"
                       : "#ccc"
                   }
                 />
@@ -230,7 +230,7 @@ const PropertyDetails: React.FC = () => {
             residence: JSON.stringify(residenceData),
           });
         }}
-        color="#00796B" 
+        color="#000080" 
       />
     </ScrollView>
   );
@@ -251,12 +251,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#004D40",
+    color: "#000040",
   },
   price: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#00796B",
+    color: "#000040",
   },
   adminFee: {
     fontSize: 16,
@@ -286,7 +286,7 @@ const styles = StyleSheet.create({
   detailItem: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#00796B",
+    backgroundColor: "#000080",
     borderRadius: 5,
     margin: 10,
     padding: 5,
@@ -298,13 +298,13 @@ const styles = StyleSheet.create({
   },
   description: {
     fontSize: 16,
-    color: "#004D40", 
+    color: "black", 
     marginBottom: 20,
   },
   address: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "#004D40", 
+    color: "black", 
     marginBottom: 20,
   },
   amenities: {
@@ -313,7 +313,7 @@ const styles = StyleSheet.create({
   amenitiesTitle: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#004D40", 
+    color: "#000080", 
     marginBottom: 10,
   },
   amenitiesList: {
@@ -323,11 +323,13 @@ const styles = StyleSheet.create({
   amenity: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent:"space-evenly",
     marginRight: 15,
     marginBottom: 10,
   },
   amenityIcon: {
     marginLeft: 8,
+    
   },
   amenityText: {
     fontSize: 14,

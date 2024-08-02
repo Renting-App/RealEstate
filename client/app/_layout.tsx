@@ -73,15 +73,7 @@ export type RootStackParamList = {
   AccountCreated: undefined;
   NotificationDetails: undefined;
   NotificationList:undefined
-  FilteredDataComponent: { criteria: {
-    category: string;
-    location: string;
-    subLocation: string;
-    operation: string;
-    priceMin: string;
-    priceMax: string;
-    amenities: string[];
-  }};
+  FilteredDataComponent: { criteria: {}}
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -111,6 +103,7 @@ export default function App() {
            // Apply the slideFromBottom transition only for 'SignIn' and 'SignUp'
            cardStyleInterpolator: route.name === 'SignIn' || route.name === 'SignUp' ? slideFromBottom : undefined,
            headerShown: true,
+           headerTitle:''
          })}
         >
           <Stack.Screen
@@ -139,7 +132,7 @@ export default function App() {
             name="FilteredDataComponent"
             component={FilteredDataComponent}
             options={{
-              headerRight: () => <HomeButton />, // Add the HomeButton to the right of the header
+              headerRight: () => <HomeButton />, 
             }}
           />
           <Stack.Screen name="Maps" component={Maps} />

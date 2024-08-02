@@ -50,14 +50,14 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 10,
-    color: '#004D40', // Dark green text
+    color: '#000040', // Dark green text
   },
   sectionTitle: {
     fontSize: 20,
     fontWeight: 'bold',
     marginTop: 20,
     marginBottom: 10,
-    color: '#004D40', // Dark green text
+    color: '#000080', // Dark green text
   },
   description: {
     fontSize: 16,
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     padding: 15,
     marginBottom: 15,
     borderWidth: 1,
-    borderColor: '#E0F2F1', // Light green border
+    borderColor: '#000080', // Light border
   },
 });
 

@@ -144,7 +144,7 @@ const FilteredDataComponent: React.FC<FilteredDataComponentProps> = ({ route }) 
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator size="large" color="#000080" />
       </View>
     );
   }
@@ -202,7 +202,7 @@ const FilteredDataComponent: React.FC<FilteredDataComponentProps> = ({ route }) 
                     {item.bathrooms} Bathrooms
                   </ThemedText>
                 </View>
-              </View>
+              </View> 
             </View>
           </View>
         </TouchableOpacity>

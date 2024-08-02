@@ -99,6 +99,14 @@ const Signin: React.FC<Props> = ({ navigation }) => {
         />
         {value.error ? <Text style={styles.errorText}>{value.error}</Text> : null}
         <Button title="Submit" buttonStyle={styles.button} onPress={signIn} />
+        <Text style={
+          {
+            textAlign: 'center',
+            fontSize: 16,
+            fontWeight: "bold",
+            marginTop: 10
+          }}>
+          You don't have an account yet ?</Text>
         <Button
           title="Sign up"
           buttonStyle={[styles.button, styles.signupButton]}
@@ -112,30 +120,30 @@ const Signin: React.FC<Props> = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#E0F2F1", // Light green background
     padding: 50,
-    paddingBottom:0,
+    paddingBottom: 0,
     alignItems: 'center',
-    justifyContent:"center",
-    
+    justifyContent: "center",
+
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent:"center"
+    justifyContent: "center"
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#004D40", // Dark green color for text
-    position:"absolute",
+    color: "#000040", // navy blue color for text
+    position: "absolute",
     top: -90,
-    right:70
+    right: 70
   },
   image: {
-    position:"absolute",
+    position: "absolute",
     top: -320,
-    width: Dimensions.get('window').width , // 60% of screen width
+    right: -200,
+    width: Dimensions.get('window').width, // 60% of screen width
     height: Dimensions.get('window').height * 0.5, // 30% of screen height
   },
   inputContainer: {
@@ -143,16 +151,19 @@ const styles = StyleSheet.create({
   },
   input: {
     marginBottom: 20,
-    marginTop:10
+    marginTop: 10
   },
   button: {
-    backgroundColor: "#00796B", // Medium green for button
+    backgroundColor: "#000080", // Medium green for button
     borderRadius: 5,
     paddingVertical: 15,
     marginTop: 20,
+    width: 100,
+
+    alignSelf: 'center'
   },
   signupButton: {
-    backgroundColor: "#004D40", // Darker green for signup button
+    backgroundColor: "#000080", // Darker green for signup button
     marginTop: 10,
   },
   errorText: {
