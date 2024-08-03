@@ -3,11 +3,11 @@ import {
   View,
   Text,
   StyleSheet,
-  Image,
   ScrollView,
-  Button,
-  Dimensions,
   TouchableOpacity,
+  Image,
+  Dimensions,
+  Button,
 } from "react-native";
 import { useRoute, useNavigation, RouteProp } from "@react-navigation/native";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -15,14 +15,15 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import MapView, { Marker } from "react-native-maps";
 import { RootStackParamList } from "../constants/types";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { API_BASE_URL } from "@/assets/IPaddress";
 import { useFavorites } from "./FavoritesContext";
 
 export interface Property {
   _id: string;
+  title: string;
   address: string;
   size: string;
   category: "apartment" | "house" | "office" | "studio" | "penthouse";
-  title: string;
   favourite: boolean;
   description: string;
   images: string[];
@@ -49,6 +50,8 @@ export interface Property {
     latitude: number;
     longitude: number;
   };
+  popular: number;
+  recommended: number;
 }
 
 type PropertyDetailsScreenRouteProp = RouteProp<
@@ -74,6 +77,7 @@ const PropertyDetails: React.FC = () => {
         const parsedResidence = JSON.parse(residence);
         setResidenceData(parsedResidence);
         setIsFavourite(parsedResidence.favourite);
+        incrementPopularField(parsedResidence._id);
       } catch (error) {
         console.error("Error parsing residence data:", error);
       }
@@ -82,12 +86,34 @@ const PropertyDetails: React.FC = () => {
     }
   }, [residence]);
 
-  const toggleFavourite = () => {
+  const incrementPopularField = async (propertyId: string) => {
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/houses/${propertyId}/popular`,
+        {
+          method: "POST",
+        }
+      );
+      const data = await response.json();
+      console.log("Popular increment response:", data);
+    } catch (error) {
+      console.error("Error incrementing popular count:", error);
+    }
+  };
+
+  const toggleFavourite = async () => {
     if (residenceData) {
       const newFavouriteStatus = !isFavourite;
       setIsFavourite(newFavouriteStatus);
       if (newFavouriteStatus) {
         addToFavorites(residenceData);
+        try {
+          await fetch(`${API_BASE_URL}/houses/${residenceData._id}/recommend`, {
+            method: "POST",
+          });
+        } catch (error) {
+          console.error("Error incrementing recommended count:", error);
+        }
       } else {
         removeFromFavorites(residenceData._id);
       }
@@ -243,7 +269,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingVertical: 20,
     paddingHorizontal: 16,
-    backgroundColor: "#FFFFFF", 
+    backgroundColor: "#FFFFFF",
   },
   header: {
     marginBottom: 20,
@@ -293,7 +319,7 @@ const styles = StyleSheet.create({
   },
   detailText: {
     fontSize: 16,
-    color: "#ffffff", 
+    color: "#ffffff",
     marginLeft: 5,
   },
   description: {
