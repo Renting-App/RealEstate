@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Text,
+  RefreshControl,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -20,10 +21,7 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import DrawerContent from "@/app/DrawerContent";
 import Search from "./Search";
-import RefreshButton from './RefreshButton'; // Import the RefreshButton component
-import Pagination from "./Pagination";
 import Profile from "./Profile";
-
 
 type HousesScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -54,7 +52,7 @@ interface Residence {
   visits: [];
   favourite: boolean;
   date_of_creation: string;
-  amenities:any;
+  amenities: any;
   status: string;
   notification: string;
   iduser: string;
@@ -64,6 +62,8 @@ interface Residence {
     longitude: number;
   };
   __v: number;
+  popular: number;
+  recommended: number;
 }
 
 const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
@@ -77,7 +77,10 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
   const [displayedResidences, setDisplayedResidences] = useState<Residence[]>(
     []
   );
-  const [showPagination, setShowPagination] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [selectedTab, setSelectedTab] = useState<"popular" | "recommended">(
+    "popular"
+  );
 
   const navigation = useNavigation<HousesScreenNavigationProp>();
 
@@ -90,44 +93,52 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
     fetch(`${API_BASE_URL}/houses`)
       .then((response) => response.json())
       .then((data) => {
-        const mappedResidences = data.map((residence: any) => ({
-          _id: residence._id ?? `id_${Date.now()}`,
-          title: residence.title ?? "",
-          address: residence.address ?? "",
-          size: residence.size ?? 0,
-          price: residence.price ?? 0,
-          rooms: residence.rooms ?? 0,
-          bathrooms: residence.bathrooms ?? 0,
-          description: residence.description ?? "",
-          contact_info: residence.contact_info ?? "",
-          images: residence.images ?? [],
-          operation: residence.operation ?? "",
-          category: residence.category ?? "",
-          location: residence.location ?? "",
-          subLocation: residence.subLocation ?? "",
-          visits: residence.visits ?? [],
-          favourite: residence.favourite ?? false,
-          date_of_creation: residence.date_of_creation ?? "",
-          amenities: residence.amenities ?? {},
-          status: residence.status ?? "",
-          notification: residence.notification ?? "",
-          iduser: residence.iduser ?? "",
-          condition: residence.condition ?? "",
-          map: residence.map ?? {},
-        }));
+      const mappedResidences = data
+          .map((residence: any) => ({
+            _id: residence._id ?? `id_${Date.now()}`,
+            title: residence.title ?? "",
+            address: residence.address ?? "",
+            size: residence.size ?? 0,
+            price: residence.price ?? 0,
+            rooms: residence.rooms ?? 0,
+            bathrooms: residence.bathrooms ?? 0,
+            description: residence.description ?? "",
+            contact_info: residence.contact_info ?? "",
+            images: residence.images ?? [],
+            operation: residence.operation ?? "",
+            category: residence.category ?? "",
+            location: residence.location ?? "",
+            subLocation: residence.subLocation ?? "",
+            visits: residence.visits ?? [],
+            favourite: residence.favourite ?? false,
+            date_of_creation: residence.date_of_creation ?? "",
+            amenities: residence.amenities ?? {},
+            status: residence.status ?? "",
+            notification: residence.notification ?? "",
+            iduser: residence.iduser ?? "",
+            condition: residence.condition ?? "",
+            map: residence.map ?? {},
+            popular: residence.popular ?? 0,
+            recommended: residence.recommended ?? 0,
+          }))
+          .sort((a, b) => b.popular - a.popular); 
+
         setResidences(mappedResidences);
         setFilteredResidences(mappedResidences);
         setDisplayedResidences(mappedResidences.slice(0, itemsPerFetch));
         setLoading(false);
+        setRefreshing(false);
       })
       .catch((error) => {
         console.error("Error fetching residences:", error);
         setLoading(false);
+        setRefreshing(false);
       });
   };
 
   const handleRefresh = () => {
-    fetchResidences(); // Call fetchResidences to refresh the data
+    setRefreshing(true);
+    fetchResidences();
   };
 
   const filterResidences = (residences: Residence[], criteria: any) => {
@@ -184,9 +195,6 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
   const handleShowMore = () => {
     const newDisplayedCount = displayedResidences.length + itemsPerFetch;
     setDisplayedResidences(filteredResidences.slice(0, newDisplayedCount));
-    if (newDisplayedCount >= 9) {
-      setShowPagination(true);
-    }
   };
 
   const handleDetailsPress = (residence: Residence) => {
@@ -209,6 +217,26 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
     filterResidences(residences, saleCriteria);
   };
 
+  const handlePopularPress = () => {
+    const sortedResidences = [...filteredResidences].sort(
+      (a, b) => b.popular - a.popular
+    );
+    setSelectedTab("popular");
+    setFilteredResidences(sortedResidences);
+    setDisplayedResidences(sortedResidences.slice(0, itemsPerFetch));
+    setCurrentPage(1); 
+  };
+
+  const handleRecommendedPress = () => {
+    const sortedResidences = [...filteredResidences].sort(
+      (a, b) => b.recommended - a.recommended
+    );
+    setSelectedTab("recommended");
+    setFilteredResidences(sortedResidences);
+    setDisplayedResidences(sortedResidences.slice(0, itemsPerFetch));
+    setCurrentPage(1); 
+  };
+
   const renderItem = ({ item }: { item: Residence }) => (
     <TouchableOpacity
       style={styles.card}
@@ -227,7 +255,7 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
       <Image
         source={{ uri: item.images[0] }}
         style={styles.image}
-        resizeMode="contain"
+        resizeMode="cover"
       />
       <View style={styles.cardContent}>
         <View style={styles.titleContainer}>
@@ -243,19 +271,19 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
         </ThemedText>
         <View style={styles.detailsContainer}>
           <View style={styles.detailItem}>
-            <MaterialCommunityIcons name="resize" size={16}  color="black" />
+            <MaterialCommunityIcons name="resize" size={16} color="#000080" />
             <ThemedText type="default" style={styles.detailText}>
               {item.size} m²
             </ThemedText>
           </View>
           <View style={styles.detailItem}>
-            <Ionicons name="bed" size={16}  color="black" />
+            <Ionicons name="bed" size={16} color="#000080" />
             <ThemedText type="default" style={styles.detailText}>
               {item.rooms} Rooms
             </ThemedText>
           </View>
           <View style={styles.detailItem}>
-            <MaterialCommunityIcons name="toilet" size={16}  color="black" />
+            <MaterialCommunityIcons name="toilet" size={16} color="#000080" />
             <ThemedText type="default" style={styles.detailText}>
               {item.bathrooms} Bathrooms
             </ThemedText>
@@ -285,13 +313,12 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
       <FlatList
         ListHeaderComponent={
           <ThemedView style={styles.container}>
-            <View style={styles.header}> 
+            <View style={styles.header}>
               <TouchableOpacity onPress={() => setIsSidebarVisible(true)}>
                 <Ionicons name="menu" style={styles.menuIcon} size={24} />
               </TouchableOpacity>
-              <RefreshButton onRefresh={handleRefresh} />
               <View style={styles.profileContainer}>
-               <Profile/>
+                <Profile />
               </View>
             </View>
             <View style={styles.searchContainer}>
@@ -317,8 +344,8 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
                 onPress={handleRentPress}
               >
                 <Image
-                  source={require('../assets/images/rent.png')}
-                   style={styles.filterCardImage}
+                  source={require("../assets/images/rent.png")}
+                  style={styles.filterCardImage}
                 />
                 <Text style={styles.filterCardText}>For Rent</Text>
               </TouchableOpacity>
@@ -327,10 +354,32 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
                 onPress={handleSalePress}
               >
                 <Image
-                  source={require('../assets/images/sale.png')}
+                  source={require("../assets/images/sale.png")}
                   style={styles.filterCardImage}
                 />
                 <Text style={styles.filterCardText}>For Sale</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.tabsContainer}>
+              <TouchableOpacity onPress={handlePopularPress}>
+                <Text
+                  style={[
+                    styles.tabText,
+                    selectedTab === "popular" && styles.selectedTab,
+                  ]}
+                >
+                  Popular
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleRecommendedPress}>
+                <Text
+                  style={[
+                    styles.tabText,
+                    selectedTab === "recommended" && styles.selectedTab,
+                  ]}
+                >
+                  Recommended
+                </Text>
               </TouchableOpacity>
             </View>
           </ThemedView>
@@ -348,11 +397,10 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
             </TouchableOpacity>
           ) : null
         }
-        onScroll={(e) => {
-          const offsetY = e.nativeEvent.contentOffset.y;
-          setShowPagination(offsetY > 200 && displayedResidences.length >= 9);
-        }}
         ListFooterComponentStyle={styles.footer}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+        }
       />
     </View>
   );
@@ -361,14 +409,14 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 30,
-    padding:20
+    marginTop: 20,
+    padding: 20,
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    
+    padding: 10,
   },
   menuIcon: {
     color: "#333",
@@ -381,7 +429,7 @@ const styles = StyleSheet.create({
     width: 45,
     height: 45,
     borderRadius: 20,
-    
+    marginLeft: 10,
   },
   profileName: {
     fontSize: 16,
@@ -390,7 +438,6 @@ const styles = StyleSheet.create({
   searchContainer: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-evenly",
     paddingHorizontal: 10,
     marginBottom: 10,
   },
@@ -399,7 +446,7 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: 5,
     padding: 8,
-    
+    marginRight: 10,
   },
   filterIcon: {
     marginLeft: 10,
@@ -432,10 +479,25 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     padding: 10,
   },
+  tabsContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginTop: 20,
+  },
+  tabText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#666",
+    marginHorizontal: 20,
+  },
+  selectedTab: {
+    textDecorationLine: "underline",
+    color: "#000",
+  },
   card: {
     backgroundColor: "#fff",
     borderRadius: 8,
-    marginBottom: 12,
+    marginBottom: 10,
     overflow: "hidden",
     elevation: 4,
     shadowColor: "#000",
@@ -447,21 +509,22 @@ const styles = StyleSheet.create({
   },
   typeContainer: {
     borderRadius: 4,
-    padding: 10,
+    padding: 5,
     position: "absolute",
     top: 10,
     left: 10,
     zIndex: 1,
   },
   rent: {
-    backgroundColor: "#ffcccc",
+    backgroundColor: "#d89b00",
   },
   sale: {
-    backgroundColor: "#ccffcc",
+    backgroundColor: "#ffbf00",
   },
   typeText: {
     fontSize: 12,
     fontWeight: "bold",
+    color:'white'
   },
   image: {
     width: "100%",
@@ -478,10 +541,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: "bold",
+    color: "#000080",
   },
   price: {
     fontSize: 14,
-    color: "#666",
+    color: "#000080",
   },
   address: {
     fontSize: 14,
@@ -491,7 +555,7 @@ const styles = StyleSheet.create({
   detailsContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    padding: 5,
+    margin: 5,
   },
   detailItem: {
     flexDirection: "row",
@@ -500,7 +564,7 @@ const styles = StyleSheet.create({
   },
   detailText: {
     fontSize: 12,
-    color: "#666",
+    color: "#000080",
     marginLeft: 5,
   },
   noDataText: {
@@ -514,7 +578,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   showMoreText: {
-    color: "black",
+    color: "#000080",
     fontSize: 16,
     fontWeight: "bold",
   },

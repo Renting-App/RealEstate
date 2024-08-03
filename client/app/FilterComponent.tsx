@@ -3,10 +3,10 @@ import {
   View,
   Text,
   TextInput,
-  Button,
   StyleSheet,
   ScrollView,
 } from "react-native";
+import { Button } from 'react-native-elements';
 import { Picker } from "@react-native-picker/picker";
 import { CheckBox } from "react-native-elements";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -181,7 +181,7 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ navigation }) => {
         </View>
       ))}
       <View style={styles.buttonContainer}>
-        <Button title="Submit" onPress={handleSubmit} />
+        <Button buttonStyle={styles.button} title="Submit" onPress={handleSubmit}  />
       </View>
     </ScrollView>
   );
@@ -197,13 +197,13 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     fontSize: 16,
     fontWeight: "bold",
-    color: "#004D40", // Dark green label color
+    color: "#000080", // Dark green label color
   },
   picker: {
     marginBottom: 16,
     padding: 8,
     backgroundColor: "#FFFFFF", // White background for picker
-    borderColor: "#004D40", // Dark green border color
+    borderColor: "#000080", // Dark green border color
     borderWidth: 1,
     borderRadius: 8,
   },
@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     padding: 8,
     backgroundColor: "#FFFFFF", // White background for input
-    borderColor: "#004D40", // Dark green border color
+    borderColor: "#000080", // Dark green border color
     borderWidth: 1,
     borderRadius: 8,
   },
@@ -229,12 +229,20 @@ const styles = StyleSheet.create({
   checkboxLabel: {
     marginLeft: 8,
     fontSize: 16,
-    color: "#004D40", // Dark green checkbox label color
+    color: "#000080", // Dark checkbox label color
   },
   buttonContainer: {
     marginVertical: 30,
     marginHorizontal: 40,
-   
+    backgroundColor: "000080",
+  },
+  button: {
+    marginTop: 20,
+    backgroundColor: '#000080', // Medium green for button
+    borderRadius: 5,
+    paddingVertical: 15,
+    width:100,
+    alignSelf:'center'
   },
 });
 

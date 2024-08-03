@@ -119,35 +119,14 @@ const MyAccount = () => {
           style={styles.sectionButton}
           onPress={() => router.push("/EditProfile")}
         >
-          <Ionicons name="person" size={20} color="#004D40" />
+          <Ionicons name="person" size={20} color="#000080" />
           <ThemedText style={styles.sectionButtonText}>Edit Profile</ThemedText>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.sectionButton}
           onPress={() => router.push("/MyProperties")}
         >
-
-<Ionicons name="person" size={20} color="#007bff" />
-          <ThemedText style={styles.sectionButtonText}>Edit Profile</ThemedText>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.sectionButton}
-          onPress={() => {
-
-            //Premium 
-            if (user?.isPremium) {
-              router.push("/PostProperty");
-            } else {Alert
-              .alert(
-                "Upgrade Required",
-                "You need a premium account to post properties. Please upgrade your account.",
-                [{ text: "OK" }]
-              );
-            }
-          }}
-        >
-
-          <Ionicons name="home" size={20} color="#007bff" />
+          <Ionicons name="home" size={20} color="#000080" />
           <ThemedText style={styles.sectionButtonText}>
             Manage My Properties
           </ThemedText>
@@ -161,7 +140,7 @@ const MyAccount = () => {
           style={styles.sectionButton}
           onPress={() => setIsModalVisible(true)}
         >
-          <Ionicons name="help-circle" size={20} color="#004D40" />
+          <Ionicons name="help-circle" size={20} color="#000080" />
           <ThemedText style={styles.sectionButtonText}>
             Contact Support
           </ThemedText>
@@ -201,7 +180,7 @@ const styles = StyleSheet.create({
     
   },
   header: {
-    backgroundColor: "#004D40", // Dark green background
+    backgroundColor: "#000080", // Dark green background
     padding: 20,
     position: "relative",
     alignItems: "center",
@@ -212,7 +191,7 @@ const styles = StyleSheet.create({
     right: 15,
   },
   notificationButton: {
-    backgroundColor: "#004D40", // Dark green background
+    backgroundColor: "#000080", // Dark green background
     padding: 10,
     borderRadius: 50,
     justifyContent: "center",
@@ -265,7 +244,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginBottom: 10,
     fontWeight: "bold",
-    color: "#004D40", // Dark green color
+    color: "#000080", // Dark green color
   },
   sectionButton: {
     flexDirection: "row",
@@ -275,7 +254,7 @@ const styles = StyleSheet.create({
   sectionButtonText: {
     marginLeft: 10,
     fontSize: 16,
-    color: "#004D40", // Dark green color
+    color: "black", // Dark green color
   },
   logoutButton: {
     marginTop: 20,

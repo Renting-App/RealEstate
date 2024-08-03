@@ -171,7 +171,7 @@ const EditProfile = () => {
             source={{ uri: user.image || 'https://via.placeholder.com/150' }}
             style={styles.image}
           />
-          <Ionicons name="camera" size={30} color="#004D40" style={styles.cameraIcon} />
+          <Ionicons name="camera" size={30} color="#000080" style={styles.cameraIcon} />
         </TouchableOpacity>
 
         <View style={styles.formGroup}>
@@ -181,7 +181,7 @@ const EditProfile = () => {
               setEditField(editField === "username" ? null : "username")
             }
           >
-            <Ionicons name="person" size={20} color="#004D40" />
+            <Ionicons name="person" size={20} color="#000080" />
             <ThemedText type="label" style={styles.label}>
               Username
             </ThemedText>
@@ -201,7 +201,7 @@ const EditProfile = () => {
             style={styles.formGroupHeader}
             onPress={() => setEditField(editField === "email" ? null : "email")}
           >
-            <Ionicons name="mail" size={20} color="#004D40" />
+            <Ionicons name="mail" size={20} color="#000080" />
             <ThemedText type="label" style={styles.label}>
               Email
             </ThemedText>
@@ -223,7 +223,7 @@ const EditProfile = () => {
               setEditField(editField === "phone_number" ? null : "phone_number")
             }
           >
-            <Ionicons name="call" size={20} color="#004D40" />
+            <Ionicons name="call" size={20} color="#000080" />
             <ThemedText type="label" style={styles.label}>
               Phone Number
             </ThemedText>
@@ -245,7 +245,7 @@ const EditProfile = () => {
               setEditField(editField === "password" ? null : "password")
             }
           >
-            <Ionicons name="lock-closed" size={20} color="#004D40" />
+            <Ionicons name="lock-closed" size={20} color="#000080" />
             <ThemedText type="label" style={styles.label}>
               Change Password
             </ThemedText>
@@ -299,12 +299,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#E0F2F1", // Light green background
+    backgroundColor: "#000080", // Light green background
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#004D40", // Dark green
+    color: "#000080", // Dark green
     marginBottom: 20,
   },
   formGroup: {
@@ -318,18 +318,18 @@ const styles = StyleSheet.create({
   label: {
     marginLeft: 10,
     fontSize: 16,
-    color: "#004D40", // Dark green
+    color: "#000040", // Dark green
   },
   input: {
     height: 40,
-    borderColor: "#4caf50", // Green border
+    borderColor: "#000080", // Green border
     borderBottomWidth: 1,
     marginBottom: 10,
     paddingHorizontal: 10,
-    color: "#004D40", // Dark green
+    color: "#000080", // Dark green
   },
   button: {
-    backgroundColor: "#004D40", // Green
+    backgroundColor: "#000080", // Green
     paddingVertical: 15,
     borderRadius: 5,
     alignItems: "center",
@@ -346,7 +346,7 @@ const styles = StyleSheet.create({
     width: 150,
     height: 150,
     borderRadius: 75,
-    borderColor: "#004D40",
+    borderColor: "#000080",
     borderWidth: 2,
   },
   cameraIcon: {

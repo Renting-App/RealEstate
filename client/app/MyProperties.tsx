@@ -75,7 +75,6 @@ const MyProperties: React.FC = () => {
           iduser: property.iduser,
         }));
 
-      
         const userProperties = mappedProperties.filter(
           (property: Property) => property.iduser === userId
         );
@@ -128,7 +127,7 @@ const MyProperties: React.FC = () => {
   const navigateToUpdateForm = (property: Property) => {
     navigation.navigate("UpdatePropertyForm", {
       property,
-      onUpdate: handleUpdate,
+      onUpdate: handleUpdate,////
     });
   };
 
@@ -138,7 +137,8 @@ const MyProperties: React.FC = () => {
         <Image
           source={{ uri: item.images[0] }}
           style={importedStyles.image}
-          resizeMode="contain"
+          resizeMode="cover" 
+          onError={() => console.log(`Failed to load image: ${item.images[0]}`)}
         />
         <ThemedText type="subtitle" style={importedStyles.title}>
           {item.title}

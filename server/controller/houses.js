@@ -54,3 +54,22 @@ exports.deleteHouseById = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+exports.incrementPopular = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await House.findByIdAndUpdate(id, { $inc: { popular: 1 } });
+    res.status(200).json({ message: "Popular field incremented" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.incrementRecommended = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await House.findByIdAndUpdate(id, { $inc: { recommended: 1 } });
+    res.status(200).json({ message: "Recommended field incremented" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
