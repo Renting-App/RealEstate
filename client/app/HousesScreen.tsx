@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { API_BASE_URL } from "@/assets/IPaddress";
 import {
   View,
@@ -9,6 +9,7 @@ import {
   StyleSheet,
   Text,
   RefreshControl,
+  Alert,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -22,6 +23,7 @@ import { ThemedView } from "@/components/ThemedView";
 import DrawerContent from "@/app/DrawerContent";
 import Search from "./Search";
 import Profile from "./Profile";
+import * as Location from "expo-location";
 
 type HousesScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -78,14 +80,19 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
     []
   );
   const [refreshing, setRefreshing] = useState(false);
-  const [selectedTab, setSelectedTab] = useState<"popular" | "recommended">(
-    "popular"
-  );
+  const [selectedTab, setSelectedTab] = useState<
+    "popular" | "recommended" | "near"
+  >("popular");
+  const [currentLocation, setCurrentLocation] = useState<{
+    latitude: number;
+    longitude: number;
+  } | null>(null);
 
   const navigation = useNavigation<HousesScreenNavigationProp>();
 
   useEffect(() => {
     fetchResidences();
+    fetchLocation();
   }, []);
 
   const fetchResidences = () => {
@@ -93,7 +100,7 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
     fetch(`${API_BASE_URL}/houses`)
       .then((response) => response.json())
       .then((data) => {
-      const mappedResidences = data
+        const mappedResidences = data
           .map((residence: any) => ({
             _id: residence._id ?? `id_${Date.now()}`,
             title: residence.title ?? "",
@@ -121,7 +128,7 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
             popular: residence.popular ?? 0,
             recommended: residence.recommended ?? 0,
           }))
-          .sort((a, b) => b.popular - a.popular); 
+          .sort((a, b) => b.popular - a.popular);
 
         setResidences(mappedResidences);
         setFilteredResidences(mappedResidences);
@@ -134,6 +141,44 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
         setLoading(false);
         setRefreshing(false);
       });
+  };
+
+  const fetchLocation = async () => {
+    try {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        Alert.alert("Permission to access location was denied");
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setCurrentLocation({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      });
+    } catch (error) {
+      console.error("Error fetching location:", error);
+    }
+  };
+
+  const calculateDistance = (
+    lat1: number,
+    lon1: number,
+    lat2: number,
+    lon2: number
+  ) => {
+    const R = 6371;
+    const dLat = ((lat2 - lat1) * Math.PI) / 180;
+    const dLon = ((lon2 - lon1) * Math.PI) / 180;
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos((lat1 * Math.PI) / 180) *
+        Math.cos((lat2 * Math.PI) / 180) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c;
+    return distance;
   };
 
   const handleRefresh = () => {
@@ -218,23 +263,44 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
   };
 
   const handlePopularPress = () => {
-    const sortedResidences = [...filteredResidences].sort(
+    const sortedResidences = [...residences].sort(
       (a, b) => b.popular - a.popular
     );
     setSelectedTab("popular");
     setFilteredResidences(sortedResidences);
     setDisplayedResidences(sortedResidences.slice(0, itemsPerFetch));
-    setCurrentPage(1); 
+    setCurrentPage(1);
   };
 
   const handleRecommendedPress = () => {
-    const sortedResidences = [...filteredResidences].sort(
+    const sortedResidences = [...residences].sort(
       (a, b) => b.recommended - a.recommended
     );
     setSelectedTab("recommended");
     setFilteredResidences(sortedResidences);
     setDisplayedResidences(sortedResidences.slice(0, itemsPerFetch));
-    setCurrentPage(1); 
+    setCurrentPage(1);
+  };
+
+  const handleNearYouPress = () => {
+    if (currentLocation) {
+      const filteredByDistance = residences.filter((residence) => {
+        const distance = calculateDistance(
+          currentLocation.latitude,
+          currentLocation.longitude,
+          residence.map.latitude,
+          residence.map.longitude
+        );
+        return distance <= 10; // 10 km radius
+      });
+
+      setSelectedTab("near");
+      setFilteredResidences(filteredByDistance);
+      setDisplayedResidences(filteredByDistance.slice(0, itemsPerFetch));
+      setCurrentPage(1);
+    } else {
+      Alert.alert("Location not available", "Unable to fetch your location.");
+    }
   };
 
   const renderItem = ({ item }: { item: Residence }) => (
@@ -271,19 +337,19 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
         </ThemedText>
         <View style={styles.detailsContainer}>
           <View style={styles.detailItem}>
-            <MaterialCommunityIcons name="resize" size={16} color="#000080" />
+            <MaterialCommunityIcons name="resize" size={16} color="#666" />
             <ThemedText type="default" style={styles.detailText}>
               {item.size} m²
             </ThemedText>
           </View>
           <View style={styles.detailItem}>
-            <Ionicons name="bed" size={16} color="#000080" />
+            <Ionicons name="bed" size={16} color="#666" />
             <ThemedText type="default" style={styles.detailText}>
               {item.rooms} Rooms
             </ThemedText>
           </View>
           <View style={styles.detailItem}>
-            <MaterialCommunityIcons name="toilet" size={16} color="#000080" />
+            <Ionicons name="water" size={16} color="#666" />
             <ThemedText type="default" style={styles.detailText}>
               {item.bathrooms} Bathrooms
             </ThemedText>
@@ -379,6 +445,16 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
                   ]}
                 >
                   Recommended
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleNearYouPress}>
+                <Text
+                  style={[
+                    styles.tabText,
+                    selectedTab === "near" && styles.selectedTab,
+                  ]}
+                >
+                  Near You
                 </Text>
               </TouchableOpacity>
             </View>
@@ -516,15 +592,14 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   rent: {
-    backgroundColor: "#d89b00",
+    backgroundColor: "#ffcccc",
   },
   sale: {
-    backgroundColor: "#ffbf00",
+    backgroundColor: "#ccffcc",
   },
   typeText: {
     fontSize: 12,
     fontWeight: "bold",
-    color:'white'
   },
   image: {
     width: "100%",
@@ -541,11 +616,10 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "#000080",
   },
   price: {
     fontSize: 14,
-    color: "#000080",
+    color: "#666",
   },
   address: {
     fontSize: 14,
@@ -564,21 +638,15 @@ const styles = StyleSheet.create({
   },
   detailText: {
     fontSize: 12,
-    color: "#000080",
-    marginLeft: 5,
-  },
-  noDataText: {
-    textAlign: "center",
-    marginTop: 20,
-    fontSize: 18,
     color: "#666",
+    marginLeft: 5,
   },
   showMoreButton: {
     padding: 15,
     alignItems: "center",
   },
   showMoreText: {
-    color: "#000080",
+    color: "#00796B",
     fontSize: 16,
     fontWeight: "bold",
   },
