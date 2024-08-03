@@ -379,7 +379,7 @@ const Signup: React.FC<Props> = ({ navigation }) => {
       },
       input: {
         marginBottom: 20,
-      },
+      }, 
       button: {
         backgroundColor: "#00796B", // Medium green for button
         borderRadius: 5,
