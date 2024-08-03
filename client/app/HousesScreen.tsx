@@ -271,19 +271,19 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
         </ThemedText>
         <View style={styles.detailsContainer}>
           <View style={styles.detailItem}>
-            <MaterialCommunityIcons name="resize" size={16} color="#666" />
+            <MaterialCommunityIcons name="resize" size={16} color="#000080" />
             <ThemedText type="default" style={styles.detailText}>
               {item.size} m²
             </ThemedText>
           </View>
           <View style={styles.detailItem}>
-            <Ionicons name="bed" size={16} color="#666" />
+            <Ionicons name="bed" size={16} color="#000080" />
             <ThemedText type="default" style={styles.detailText}>
               {item.rooms} Rooms
             </ThemedText>
           </View>
           <View style={styles.detailItem}>
-            <Ionicons name="water" size={16} color="#666" />
+            <MaterialCommunityIcons name="toilet" size={16} color="#000080" />
             <ThemedText type="default" style={styles.detailText}>
               {item.bathrooms} Bathrooms
             </ThemedText>
@@ -516,14 +516,15 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   rent: {
-    backgroundColor: "#ffcccc",
+    backgroundColor: "#d89b00",
   },
   sale: {
-    backgroundColor: "#ccffcc",
+    backgroundColor: "#ffbf00",
   },
   typeText: {
     fontSize: 12,
     fontWeight: "bold",
+    color:'white'
   },
   image: {
     width: "100%",
@@ -540,10 +541,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: "bold",
+    color: "#000080",
   },
   price: {
     fontSize: 14,
-    color: "#666",
+    color: "#000080",
   },
   address: {
     fontSize: 14,
@@ -553,6 +555,7 @@ const styles = StyleSheet.create({
   detailsContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
+    margin: 5,
   },
   detailItem: {
     flexDirection: "row",
@@ -561,7 +564,7 @@ const styles = StyleSheet.create({
   },
   detailText: {
     fontSize: 12,
-    color: "#666",
+    color: "#000080",
     marginLeft: 5,
   },
   noDataText: {
@@ -575,7 +578,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   showMoreText: {
-    color: "#00796B",
+    color: "#000080",
     fontSize: 16,
     fontWeight: "bold",
   },

@@ -483,7 +483,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF", // White background for the form
     borderRadius: 8,
     padding: 16,
-    shadowColor: "#004D40", // Dark green shadow color
+    shadowColor: "#000080", // Dark green shadow color
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
     shadowRadius: 8,
@@ -491,19 +491,19 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   button: {
-    backgroundColor: "#004D40", // Dark green button background
+    backgroundColor: "#000080", // Dark button background
     paddingVertical: 12,
     paddingHorizontal: 16,
     borderRadius: 8,
     alignItems: 'center',
   },
   buttonText: {
-    color: "#E0F2F1", // Light green text color
+    color: "#000040", // Light green text color
     fontSize: 16,
     fontWeight: 'bold',
   },
   input: {
-    borderColor: "#004D40", // Dark green border color
+    borderColor: "#000080", // Dark green border color
     borderWidth: 1,
     borderRadius: 8,
     padding: 12,
@@ -519,7 +519,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF", // White background for calendar
     borderRadius: 8,
     padding: 16,
-    shadowColor: "#004D40", // Dark green shadow color
+    shadowColor: "#000080", // Dark green shadow color
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
     shadowRadius: 8,
@@ -527,7 +527,7 @@ const styles = StyleSheet.create({
   },
   suggestion: {
     padding: 12,
-    borderBottomColor: "#004D40", // Dark green border color for suggestions
+    borderBottomColor: "#000080", // Dark green border color for suggestions
     borderBottomWidth: 1,
   },
 });

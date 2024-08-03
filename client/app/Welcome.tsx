@@ -30,7 +30,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 50,
-    backgroundColor: '#E0F2F1', // Light green background
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -38,11 +37,11 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
-    color: '#004D40', // Dark green color for text
+    color: '#000080', // Dark green color for text
   },
   image: {
     width: Dimensions.get('window').width * 0.9, 
-    height: Dimensions.get('window').height * 0.4, 
+    height: Dimensions.get('window').height * 0.5, 
     marginBottom: 20,
   },
   buttons: {
@@ -50,9 +49,11 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 20,
-    backgroundColor: '#00796B', // Medium green for button
+    backgroundColor: '#000080', // Medium green for button
     borderRadius: 5,
     paddingVertical: 15,
+    width:100,
+    alignSelf:'center'
   },
 });
 

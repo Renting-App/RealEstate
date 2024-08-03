@@ -64,21 +64,21 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
-    color: '#004D40', // Dark green text
+    color: '#000040', // Dark green text
   },
   faqItem: {
     marginBottom: 20,
-    backgroundColor: '#ffffff', // White background for each FAQ item
+    backgroundColor: '#ffffff', 
     padding: 15,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: '#E0F2F1', // Light green border
+    borderColor: '#000080', // Light green border
     elevation: 2,
   },
   question: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#004D40', // Dark green text
+    color: '#000080', // Dark green text
     marginBottom: 10,
   },
   answer: {
