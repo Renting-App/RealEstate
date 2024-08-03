@@ -100,7 +100,7 @@ const slideFromBottom = ({ current }: any) => {
     outputRange: [600, 0], // Adjust the height to match your screen height
   });
 
-  return {
+  return {         
     cardStyle: {
       transform: [{ translateY }],
     },
@@ -113,7 +113,7 @@ export default function App() {
 
     <FavoritesProvider>
       <ThemeProvider>
-         <NavigationContainer> 
+{/* <NavigationContainer>  */}
         <StripeProvider publishableKey={publishableKey}>
         <Stack.Navigator
          initialRouteName="Welcome"
@@ -174,7 +174,7 @@ export default function App() {
           />
         </Stack.Navigator>
         </StripeProvider>
-         </NavigationContainer> 
+         {/* </NavigationContainer>  */}
       </ThemeProvider>
     </FavoritesProvider>
   );

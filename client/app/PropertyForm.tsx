@@ -461,7 +461,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 5,
-    color: "#004D40", // Dark green header text color
+    color: "#000080", // Dark green header text color
   },
   headerSubText: {
     fontSize: 16,
@@ -474,19 +474,19 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 10,
-    color: "#004D40", // Dark green section title color
+    color: "#000080", // Dark green section title color
   },
   label: {
     fontSize: 16,
     fontWeight: "bold",
     marginBottom: 5,
-    color: "#004D40", // Dark green label color
+    color: "#000080", // Dark green label color
   },
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 15,
-    borderColor: "#004D40", // Dark green border color
+    borderColor: "#000080", // Dark green border color
     borderWidth: 1,
     borderRadius: 5,
     paddingLeft: 10,
@@ -506,7 +506,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF", // White background for picker
   },
   calendarLabel: {
-    color: "#004D40", // Dark green calendar label color
+    color: "#000080", // Dark green calendar label color
     fontSize: 16,
     textDecorationLine: "underline",
     marginBottom: 15,
@@ -526,12 +526,12 @@ const styles = StyleSheet.create({
     width: "30%",
     padding: 10,
     borderWidth: 1,
-    borderColor: "#004D40", // Dark green border color for amenity buttons
+    borderColor: "#000080", // Dark green border color for amenity buttons
     borderRadius: 5,
     marginBottom: 10,
   },
   amenityButtonSelected: {
-    backgroundColor: "#004D40", // Dark green background for selected amenities
+    backgroundColor: "#000080", // Dark green background for selected amenities
   },
   amenityText: {
     marginTop: 5,
@@ -541,7 +541,7 @@ const styles = StyleSheet.create({
     color: "#FFFFFF", // White text color for selected amenities
   },
   imageButton: {
-    color: "#004D40", // Dark green text color for image button
+    color: "#000080", // Dark green text color for image button
     textAlign: "center",
     marginVertical: 10,
     fontSize: 16,
@@ -561,7 +561,7 @@ const styles = StyleSheet.create({
     height: 100,
   },
   mapLink: {
-    color: "#004D40", // Dark green map link color
+    color: "#000080", // Dark green map link color
     fontSize: 16,
     textDecorationLine: "underline",
     marginVertical: 10,
@@ -577,7 +577,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 20,
     right: 20,
-    backgroundColor: "#004D40", // Dark green background for location button
+    backgroundColor: "#000080", // Dark green background for location button
     borderRadius: 50,
     padding: 10,
     justifyContent: "center",
@@ -585,7 +585,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   submitButton: {
-    backgroundColor: "#004D40", // Dark green background for submit button
+    backgroundColor: "#000080", // Dark green background for submit button
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
@@ -600,7 +600,7 @@ const styles = StyleSheet.create({
   itemText: {
     padding: 10,
     borderBottomWidth: 1,
-    borderBottomColor: "#004D40", // Dark green border color for item text
+    borderBottomColor: "#000080", // Dark green border color for item text
   },
 });
 

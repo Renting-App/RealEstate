@@ -357,9 +357,7 @@ const Signup: React.FC<Props> = ({ navigation }) => {
     const styles = StyleSheet.create({
       container: {
         flex: 1,
-        
         paddingBottom:50,
-        backgroundColor: "#E0F2F1", // Light green background
         alignItems: "center",
         justifyContent: "center",
       },
@@ -367,24 +365,26 @@ const Signup: React.FC<Props> = ({ navigation }) => {
         fontSize: 24,
         fontWeight: "bold",
         marginBottom: 20,
-        color: "#004D40", // Dark green color for text
+        color: "#000040", // Dark green color for text
       },
       image: {
-        width: Dimensions.get('window').width * 0.7, 
-        height: Dimensions.get('window').height * 0.3, 
-        margin: 20,
+        width: Dimensions.get('window').width * 0.6, 
+        height: Dimensions.get('window').height * 0.29, 
+        margin: 8,
       },
       inputContainer: {
         width: "80%",
       },
       input: {
-        marginBottom: 20,
+        marginBottom: 10,
       },
       button: {
-        backgroundColor: "#00796B", // Medium green for button
+        backgroundColor: "#000080", // Medium green for button
         borderRadius: 5,
         paddingVertical: 15,
-        marginTop: 20,
+        marginTop: 10,
+        width: 100,
+        alignSelf: 'center'
       },
       errorText: {
         color: "#ff0000",

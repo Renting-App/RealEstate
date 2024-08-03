@@ -8,14 +8,6 @@ import { firestore } from "../config/firebase";
 import PropertyForm from "./PropertyForm";
 import * as ImagePicker from "expo-image-picker";
 import { API_BASE_URL } from "@/assets/IPaddress";
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from './_layout';
-
-//premium
-type PaymentScreenNavigationProp = StackNavigationProp<RootStackParamList, 'PaymentScreen'>;
-
-const navigation = useNavigation<PaymentScreenNavigationProp>();
 
 const CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/dw1sxdmac/upload";
 const CLOUDINARY_PRESET = "hotel_preset";
@@ -33,7 +25,6 @@ const PostProperty = () => {
   const [selectedDates, setSelectedDates] = useState<string[]>([]);
   const [showCalendar, setShowCalendar] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [isPremium, setIsPremium] = useState(false);
   const [map, setMap] = useState<{
     latitude: number;
     longitude: number;
@@ -41,8 +32,6 @@ const PostProperty = () => {
   const mapRef = useRef(null);
   const [suggestions, setSuggestions] = useState<any[]>([]);
   const [showMap, setShowMap] = useState(false);
-  
-
 
   interface Property {
     address: string;
@@ -61,7 +50,6 @@ const PostProperty = () => {
     price: number;
     bathrooms: number;
     visits: string[];
-    isPremium:boolean;
     amenities: {
       parking: boolean;
       ac: boolean;
@@ -78,7 +66,6 @@ const PostProperty = () => {
     notification: string;
     iduser: string;
     map: { latitude: number; longitude: number };
-    adminFee:number;
   }
 
   const initialPropertyData: Property = {
@@ -98,7 +85,6 @@ const PostProperty = () => {
     price: 0,
     bathrooms: 0,
     visits: [],
-    isPremium:false,
     amenities: {
       parking: false,
       ac: false,
@@ -115,7 +101,6 @@ const PostProperty = () => {
     notification: "",
     iduser: "",
     map: { latitude: 0, longitude: 0 },
-    adminFee:0.05
   };
 
   const auth = getAuth();
@@ -126,26 +111,15 @@ const PostProperty = () => {
       const userDocRef = doc(firestore, "users", currentUser.uid);
       const userDoc = await getDoc(userDocRef);
       if (userDoc.exists()) {
-        const userData = userDoc.data(); 
-
-         if (userData) {
         setPropertyData((prevData) => ({
           ...prevData,
           iduser: currentUser.uid,
         }));
-
-        setIsPremium(userData.isPremium || false); //premium
       }
-    
-  } else {
-      console.log("No data found for the user!");
+    } else {
+      console.log("No user is signed in!");
     }
-  }
-   else {
-    console.log("No user is signed in!");
-  }
-} 
-
+  };
 
   useEffect(() => {
     fetchUserId();
@@ -262,19 +236,8 @@ const PostProperty = () => {
     }
   };
 
-
-  
-    
-//premium
   const handleSubmit = async () => {
-    if (!isPremium) {
-      Alert.alert(
-        "Upgrade Required",
-        "Only premium users can post properties. Please upgrade your account."
-      );
-      return;
-    }
-    const adminFee = propertyData.price * 0.05;
+    const adminFee = propertyData.price * 0.01;
     Alert.alert(
       "Confirmation",
       `Are you sure you want to post this property? The admin fee is ${adminFee} DT.`,
@@ -284,13 +247,9 @@ const PostProperty = () => {
           style: "cancel",
         },
         {
-          text: "Proceed to Payment",
-
+          text: "OK",
           onPress: async () => {
             try {
-              // Navigate to PaymentScreen with adminFee
-               //adminFee
-
               setLoading(true);
               const response = await fetch(
                 `${API_BASE_URL}/addhouse`,
@@ -308,7 +267,6 @@ const PostProperty = () => {
               if (response.ok) {
                 const result = await response.json();
                 console.log("Property posted successfully:", result);
-                navigation.navigate('PaymentScreen', {isPremium, adminFee });
                 Alert.alert("Success", "Property posted successfully!");
                 setPropertyData(initialPropertyData);
               } else {
@@ -332,7 +290,7 @@ const PostProperty = () => {
 
   const handleInputChange = (
     name: keyof typeof propertyData,
-    value: string | boolean | number
+    value: string | boolean
   ) => {
     setPropertyData((prevData) => ({
       ...prevData,
@@ -489,29 +447,29 @@ const PostProperty = () => {
 
   return (
     <View style={styles.container}>
-    <PropertyForm
-      propertyData={propertyData}
-      handleInputChange={handleInputChange}
-      toggleCheckbox={toggleCheckbox}
-      handleImageSelection={handleImageSelection}
-      getMarkedDates={getMarkedDates}
-      handleDayPress={handleDayPress}
-      showCalendar={showCalendar}
-      setShowCalendar={setShowCalendar}
-      handleQueryChange={handleQueryChange}
-      handleSuggestionSelect={handleSuggestionSelect}
-      suggestions={suggestions}
-      setSuggestions={setSuggestions}
-      handleSubmit={handleSubmit}
-      handleMapPress={handleMapPress}
-      handleUseCurrentLocation={handleUseCurrentLocation}
-      map={map}
-      mapRef={mapRef}
-      loading={loading}
-      showMap={showMap}
-      setShowMap={setShowMap}
-    />
-  </View>
+      <PropertyForm
+        propertyData={propertyData}
+        handleInputChange={handleInputChange}
+        toggleCheckbox={toggleCheckbox}
+        handleImageSelection={handleImageSelection}
+        getMarkedDates={getMarkedDates}
+        handleDayPress={handleDayPress}
+        showCalendar={showCalendar}
+        setShowCalendar={setShowCalendar}
+        handleQueryChange={handleQueryChange}
+        handleSuggestionSelect={handleSuggestionSelect}
+        suggestions={suggestions}
+        setSuggestions={setSuggestions}
+        handleSubmit={handleSubmit}
+        handleMapPress={handleMapPress}
+        handleUseCurrentLocation={handleUseCurrentLocation}
+        map={map}
+        mapRef={mapRef}
+        loading={loading}
+        showMap={showMap}
+        setShowMap={setShowMap}
+      />
+    </View>
   );
 };
 
@@ -525,7 +483,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF", // White background for the form
     borderRadius: 8,
     padding: 16,
-    shadowColor: "#004D40", // Dark green shadow color
+    shadowColor: "#000080", // Dark green shadow color
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
     shadowRadius: 8,
@@ -533,19 +491,19 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   button: {
-    backgroundColor: "#004D40", // Dark green button background
+    backgroundColor: "#000080", // Dark button background
     paddingVertical: 12,
     paddingHorizontal: 16,
     borderRadius: 8,
     alignItems: 'center',
   },
   buttonText: {
-    color: "#E0F2F1", // Light green text color
+    color: "#000040", // Light green text color
     fontSize: 16,
     fontWeight: 'bold',
   },
   input: {
-    borderColor: "#004D40", // Dark green border color
+    borderColor: "#000080", // Dark green border color
     borderWidth: 1,
     borderRadius: 8,
     padding: 12,
@@ -561,7 +519,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF", // White background for calendar
     borderRadius: 8,
     padding: 16,
-    shadowColor: "#004D40", // Dark green shadow color
+    shadowColor: "#000080", // Dark green shadow color
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
     shadowRadius: 8,
@@ -569,7 +527,7 @@ const styles = StyleSheet.create({
   },
   suggestion: {
     padding: 12,
-    borderBottomColor: "#004D40", // Dark green border color for suggestions
+    borderBottomColor: "#000080", // Dark green border color for suggestions
     borderBottomWidth: 1,
   },
 });
