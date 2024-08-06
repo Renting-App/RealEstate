@@ -14,6 +14,7 @@ import searchIcon from './img/icons8-search-24.png';
 import alarmIcon from './img/icons8-alarm-24.png';
 import avatar from './img/avater.jpeg';
 
+
 const Dashboard = () => {
     const [showNotification, setShowNotification] = useState(false);
     const [notifications, setNotifications] = useState([]);
@@ -71,7 +72,7 @@ const Dashboard = () => {
                     <li><Link to="/"><img src={homeIcon} alt="Home page" />Home</Link></li>
                     <li><Link to="#"><img src={profileIcon} alt="Profile" />Profile</Link></li>
                     <li><Link to="/tour-request"><img src={messageIcon} alt="Tour Request" />Tour Request</Link></li>
-                    <li><Link to="#"><img src={paymentIcon} alt="Payment" />Payment</Link></li>
+                    <li><Link to="/profit"><img src={paymentIcon} alt="Payment" />Payment</Link></li>
                     <li><Link to="/ManagePosts"><img src={postRequestIcon} alt="Post Request" />Post Request</Link></li>
                     <li><Link to="#"><img src={supportIcon} alt="Support" />Support</Link></li>
                     <li><Link to="#"><img src={privacyIcon} alt="Privacy" />Privacy</Link></li>

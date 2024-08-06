@@ -54,7 +54,7 @@ export type RootStackParamList = {
   SignUp: undefined;
   SignOut: undefined;
   AdminDrawer: undefined;
-  HousesScreen: { criteria: any };
+  HousesScreen: { criteria: {} };
   AboutUs: undefined;
   FAQ: undefined;
   Maps: undefined;
