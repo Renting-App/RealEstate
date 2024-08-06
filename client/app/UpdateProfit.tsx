@@ -13,7 +13,7 @@ const UpdateProfit: React.FC<UpdateProfitProps> = ({ adminFee }) => {
   const updateProfit = async () => {
     try {
       setLoading(true);
-      const adminDocRef = doc(firestore, "admin", "adminDocumentID");
+      const adminDocRef = doc(firestore, "admin", "admin");
       const adminDoc = await getDoc(adminDocRef);
 
       if (adminDoc.exists()) {
