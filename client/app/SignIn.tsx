@@ -1,10 +1,10 @@
 import React from "react";
-import { View, Text, StyleSheet, Dimensions, Image, ScrollView } from "react-native";
+import { View, Text, StyleSheet, Dimensions, Image, ScrollView, Alert } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { Input, Button } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { RootStackParamList } from "./_layout";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword,sendPasswordResetEmail  } from "firebase/auth";
 import { auth, firestore } from "../config/firebase";
 import { doc, getDoc } from "firebase/firestore";
 
@@ -41,18 +41,28 @@ const Signin: React.FC<Props> = ({ navigation }) => {
         value.password
       );
       const user = userCredential.user;
+
+      if (!user.emailVerified) {
+        Alert.alert('Email not verified', 'Please check your email and verify your account.');
+        await auth.signOut()
+        return
+    }
       const userDoc = await getDoc(doc(firestore, "users", user.uid));
       const userData = userDoc.data();
       if (userData && userData.role === "admin") {
         navigation.navigate("adminPage");
       } else {
-        navigation.navigate("HousesScreen", { criteria: {} });
+        // navigation.navigate("HousesScreen", { criteria: {} });
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'HousesScreen' }],
+      });
       }
     } catch (error) {
       if (error instanceof Error) {
         setValue({
           ...value,
-          error: error.message,
+          error: "Invalid email or password",
         });
       } else {
         setValue({
@@ -62,6 +72,22 @@ const Signin: React.FC<Props> = ({ navigation }) => {
       }
     }
   }
+  const resetPassword = async () => {
+    if (value.email === '') {
+        Alert.alert('Error', 'Please enter your email to reset your password.');
+        return;
+    }
+    try {
+        await sendPasswordResetEmail(auth, value.email);
+        Alert.alert('Success', 'Password reset email sent.');
+    } catch (error) {
+        if (error instanceof Error) {
+            Alert.alert('Error', error.message);
+        } else {
+            Alert.alert('Error', 'An unknown error occurred.');
+        }
+    }
+}
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -112,6 +138,8 @@ const Signin: React.FC<Props> = ({ navigation }) => {
           buttonStyle={[styles.button, styles.signupButton]}
           onPress={() => navigation.navigate("SignUp")}
         />
+      <Button title="Forgot Password" type="clear" onPress={resetPassword} />
+
       </View>
     </ScrollView>
   );
