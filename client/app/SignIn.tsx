@@ -120,8 +120,9 @@ const Signin: React.FC<Props> = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 50,
-    paddingBottom: 0,
+    marginTop: 100,
+    paddingRight: 20,
+    paddingLeft:20,
     alignItems: 'center',
     justifyContent: "center",
 
@@ -141,8 +142,8 @@ const styles = StyleSheet.create({
   },
   image: {
     position: "absolute",
-    top: -320,
-    right: -200,
+    bottom: -110,
+    left: -200,
     width: Dimensions.get('window').width, // 60% of screen width
     height: Dimensions.get('window').height * 0.5, // 30% of screen height
   },

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { API_BASE_URL } from "@/assets/IPaddress";
 import {
   View,
@@ -9,6 +9,7 @@ import {
   StyleSheet,
   Text,
   RefreshControl,
+  Alert,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -22,6 +23,7 @@ import { ThemedView } from "@/components/ThemedView";
 import DrawerContent from "@/app/DrawerContent";
 import Search from "./Search";
 import Profile from "./Profile";
+import * as Location from "expo-location";
 
 type HousesScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -62,6 +64,8 @@ interface Residence {
     longitude: number;
   };
   __v: number;
+  popular: number;
+  recommended: number;
 }
 
 const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
@@ -75,13 +79,20 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
   const [displayedResidences, setDisplayedResidences] = useState<Residence[]>(
     []
   );
-  const [showPagination, setShowPagination] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const [selectedTab, setSelectedTab] = useState<
+    "popular" | "recommended" | "near"
+  >("popular");
+  const [currentLocation, setCurrentLocation] = useState<{
+    latitude: number;
+    longitude: number;
+  } | null>(null);
 
   const navigation = useNavigation<HousesScreenNavigationProp>();
 
   useEffect(() => {
     fetchResidences();
+    fetchLocation();
   }, []);
 
   const fetchResidences = () => {
@@ -89,31 +100,36 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
     fetch(`${API_BASE_URL}/houses`)
       .then((response) => response.json())
       .then((data) => {
-        const mappedResidences = data.map((residence: any) => ({
-          _id: residence._id ?? `id_${Date.now()}`,
-          title: residence.title ?? "",
-          address: residence.address ?? "",
-          size: residence.size ?? 0,
-          price: residence.price ?? 0,
-          rooms: residence.rooms ?? 0,
-          bathrooms: residence.bathrooms ?? 0,
-          description: residence.description ?? "",
-          contact_info: residence.contact_info ?? "",
-          images: residence.images ?? [],
-          operation: residence.operation ?? "",
-          category: residence.category ?? "",
-          location: residence.location ?? "",
-          subLocation: residence.subLocation ?? "",
-          visits: residence.visits ?? [],
-          favourite: residence.favourite ?? false,
-          date_of_creation: residence.date_of_creation ?? "",
-          amenities: residence.amenities ?? {},
-          status: residence.status ?? "",
-          notification: residence.notification ?? "",
-          iduser: residence.iduser ?? "",
-          condition: residence.condition ?? "",
-          map: residence.map ?? {},
-        }));
+        const mappedResidences = data
+          .map((residence: any) => ({
+            _id: residence._id ?? `id_${Date.now()}`,
+            title: residence.title ?? "",
+            address: residence.address ?? "",
+            size: residence.size ?? 0,
+            price: residence.price ?? 0,
+            rooms: residence.rooms ?? 0,
+            bathrooms: residence.bathrooms ?? 0,
+            description: residence.description ?? "",
+            contact_info: residence.contact_info ?? "",
+            images: residence.images ?? [],
+            operation: residence.operation ?? "",
+            category: residence.category ?? "",
+            location: residence.location ?? "",
+            subLocation: residence.subLocation ?? "",
+            visits: residence.visits ?? [],
+            favourite: residence.favourite ?? false,
+            date_of_creation: residence.date_of_creation ?? "",
+            amenities: residence.amenities ?? {},
+            status: residence.status ?? "",
+            notification: residence.notification ?? "",
+            iduser: residence.iduser ?? "",
+            condition: residence.condition ?? "",
+            map: residence.map ?? {},
+            popular: residence.popular ?? 0,
+            recommended: residence.recommended ?? 0,
+          }))
+          .sort((a:any, b:any) => b.popular - a.popular); 
+
         setResidences(mappedResidences);
         setFilteredResidences(mappedResidences);
         setDisplayedResidences(mappedResidences.slice(0, itemsPerFetch));
@@ -123,13 +139,51 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
       .catch((error) => {
         console.error("Error fetching residences:", error);
         setLoading(false);
-        setRefreshing(false); 
+        setRefreshing(false);
       });
+  };
+
+  const fetchLocation = async () => {
+    try {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        Alert.alert("Permission to access location was denied");
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setCurrentLocation({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      });
+    } catch (error) {
+      console.error("Error fetching location:", error);
+    }
+  };
+
+  const calculateDistance = (
+    lat1: number,
+    lon1: number,
+    lat2: number,
+    lon2: number
+  ) => {
+    const R = 6371;
+    const dLat = ((lat2 - lat1) * Math.PI) / 180;
+    const dLon = ((lon2 - lon1) * Math.PI) / 180;
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos((lat1 * Math.PI) / 180) *
+        Math.cos((lat2 * Math.PI) / 180) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c;
+    return distance;
   };
 
   const handleRefresh = () => {
     setRefreshing(true);
-    fetchResidences(); 
+    fetchResidences();
   };
 
   const filterResidences = (residences: Residence[], criteria: any) => {
@@ -186,9 +240,6 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
   const handleShowMore = () => {
     const newDisplayedCount = displayedResidences.length + itemsPerFetch;
     setDisplayedResidences(filteredResidences.slice(0, newDisplayedCount));
-    if (newDisplayedCount >= 9) {
-      setShowPagination(true);
-    }
   };
 
   const handleDetailsPress = (residence: Residence) => {
@@ -209,6 +260,47 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
   const handleSalePress = () => {
     const saleCriteria = { ...criteria, operation: "sale" };
     filterResidences(residences, saleCriteria);
+  };
+
+  const handlePopularPress = () => {
+    const sortedResidences = [...residences].sort(
+      (a, b) => b.popular - a.popular
+    );
+    setSelectedTab("popular");
+    setFilteredResidences(sortedResidences);
+    setDisplayedResidences(sortedResidences.slice(0, itemsPerFetch));
+    setCurrentPage(1);
+  };
+
+  const handleRecommendedPress = () => {
+    const sortedResidences = [...residences].sort(
+      (a, b) => b.recommended - a.recommended
+    );
+    setSelectedTab("recommended");
+    setFilteredResidences(sortedResidences);
+    setDisplayedResidences(sortedResidences.slice(0, itemsPerFetch));
+    setCurrentPage(1);
+  };
+
+  const handleNearYouPress = () => {
+    if (currentLocation) {
+      const filteredByDistance = residences.filter((residence) => {
+        const distance = calculateDistance(
+          currentLocation.latitude,
+          currentLocation.longitude,
+          residence.map.latitude,
+          residence.map.longitude
+        );
+        return distance <= 10; // 10 km radius
+      });
+
+      setSelectedTab("near");
+      setFilteredResidences(filteredByDistance);
+      setDisplayedResidences(filteredByDistance.slice(0, itemsPerFetch));
+      setCurrentPage(1);
+    } else {
+      Alert.alert("Location not available", "Unable to fetch your location.");
+    }
   };
 
   const renderItem = ({ item }: { item: Residence }) => (
@@ -245,19 +337,19 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
         </ThemedText>
         <View style={styles.detailsContainer}>
           <View style={styles.detailItem}>
-            <MaterialCommunityIcons name="resize" size={16} color="#000080" />
+            <MaterialCommunityIcons name="resize" size={16} color="#666" />
             <ThemedText type="default" style={styles.detailText}>
               {item.size} m²
             </ThemedText>
           </View>
           <View style={styles.detailItem}>
-            <Ionicons name="bed" size={16} color="#000080" />
+            <Ionicons name="bed" size={16} color="#666" />
             <ThemedText type="default" style={styles.detailText}>
               {item.rooms} Rooms
             </ThemedText>
           </View>
           <View style={styles.detailItem}>
-            <MaterialCommunityIcons name="toilet" size={16} color="#000080" />
+            <Ionicons name="water" size={16} color="#666" />
             <ThemedText type="default" style={styles.detailText}>
               {item.bathrooms} Bathrooms
             </ThemedText>
@@ -334,6 +426,38 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
                 <Text style={styles.filterCardText}>For Sale</Text>
               </TouchableOpacity>
             </View>
+            <View style={styles.tabsContainer}>
+              <TouchableOpacity onPress={handlePopularPress}>
+                <Text
+                  style={[
+                    styles.tabText,
+                    selectedTab === "popular" && styles.selectedTab,
+                  ]}
+                >
+                  Popular
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleRecommendedPress}>
+                <Text
+                  style={[
+                    styles.tabText,
+                    selectedTab === "recommended" && styles.selectedTab,
+                  ]}
+                >
+                  Recommended
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleNearYouPress}>
+                <Text
+                  style={[
+                    styles.tabText,
+                    selectedTab === "near" && styles.selectedTab,
+                  ]}
+                >
+                  Near You
+                </Text>
+              </TouchableOpacity>
+            </View>
           </ThemedView>
         }
         data={displayedResidences}
@@ -349,10 +473,6 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
             </TouchableOpacity>
           ) : null
         }
-        onScroll={(e) => {
-          const offsetY = e.nativeEvent.contentOffset.y;
-          setShowPagination(offsetY > 200 && displayedResidences.length >= 9);
-        }}
         ListFooterComponentStyle={styles.footer}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
@@ -435,6 +555,21 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     padding: 10,
   },
+  tabsContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginTop: 20,
+  },
+  tabText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#666",
+    marginHorizontal: 20,
+  },
+  selectedTab: {
+    textDecorationLine: "underline",
+    color: "#000",
+  },
   card: {
     backgroundColor: "#fff",
     borderRadius: 8,
@@ -457,15 +592,14 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   rent: {
-    backgroundColor: "#d89b00",
+    backgroundColor: "#ffcccc",
   },
   sale: {
-    backgroundColor: "#ffbf00",
+    backgroundColor: "#A9A9A9",
   },
   typeText: {
     fontSize: 12,
     fontWeight: "bold",
-    color:'white'
   },
   image: {
     width: "100%",
@@ -482,11 +616,10 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "#000080",
   },
   price: {
     fontSize: 14,
-    color: "#000080",
+    color: "#666",
   },
   address: {
     fontSize: 14,
@@ -505,21 +638,15 @@ const styles = StyleSheet.create({
   },
   detailText: {
     fontSize: 12,
-    color: "#000080",
-    marginLeft: 5,
-  },
-  noDataText: {
-    textAlign: "center",
-    marginTop: 20,
-    fontSize: 18,
     color: "#666",
+    marginLeft: 5,
   },
   showMoreButton: {
     padding: 15,
     alignItems: "center",
   },
   showMoreText: {
-    color: "#000080",
+    color: "#00796B",
     fontSize: 16,
     fontWeight: "bold",
   },

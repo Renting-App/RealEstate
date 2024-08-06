@@ -17,7 +17,6 @@ const NotificationList: React.FC = () => {
   const [requests, setRequests] = useState([]);
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null); // Define error state
   const auth = getAuth();
   const navigation = useNavigation();
 
@@ -39,7 +38,6 @@ const NotificationList: React.FC = () => {
         }
       } catch (error) {
         console.error("Error fetching notifications:", error);
-        setError("Failed to fetch notifications."); // Set error message profit
       } finally {
         setLoading(false);
       }
@@ -98,14 +96,6 @@ const NotificationList: React.FC = () => {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#0000ff" />
-      </View>
-    );
-  }
-
-  if (error) {
-    return (
-      <View style={styles.loadingContainer}>
-        <Text style={styles.errorText}>{error}</Text>
       </View>
     );
   }
@@ -186,12 +176,6 @@ const styles = StyleSheet.create({
   noNotificationsText: {
     fontSize: 16,
     color: "#666",
-    textAlign: "center",
-    marginTop: 20,
-  },
-  errorText: {
-    fontSize: 16,
-    color: "red",
     textAlign: "center",
     marginTop: 20,
   },

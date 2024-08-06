@@ -3,7 +3,7 @@ import { View, StyleSheet, Alert } from "react-native";
 import axios from "axios";
 import * as Location from "expo-location";
 import { getAuth } from "firebase/auth";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { firestore } from "../config/firebase";
 import PropertyForm from "./PropertyForm";
 import * as ImagePicker from "expo-image-picker";
@@ -237,7 +237,7 @@ const PostProperty = () => {
   };
 
   const handleSubmit = async () => {
-    const adminFee = propertyData.price * 0.05;
+    const adminFee = propertyData.price * 0.01;
     Alert.alert(
       "Confirmation",
       `Are you sure you want to post this property? The admin fee is ${adminFee} DT.`,
@@ -268,11 +268,6 @@ const PostProperty = () => {
                 const result = await response.json();
                 console.log("Property posted successfully:", result);
                 Alert.alert("Success", "Property posted successfully!");
-
-
-                 // Update admin's profit in Firebase
-                 await updateAdminProfit(adminFee);
-
                 setPropertyData(initialPropertyData);
               } else {
                 const error = await response.json();
@@ -293,24 +288,6 @@ const PostProperty = () => {
     );
   };
 
-  const updateAdminProfit = async (adminFee: number) => {
-    try {
-      const adminDocRef = doc(firestore, "admin", "adminID"); // Use the actual admin ID document path
-      const adminDoc = await getDoc(adminDocRef);
-
-      if (adminDoc.exists()) {
-        const currentProfit = adminDoc.data().profit || 0;
-        await updateDoc(adminDocRef, {
-          profit: currentProfit + adminFee,
-        });
-        console.log("Admin profit updated successfully");
-      } else {
-        console.error("Admin document does not exist");
-      }
-    } catch (error) {
-      console.error("Error updating admin profit:", error);
-    }
-  }
   const handleInputChange = (
     name: keyof typeof propertyData,
     value: string | boolean
@@ -467,7 +444,7 @@ const PostProperty = () => {
       1000
     );
   };
-  
+
   return (
     <View style={styles.container}>
       <PropertyForm
@@ -556,4 +533,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default PostProperty
+export default PostProperty;

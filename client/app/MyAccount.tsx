@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   ScrollView,
   Text,
-  Alert
 } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { useRouter } from "expo-router";
@@ -23,7 +22,6 @@ interface User {
   phone_number: string;
   image: string;
   notification: { id: string; message: string }[]; // Replace with a more specific type if available
-  isPremium: boolean;
 }
 
 const MyAccount = () => {

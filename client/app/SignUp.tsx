@@ -357,14 +357,14 @@ const Signup: React.FC<Props> = ({ navigation }) => {
     const styles = StyleSheet.create({
       container: {
         flex: 1,
-        paddingBottom:50,
+        paddingTop:'12%',
         alignItems: "center",
         justifyContent: "center",
       },
       title: {
         fontSize: 24,
         fontWeight: "bold",
-        marginBottom: 20,
+        marginBottom:'1%',
         color: "#000040", // Dark green color for text
       },
       image: {
