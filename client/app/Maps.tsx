@@ -213,6 +213,7 @@ const Maps: React.FC = () => {
       <MapView
         ref={mapRef}
         style={styles.map}
+        showsUserLocation = {true}
         initialRegion={{
           latitude: 33.8869,
           longitude: 9.5375,
@@ -220,17 +221,10 @@ const Maps: React.FC = () => {
           longitudeDelta: 5,
         }}
       >
-        {currentLocation && (
-          <Marker
-            coordinate={{
-              latitude: currentLocation.latitude,
-              longitude: currentLocation.longitude,
-            }}
-            title="Your Location"
-            pinColor="blue"
-          />
-        )}
-        {places.map((place) => (
+        {currentLocation && 
+         
+        
+        places.map((place) => (
           <Marker
             key={place.id}
             coordinate={{
@@ -243,12 +237,7 @@ const Maps: React.FC = () => {
           />
         ))}
       </MapView>
-      <TouchableOpacity
-        style={styles.locationButton}
-        onPress={zoomToCurrentLocation}
-      >
-        <Ionicons name="locate" size={24} color="#fff" />
-      </TouchableOpacity>
+   
     </View>
   );
 };

@@ -139,9 +139,7 @@ const MyAccount = () => {
           onPress={() => setIsModalVisible(true)}
         >
           <Ionicons name="help-circle" size={20} color="#000080" />
-          <ThemedText style={styles.sectionButtonText}>
-            Contact Support
-          </ThemedText>
+        
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.sectionButton, styles.logoutButton]}

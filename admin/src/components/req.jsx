@@ -32,10 +32,10 @@ const TourRequestsList = () => {
     }
   };
 
-  const handleCancel = (id) => {
+  // const handleCancel = (id) => {
    
-    console.log(`Cancelled request with id: ${id}`);
-  };
+  //   console.log(`Cancelled request with id: ${id}`);
+  // };
 
   if (loading) return <div className="loading-text">Loading...</div>;
   if (error) return <div className="error-text">{error}</div>;

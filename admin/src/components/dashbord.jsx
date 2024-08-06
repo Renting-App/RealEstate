@@ -69,22 +69,20 @@ const Dashboard = () => {
                     <img src={dashboardIcon} alt="Dashboard Icon" />Dashboard
                 </h2>
                 <ul>
-                    <li><Link to="/"><img src={homeIcon} alt="Home page" />Home</Link></li>
-                    <li><Link to="#"><img src={profileIcon} alt="Profile" />Profile</Link></li>
+                    {/* <li><Link to="/"><img src={homeIcon} alt="Home page" />log out</Link></li>
+                    <li><Link to="#"><img src={profileIcon} alt="Profile" />Profile</Link></li> */}
                     <li><Link to="/tour-request"><img src={messageIcon} alt="Tour Request" />Tour Request</Link></li>
                     <li><Link to="/profit"><img src={paymentIcon} alt="Payment" />Payment</Link></li>
-                    <li><Link to="/ManagePosts"><img src={postRequestIcon} alt="Post Request" />Post Request</Link></li>
-                    <li><Link to="#"><img src={supportIcon} alt="Support" />Support</Link></li>
-                    <li><Link to="#"><img src={privacyIcon} alt="Privacy" />Privacy</Link></li>
+                  
                 </ul>
             </div>
 
             <div className="main grid">
                 <nav>
-                    <div className="first">
+                    {/* <div className="first">
                         <img src={searchIcon} alt="Search Icon" />
                         <input type="text" />
-                    </div>
+                    </div> */}
                     <div className="end">
                         <div style={{ position: 'relative' }}>
                             <img src={alarmIcon} alt="Alarm Icon" onClick={toggleNotification} />
@@ -101,11 +99,11 @@ const Dashboard = () => {
                         <img style={{ width: '50px', borderRadius: '50%' }} src={avatar} alt="Avatar" />
                         <h4>Hi dear, admin@gmail.com</h4>
                     </div>
-                    <ul className="row2">
+                    {/* <ul className="row2">
                         <li><Link to="#">New</Link></li>
                         <li><Link to="#">Upload</Link></li>
                         <li><Link to="#">Share</Link></li>
-                    </ul>
+                    </ul> */}
                 </nav>
 
                 {showNotification && (
