@@ -143,13 +143,10 @@ const EditProfile = () => {
 
     if (currentUser) {
       try {
-        // Delete user from Firestore
         await deleteDoc(doc(firestore, 'users', currentUser.uid));
 
-        // Delete user from Firebase Authentication
         await deleteUser(currentUser);
 
-        // Show success message
         Alert.alert('Success', 'Account deleted successfully', [
           { text: 'OK', onPress: () => router.push('/Welcome') },
         ]);
