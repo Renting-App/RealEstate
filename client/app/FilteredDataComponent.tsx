@@ -235,10 +235,10 @@ const styles = StyleSheet.create({
     left: 10,
   },
   rent: {
-    backgroundColor: "#ffcccc",
+    backgroundColor: "#d89b00",
   },
   sale: {
-    backgroundColor: "#ccffcc",
+    backgroundColor: "#A9A9A9",
   },
   typeText: {
     color: "#666",
