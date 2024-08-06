@@ -65,7 +65,10 @@ const Maps: React.FC = () => {
           return;
         }
 
-        let location = await Location.getCurrentPositionAsync({});
+        let location = await Location.getCurrentPositionAsync({
+          accuracy: Location.Accuracy.High,
+        });
+        console.log("Current location:", location);
         setCurrentLocation({
           latitude: location.coords.latitude,
           longitude: location.coords.longitude,
@@ -214,8 +217,8 @@ const Maps: React.FC = () => {
         ref={mapRef}
         style={styles.map}
         initialRegion={{
-          latitude: 33.8869,
-          longitude: 9.5375,
+          latitude: currentLocation ? currentLocation.latitude : 33.8869,
+          longitude: currentLocation ? currentLocation.longitude : 9.5375,
           latitudeDelta: 5,
           longitudeDelta: 5,
         }}
@@ -290,7 +293,6 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 5,
-    zIndex: 1,
   },
   searchInput: {
     flex: 1,
@@ -302,9 +304,10 @@ const styles = StyleSheet.create({
   },
   suggestionsList: {
     position: "absolute",
-    top: 80,
+    top: 100,
     left: 20,
     right: 20,
+    maxHeight: 200,
     backgroundColor: "#fff",
     borderRadius: 10,
     elevation: 5,
@@ -312,34 +315,26 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 5,
-    zIndex: 1,
   },
   suggestionItem: {
-    padding: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ddd",
-  },
-  noResultsText: {
-    padding: 15,
-    textAlign: "center",
-    color: "#888",
+    padding: 10,
+    fontSize: 16,
+    color: "#333",
   },
   loadingIndicator: {
     position: "absolute",
-    top: 80,
+    top: 100,
     left: 20,
     right: 20,
     backgroundColor: "#fff",
     borderRadius: 10,
+    padding: 10,
     elevation: 5,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    zIndex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 15,
+  },
+  noResultsText: {
+    textAlign: "center",
+    padding: 10,
+    color: "#888",
   },
 });
 

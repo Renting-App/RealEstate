@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
   View,
+  Text,
   Image,
   StyleSheet,
   TouchableOpacity,
@@ -10,7 +11,7 @@ import {
 import { RouteProp, useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from './_layout';
-import { ThemedText } from "@/components/ThemedText";
+
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { API_BASE_URL } from "@/assets/IPaddress";
@@ -162,9 +163,9 @@ const FilteredDataComponent: React.FC<FilteredDataComponentProps> = ({ route }) 
                 item.operation === "rent" ? styles.rent : styles.sale,
               ]}
             >
-              <ThemedText type="subtitle" style={styles.typeText}>
+              <Text  style={styles.typeText}>
                 {item.operation === "rent" ? "Rent" : "Sale"}
-              </ThemedText>
+              </Text>
             </View>
             <Image
               source={{ uri: item.images[0] }}
@@ -173,34 +174,34 @@ const FilteredDataComponent: React.FC<FilteredDataComponentProps> = ({ route }) 
             />
             <View style={styles.cardContent}>
               <View style={styles.titleContainer}>
-                <ThemedText type="subtitle" style={styles.title}>
+                <Text style={styles.title}>
                   {item.title}
-                </ThemedText>
-                <ThemedText type="default" style={styles.price}>
+                </Text>
+                <Text  style={styles.price}>
                   {item.price} DT
-                </ThemedText>
+                </Text>
               </View>
-              <ThemedText type="default" style={styles.address}>
+              <Text  style={styles.address}>
                 {item.address}
-              </ThemedText>
+              </Text>
               <View style={styles.detailsContainer}>
                 <View style={styles.detailItem}>
                   <MaterialCommunityIcons name="resize" size={16} color="black" />
-                  <ThemedText type="default" style={styles.detailText}>
+                  <Text  style={styles.detailText}>
                     {item.size} m²
-                  </ThemedText>
+                  </Text>
                 </View>
                 <View style={styles.detailItem}>
                   <Ionicons name="bed" size={16} color="black" />
-                  <ThemedText type="default" style={styles.detailText}>
+                  <Text style={styles.detailText}>
                     {item.rooms} Rooms
-                  </ThemedText>
+                  </Text>
                 </View>
                 <View style={styles.detailItem}>
                   <MaterialCommunityIcons name="toilet" size={16} color="black" />
-                  <ThemedText type="default" style={styles.detailText}>
+                  <Text style={styles.detailText}>
                     {item.bathrooms} Bathrooms
-                  </ThemedText>
+                  </Text>
                 </View>
               </View> 
             </View>

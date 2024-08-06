@@ -121,8 +121,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: 100,
-    paddingRight: 20,
-    paddingLeft:20,
+    paddingRight: '7%',
+    paddingLeft:'7%',
     alignItems: 'center',
     justifyContent: "center",
 
@@ -137,22 +137,22 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#000040", // navy blue color for text
     position: "absolute",
-    top: -90,
+    top: -70,
     right: 70
   },
   image: {
     position: "absolute",
-    bottom: -110,
+    bottom: -100,
     left: -200,
     width: Dimensions.get('window').width, // 60% of screen width
-    height: Dimensions.get('window').height * 0.5, // 30% of screen height
+    height: Dimensions.get('window').height * 0.45, // 30% of screen height
   },
   inputContainer: {
     width: "100%",
   },
   input: {
     marginBottom: 20,
-    marginTop: 10
+    marginTop: 5
   },
   button: {
     backgroundColor: "#000080", // Medium green for button

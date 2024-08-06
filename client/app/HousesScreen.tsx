@@ -646,7 +646,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   showMoreText: {
-    color: "#00796B",
+    color: "#000080",
     fontSize: 16,
     fontWeight: "bold",
   },

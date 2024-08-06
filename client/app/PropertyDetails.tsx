@@ -69,7 +69,7 @@ const PropertyDetails: React.FC = () => {
   const { residence } = route.params;
   const { addToFavorites, removeFromFavorites } = useFavorites();
   const [residenceData, setResidenceData] = useState<Property | null>(null);
-  const [isFavourite, setIsFavourite] = useState(false);
+  const [isFavourite, setIsFavourite] = useState(residenceData?.favourite);
 
   useEffect(() => {
     if (residence) {
@@ -105,12 +105,24 @@ const PropertyDetails: React.FC = () => {
     if (residenceData) {
       const newFavouriteStatus = !isFavourite;
       setIsFavourite(newFavouriteStatus);
+      
       if (newFavouriteStatus) {
         addToFavorites(residenceData);
+  
         try {
-          await fetch(`${API_BASE_URL}/houses/${residenceData._id}/recommend`, {
+          const response = await fetch(`${API_BASE_URL}/houses/${residenceData._id}/recommend`, {
             method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
           });
+  
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+  
+          const data = await response.json();
+          console.log("Incremented recommended field:", data);
         } catch (error) {
           console.error("Error incrementing recommended count:", error);
         }
@@ -119,6 +131,7 @@ const PropertyDetails: React.FC = () => {
       }
     }
   };
+  
 
   if (!residenceData) {
     return <Text>Loading...</Text>;

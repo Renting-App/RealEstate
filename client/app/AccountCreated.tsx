@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     message: {
         fontSize: 24,
         fontWeight: "bold",
-        color: "#4BB543",
+        color: "#000080",
     },
 });
 

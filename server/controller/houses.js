@@ -67,8 +67,17 @@ exports.incrementPopular = async (req, res) => {
 exports.incrementRecommended = async (req, res) => {
   try {
     const { id } = req.params;
-    await House.findByIdAndUpdate(id, { $inc: { recommended: 1 } });
-    res.status(200).json({ message: "Recommended field incremented" });
+    if (!id) {
+      return res.status(400).json({ message: "ID is required" });
+    }
+
+    const result = await House.findByIdAndUpdate(id, { $inc: { recommended: 1 } }, { new: true });
+    
+    if (!result) {
+      return res.status(404).json({ message: "House not found" });
+    }
+
+    res.status(200).json({ message: "Recommended field incremented", data: result });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
