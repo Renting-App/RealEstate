@@ -300,7 +300,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   image: {
-    width: screenWidth - 70,
+    width: screenWidth - 30,
     height: screenHeight * 0.4,
     margin: 2,
   },

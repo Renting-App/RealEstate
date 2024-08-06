@@ -121,7 +121,7 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
             popular: residence.popular ?? 0,
             recommended: residence.recommended ?? 0,
           }))
-          .sort((a, b) => b.popular - a.popular); 
+          .sort((a:any, b:any) => b.popular - a.popular); 
 
         setResidences(mappedResidences);
         setFilteredResidences(mappedResidences);
@@ -519,7 +519,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#d89b00",
   },
   sale: {
-    backgroundColor: "#ffbf00",
+    backgroundColor: "#A9A9A9",
   },
   typeText: {
     fontSize: 12,
