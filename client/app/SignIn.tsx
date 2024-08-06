@@ -42,11 +42,11 @@ const Signin: React.FC<Props> = ({ navigation }) => {
       );
       const user = userCredential.user;
 
-      if (!user.emailVerified) {
-        Alert.alert('Email not verified', 'Please check your email and verify your account.');
-        await auth.signOut()
-        return
-    }
+    //   if (!user.emailVerified) {
+    //     Alert.alert('Email not verified', 'Please check your email and verify your account.');
+    //     await auth.signOut()
+    //     return
+    // }
       const userDoc = await getDoc(doc(firestore, "users", user.uid));
       const userData = userDoc.data();
       if (userData && userData.role === "admin") {
