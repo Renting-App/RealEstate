@@ -8,6 +8,7 @@ import { firestore } from "../config/firebase";
 import PropertyForm from "./PropertyForm";
 import * as ImagePicker from "expo-image-picker";
 import { API_BASE_URL } from "@/assets/IPaddress";
+import UpdateProfit from "./UpdateProfit";
 
 const CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/dw1sxdmac/upload";
 const CLOUDINARY_PRESET = "hotel_preset";
@@ -469,6 +470,7 @@ const PostProperty = () => {
         showMap={showMap}
         setShowMap={setShowMap}
       />
+         <UpdateProfit adminFee={propertyData.price * 0.01} />
     </View>
   );
 };

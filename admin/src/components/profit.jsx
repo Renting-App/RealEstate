@@ -1,72 +1,49 @@
-// Profit.js
-import React, { useEffect, useState } from 'react';
-import { firestore, auth } from '../config/firebase';
+import React, { useState, useEffect } from "react";
+import { doc, getDoc } from "firebase/firestore";
+import { firestore } from "../config/firebase";
+import "./AdminProfit.css";
 
 const Profit = () => {
-  const [profit, setProfit] = useState(0);
-  const [user, setUser] = useState(null);
-  const [error, setError] = useState(null);
-  const [amount, setAmount] = useState('');
-  const [notification, setNotification] = useState('');
+  const [profit, setProfit] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(async (user) => {
-      if (user) {
-        setUser(user);
-        const adminRef = firestore.collection('admin').doc(user.uid);
-        const doc = await adminRef.get();
-        if (doc.exists) {
-          setProfit(doc.data().profit);
+    const fetchProfit = async () => {
+      try {
+        const adminDocRef = doc(firestore, "admin", "adminDocumentID");
+        const adminDoc = await getDoc(adminDocRef);
+
+        if (adminDoc.exists()) {
+          setProfit(adminDoc.data().profit);
         } else {
-          setError('Admin data not found.');
+          console.error("Admin document not found!");
         }
-      } else {
-        setUser(null);
+      } catch (error) {
+        console.error("Error fetching profit:", error);
+      } finally {
+        setLoading(false);
       }
-    });
-    return () => unsubscribe();
+    };
+
+    fetchProfit();
   }, []);
 
-  const updateProfit = async (value) => {
-    try {
-      const adminRef = firestore.collection('admins').doc(user.uid);
-      await adminRef.update({ profit: firestore.FieldValue.increment(value) });
-      const updatedDoc = await adminRef.get();
-      setProfit(updatedDoc.data().profit);
-
-      // Set notification message
-      setNotification(`A percentage of ${value} DT added to the profit.`);
-      setTimeout(() => {
-        setNotification('');
-      }, 3000); // Hide notification after 3 seconds
-    } catch (error) {
-      setError(error.message);
-    }
-  };
-
-  const handleAdd = () => {
-    updateProfit(Number(amount));
-    setAmount('');
-  };
-
-  const handleSubtract = () => {
-    updateProfit(-Number(amount));
-    setAmount('');
-  };
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <div className="spinner"></div>
+      </div>
+    );
+  }
 
   return (
-    <div>
-      <h1>Admin Profit: {profit} DT</h1>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      {notification && <p style={{ color: 'green' }}>{notification}</p>}
-      <input
-        type="number"
-        value={amount}
-        onChange={(e) => setAmount(e.target.value)}
-        placeholder="Amount"
-      />
-      <button onClick={handleAdd}>Add</button>
-      <button onClick={handleSubtract}>Subtract</button>
+    <div className="admin-profit-container">
+      <div className="profit-card">
+        <h2 className="profit-title">Admin Profit</h2>
+        <p className="profit-amount">
+          {profit !== null ? `${profit} DT` : "No data available"}
+        </p>
+      </div>
     </div>
   );
 };
