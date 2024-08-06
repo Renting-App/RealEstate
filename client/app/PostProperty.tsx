@@ -3,8 +3,8 @@ import { View, StyleSheet, Alert } from "react-native";
 import axios from "axios";
 import * as Location from "expo-location";
 import { getAuth } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
-import { firestore } from "../config/firebase";
+import { doc, getDoc ,updateDoc, increment } from "firebase/firestore";
+import { firestore  } from "../config/firebase";
 import PropertyForm from "./PropertyForm";
 import * as ImagePicker from "expo-image-picker";
 import { API_BASE_URL } from "@/assets/IPaddress";
@@ -269,6 +269,13 @@ const PostProperty = () => {
                 const result = await response.json();
                 console.log("Property posted successfully:", result);
                 Alert.alert("Success", "Property posted successfully!");
+
+                 // Update the profit in Firebase
+                 const adminDocRef = doc(firestore, "admin", "admin");
+                 await updateDoc(adminDocRef, {
+                   profit: increment(adminFee),
+                 });
+                 
                 setPropertyData(initialPropertyData);
               } else {
                 const error = await response.json();

@@ -10,7 +10,7 @@ const Profit = () => {
   useEffect(() => {
     const fetchProfit = async () => {
       try {
-        const adminDocRef = doc(firestore, "admin", "adminDocumentID");
+        const adminDocRef = doc(firestore, "admin", "admin");
         const adminDoc = await getDoc(adminDocRef);
 
         if (adminDoc.exists()) {
