@@ -45,7 +45,7 @@ export type Residence = {
   subLocation: string;
   condition: string;
   favourite: boolean;
-  NotificationList :undefined;
+  NotificationList: undefined;
 };
 
 export type RootStackParamList = {
@@ -72,8 +72,8 @@ export type RootStackParamList = {
   EditProfile: undefined;
   AccountCreated: undefined;
   NotificationDetails: undefined;
-  NotificationList:undefined
-  FilteredDataComponent: { criteria: {}}
+  NotificationList: undefined
+  FilteredDataComponent: { criteria: {} }
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -98,45 +98,89 @@ export default function App() {
       <ThemeProvider>
         {/* <NavigationContainer> */}
         <Stack.Navigator
-         initialRouteName="Welcome"
-         screenOptions={({ route }) => ({
-           // Apply the slideFromBottom transition only for 'SignIn' and 'SignUp'
-           cardStyleInterpolator: route.name === 'SignIn' || route.name === 'SignUp' ? slideFromBottom : undefined,
-           headerShown: true,
-           headerTitle:''
-         })}
+          initialRouteName="Welcome"
+          screenOptions={({ route }) => ({
+            // Apply the slideFromBottom transition only for 'SignIn' and 'SignUp'
+            cardStyleInterpolator: route.name === 'SignIn' || route.name === 'SignUp' ? slideFromBottom : undefined,
+            headerShown: true,
+            headerTitle: ''
+          })}
         >
           <Stack.Screen
             name="Welcome"
             component={Welcome}
             options={{ headerShown: false }}
           />
-          <Stack.Screen name="SignIn" component={Signin} />
-          <Stack.Screen name="AccountCreated" component={AccountCreated} />
-          <Stack.Screen name="SignUp" component={Signup} />
+          <Stack.Screen
+            name="SignIn"
+            component={Signin}
+            options={{ headerShown: false }} />
+
+          <Stack.Screen
+            name="AccountCreated"
+            component={AccountCreated} />
+
+          <Stack.Screen
+            name="SignUp"
+            component={Signup}
+            options={{ headerShown: false }} />
+
           <Stack.Screen
             name="HousesScreen"
             component={HousesScreen}
             options={{ headerShown: false }}
           />
-          <Stack.Screen name="AboutUs" component={AboutUs} />
-          <Stack.Screen name="FAQ" component={FAQ} />
-          <Stack.Screen name="NotificationList" component={NotificationList} />
-          <Stack.Screen name="PostProperty" component={PostProperty} />
-          <Stack.Screen name="PropertyDetails" component={PropertyDetails} />
-          <Stack.Screen name="PostDetail" component={PostDetail} />
-          <Stack.Screen name="EditProfile" component={EditProfile} />
-          <Stack.Screen name="Favorite" component={Favorite} />
-          <Stack.Screen name="FilterComponent" component={FilterComponent} />
+          <Stack.Screen
+            name="AboutUs"
+            component={AboutUs} />
+
+          <Stack.Screen
+            name="FAQ"
+            component={FAQ} />
+
+          <Stack.Screen
+            name="NotificationList"
+            component={NotificationList} />
+
+          <Stack.Screen
+            name="PostProperty"
+            component={PostProperty} />
+
+          <Stack.Screen
+            name="PropertyDetails"
+            component={PropertyDetails} />
+
+          <Stack.Screen
+            name="PostDetail"
+            component={PostDetail} />
+
+          <Stack.Screen
+            name="EditProfile"
+            component={EditProfile} />
+
+          <Stack.Screen
+            name="Favorite"
+            component={Favorite} />
+
+          <Stack.Screen
+            name="FilterComponent"
+            component={FilterComponent} />
+
           <Stack.Screen
             name="FilteredDataComponent"
             component={FilteredDataComponent}
             options={{
-              headerRight: () => <HomeButton />, 
+              headerRight: () => <HomeButton />,
             }}
           />
-          <Stack.Screen name="Maps" component={Maps} />
-          <Stack.Screen name="RequestTour" component={RequestTour} />
+          <Stack.Screen
+            name="Maps"
+            component={Maps} />
+
+          <Stack.Screen
+            name="RequestTour"
+            component={RequestTour} />
+
           <Stack.Screen
             name="NotificationDetails"
             component={NotificationDetails}
@@ -146,9 +190,18 @@ export default function App() {
             component={AdminPage}
             options={{ headerShown: false }}
           />
-          <Stack.Screen name="ManagePosts" component={ManagePosts} />
-          <Stack.Screen name="MyAccount" component={MyAccount} />
-          <Stack.Screen name="MyProperties" component={MyProperties} />
+          <Stack.Screen
+            name="ManagePosts"
+            component={ManagePosts} />
+
+          <Stack.Screen
+            name="MyAccount"
+            component={MyAccount} />
+
+          <Stack.Screen
+            name="MyProperties"
+            component={MyProperties} />
+
           <Stack.Screen
             name="UpdatePropertyForm"
             component={UpdatePropertyForm}
