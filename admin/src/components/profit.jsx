@@ -7,6 +7,7 @@ const Profit = () => {
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
   const [amount, setAmount] = useState('');
+  const [notification, setNotification] = useState('');
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
@@ -32,6 +33,12 @@ const Profit = () => {
       await adminRef.update({ profit: firestore.FieldValue.increment(value) });
       const updatedDoc = await adminRef.get();
       setProfit(updatedDoc.data().profit);
+
+      // Set notification message
+      setNotification(`A percentage of ${value} DT added to the profit.`);
+      setTimeout(() => {
+        setNotification('');
+      }, 3000); // Hide notification after 3 seconds
     } catch (error) {
       setError(error.message);
     }
@@ -49,8 +56,9 @@ const Profit = () => {
 
   return (
     <div>
-      <h1>Admin Profit: {profit}</h1>
-      {error && <p>{error}</p>}
+      <h1>Admin Profit: {profit} DT</h1>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {notification && <p style={{ color: 'green' }}>{notification}</p>}
       <input
         type="number"
         value={amount}

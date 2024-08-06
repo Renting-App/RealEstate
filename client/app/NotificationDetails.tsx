@@ -19,6 +19,18 @@ const NotificationDetails: React.FC = () => {
   const { notification } = route.params;
   const parsedNotification = JSON.parse(notification);
 
+
+
+  // Check if parsedNotification exists
+  //profit
+  if (!parsedNotification) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.detailText}>No notification data available.</Text>
+      </View>
+    );
+  }
+
   const handleResponse = async (response: string) => {
     const message = `Your tour request for ${parsedNotification.residenceTitle} on ${parsedNotification.selectedVisitDate} has been ${response}.`;
 

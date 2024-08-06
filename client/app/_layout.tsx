@@ -27,11 +27,6 @@ import EditProfile from "./EditProfile";
 import AccountCreated from "./AccountCreated";
 import NotificationDetails from "./NotificationDetails";
 import NotificationList from "./NotificationList";
-import { StripeProvider } from '@stripe/stripe-react-native';
-import PaymentScreen from './PaymentScreen';
-
-const publishableKey = "your_publishable_key"; 
-
 export type Residence = {
   _id: string;
   title: string;
@@ -89,7 +84,7 @@ const slideFromBottom = ({ current }: any) => {
     outputRange: [600, 0], // Adjust the height to match your screen height
   });
 
-  return {         
+  return {
     cardStyle: {
       transform: [{ translateY }],
     },
@@ -99,11 +94,9 @@ const slideFromBottom = ({ current }: any) => {
 
 export default function App() {
   return (
-
     <FavoritesProvider>
       <ThemeProvider>
-{/* <NavigationContainer>  */}
-        <StripeProvider publishableKey={publishableKey}>
+        {/* <NavigationContainer> */}
         <Stack.Navigator
          initialRouteName="Welcome"
          screenOptions={({ route }) => ({
@@ -130,7 +123,6 @@ export default function App() {
           <Stack.Screen name="FAQ" component={FAQ} />
           <Stack.Screen name="NotificationList" component={NotificationList} />
           <Stack.Screen name="PostProperty" component={PostProperty} />
-          <Stack.Screen name="PaymentScreen" component={PaymentScreen} />
           <Stack.Screen name="PropertyDetails" component={PropertyDetails} />
           <Stack.Screen name="PostDetail" component={PostDetail} />
           <Stack.Screen name="EditProfile" component={EditProfile} />
@@ -157,14 +149,12 @@ export default function App() {
           <Stack.Screen name="ManagePosts" component={ManagePosts} />
           <Stack.Screen name="MyAccount" component={MyAccount} />
           <Stack.Screen name="MyProperties" component={MyProperties} />
-          
           <Stack.Screen
             name="UpdatePropertyForm"
             component={UpdatePropertyForm}
           />
         </Stack.Navigator>
-        </StripeProvider>
-         {/* </NavigationContainer>  */}
+        {/* </NavigationContainer> */}
       </ThemeProvider>
     </FavoritesProvider>
   );

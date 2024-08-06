@@ -62,8 +62,6 @@ interface Residence {
     longitude: number;
   };
   __v: number;
-  popular: number;
-  recommended: number;
 }
 
 const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
@@ -77,10 +75,8 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
   const [displayedResidences, setDisplayedResidences] = useState<Residence[]>(
     []
   );
+  const [showPagination, setShowPagination] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-  const [selectedTab, setSelectedTab] = useState<"popular" | "recommended">(
-    "popular"
-  );
 
   const navigation = useNavigation<HousesScreenNavigationProp>();
 
@@ -93,36 +89,31 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
     fetch(`${API_BASE_URL}/houses`)
       .then((response) => response.json())
       .then((data) => {
-      const mappedResidences = data
-          .map((residence: any) => ({
-            _id: residence._id ?? `id_${Date.now()}`,
-            title: residence.title ?? "",
-            address: residence.address ?? "",
-            size: residence.size ?? 0,
-            price: residence.price ?? 0,
-            rooms: residence.rooms ?? 0,
-            bathrooms: residence.bathrooms ?? 0,
-            description: residence.description ?? "",
-            contact_info: residence.contact_info ?? "",
-            images: residence.images ?? [],
-            operation: residence.operation ?? "",
-            category: residence.category ?? "",
-            location: residence.location ?? "",
-            subLocation: residence.subLocation ?? "",
-            visits: residence.visits ?? [],
-            favourite: residence.favourite ?? false,
-            date_of_creation: residence.date_of_creation ?? "",
-            amenities: residence.amenities ?? {},
-            status: residence.status ?? "",
-            notification: residence.notification ?? "",
-            iduser: residence.iduser ?? "",
-            condition: residence.condition ?? "",
-            map: residence.map ?? {},
-            popular: residence.popular ?? 0,
-            recommended: residence.recommended ?? 0,
-          }))
-          .sort((a, b) => b.popular - a.popular); 
-
+        const mappedResidences = data.map((residence: any) => ({
+          _id: residence._id ?? `id_${Date.now()}`,
+          title: residence.title ?? "",
+          address: residence.address ?? "",
+          size: residence.size ?? 0,
+          price: residence.price ?? 0,
+          rooms: residence.rooms ?? 0,
+          bathrooms: residence.bathrooms ?? 0,
+          description: residence.description ?? "",
+          contact_info: residence.contact_info ?? "",
+          images: residence.images ?? [],
+          operation: residence.operation ?? "",
+          category: residence.category ?? "",
+          location: residence.location ?? "",
+          subLocation: residence.subLocation ?? "",
+          visits: residence.visits ?? [],
+          favourite: residence.favourite ?? false,
+          date_of_creation: residence.date_of_creation ?? "",
+          amenities: residence.amenities ?? {},
+          status: residence.status ?? "",
+          notification: residence.notification ?? "",
+          iduser: residence.iduser ?? "",
+          condition: residence.condition ?? "",
+          map: residence.map ?? {},
+        }));
         setResidences(mappedResidences);
         setFilteredResidences(mappedResidences);
         setDisplayedResidences(mappedResidences.slice(0, itemsPerFetch));
@@ -132,13 +123,13 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
       .catch((error) => {
         console.error("Error fetching residences:", error);
         setLoading(false);
-        setRefreshing(false);
+        setRefreshing(false); 
       });
   };
 
   const handleRefresh = () => {
     setRefreshing(true);
-    fetchResidences();
+    fetchResidences(); 
   };
 
   const filterResidences = (residences: Residence[], criteria: any) => {
@@ -195,6 +186,9 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
   const handleShowMore = () => {
     const newDisplayedCount = displayedResidences.length + itemsPerFetch;
     setDisplayedResidences(filteredResidences.slice(0, newDisplayedCount));
+    if (newDisplayedCount >= 9) {
+      setShowPagination(true);
+    }
   };
 
   const handleDetailsPress = (residence: Residence) => {
@@ -215,26 +209,6 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
   const handleSalePress = () => {
     const saleCriteria = { ...criteria, operation: "sale" };
     filterResidences(residences, saleCriteria);
-  };
-
-  const handlePopularPress = () => {
-    const sortedResidences = [...filteredResidences].sort(
-      (a, b) => b.popular - a.popular
-    );
-    setSelectedTab("popular");
-    setFilteredResidences(sortedResidences);
-    setDisplayedResidences(sortedResidences.slice(0, itemsPerFetch));
-    setCurrentPage(1); 
-  };
-
-  const handleRecommendedPress = () => {
-    const sortedResidences = [...filteredResidences].sort(
-      (a, b) => b.recommended - a.recommended
-    );
-    setSelectedTab("recommended");
-    setFilteredResidences(sortedResidences);
-    setDisplayedResidences(sortedResidences.slice(0, itemsPerFetch));
-    setCurrentPage(1); 
   };
 
   const renderItem = ({ item }: { item: Residence }) => (
@@ -360,28 +334,6 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
                 <Text style={styles.filterCardText}>For Sale</Text>
               </TouchableOpacity>
             </View>
-            <View style={styles.tabsContainer}>
-              <TouchableOpacity onPress={handlePopularPress}>
-                <Text
-                  style={[
-                    styles.tabText,
-                    selectedTab === "popular" && styles.selectedTab,
-                  ]}
-                >
-                  Popular
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={handleRecommendedPress}>
-                <Text
-                  style={[
-                    styles.tabText,
-                    selectedTab === "recommended" && styles.selectedTab,
-                  ]}
-                >
-                  Recommended
-                </Text>
-              </TouchableOpacity>
-            </View>
           </ThemedView>
         }
         data={displayedResidences}
@@ -397,6 +349,10 @@ const HousesScreen: React.FC<HousesScreenProps> = ({ route }) => {
             </TouchableOpacity>
           ) : null
         }
+        onScroll={(e) => {
+          const offsetY = e.nativeEvent.contentOffset.y;
+          setShowPagination(offsetY > 200 && displayedResidences.length >= 9);
+        }}
         ListFooterComponentStyle={styles.footer}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
@@ -478,21 +434,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     padding: 10,
-  },
-  tabsContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    marginTop: 20,
-  },
-  tabText: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#666",
-    marginHorizontal: 20,
-  },
-  selectedTab: {
-    textDecorationLine: "underline",
-    color: "#000",
   },
   card: {
     backgroundColor: "#fff",
