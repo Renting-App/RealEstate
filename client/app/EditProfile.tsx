@@ -16,8 +16,9 @@ import {
   updatePassword,
   reauthenticateWithCredential,
   EmailAuthProvider,
+  deleteUser
 } from "firebase/auth";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc, deleteDoc } from "firebase/firestore";
 import { firestore } from "../config/firebase";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import * as ImagePicker from "expo-image-picker";
@@ -136,6 +137,40 @@ const EditProfile = () => {
     if (!result.canceled && result.assets && result.assets.length > 0) {
       setUser({ ...user, image: result.assets[0].uri });
     }
+  };
+  const handleDeleteAccount = async () => {
+    const currentUser = auth.currentUser;
+
+    if (currentUser) {
+      try {
+        await deleteDoc(doc(firestore, 'users', currentUser.uid));
+
+        await deleteUser(currentUser);
+
+        Alert.alert('Success', 'Account deleted successfully', [
+          { text: 'OK', onPress: () => router.push('/Welcome') },
+        ]);
+      } catch (error) {
+        if (error instanceof Error) {
+          setError(error.message);
+        } else {
+          setError('An unknown error occurred');
+        }
+      }
+    } else {
+      setError('No user is currently signed in');
+    }
+  };
+
+  const confirmDeleteAccount = () => {
+    Alert.alert(
+      'Confirm Account Deletion',
+      'Are you sure you want to delete your account? This action cannot be undone.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Delete', style: 'destructive', onPress: handleDeleteAccount },
+      ]
+    );
   };
 
   if (loading) {
@@ -280,6 +315,12 @@ const EditProfile = () => {
         <TouchableOpacity style={styles.button} onPress={handleSave}>
           <ThemedText style={styles.buttonText}>Save</ThemedText>
         </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.button, styles.deleteButton]}
+          onPress={confirmDeleteAccount}
+        >
+          <ThemedText style={styles.buttonText}>Delete Account</ThemedText>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );
@@ -293,7 +334,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    
+
   },
   loadingContainer: {
     flex: 1,
@@ -353,6 +394,9 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 10,
     right: 10,
+  },
+  deleteButton: {
+    backgroundColor: "red",
   },
 });
 

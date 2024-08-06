@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link,Navigate,useNavigate } from 'react-router-dom';
 import { auth } from '../config/firebase';
+import { firestore } from '../config/firebase';
+import { collection, getDocs } from 'firebase/firestore';
 import './style.css';
 import dashboardIcon from './img/icons8-dashboard-layout-24.png';
 import homeIcon from './img/icons8-home-page-24.png';
@@ -19,6 +21,7 @@ const Dashboard = () => {
     const [showNotification, setShowNotification] = useState(false);
     const [notifications, setNotifications] = useState([]);
     const [unreadCount, setUnreadCount] = useState(0);
+    const [userCount, setUserCount] = useState(0);
 
     const toggleNotification = () => {
         setShowNotification(!showNotification);
@@ -48,6 +51,14 @@ const Dashboard = () => {
             console.error('Error marking notifications as read:', error);
         }
     };
+    const fetchUserCount = async () => {
+        try {
+            const querySnapshot = await getDocs(collection(firestore, 'users'));
+            setUserCount(querySnapshot.size);
+        } catch (error) {
+            console.error('Error fetching user count:', error);
+        }
+    };
 
     const Logout = async () => {
         try {
@@ -60,6 +71,7 @@ const Dashboard = () => {
 
     useEffect(() => {
         fetchNotifications();
+        fetchUserCount();
     }, []);
 
     return (
@@ -82,7 +94,10 @@ const Dashboard = () => {
                     {/* <div className="first">
                         <img src={searchIcon} alt="Search Icon" />
                         <input type="text" />
-                    </div> */}
+                    </div>
+                    <div className="user-count">
+                    <h2>Total Users: {userCount}</h2>
+                </div>
                     <div className="end">
                         <div style={{ position: 'relative' }}>
                             <img src={alarmIcon} alt="Alarm Icon" onClick={toggleNotification} />
@@ -116,6 +131,7 @@ const Dashboard = () => {
                         </ul>
                     </div>
                 )}
+                 
             </div>
         </div>
     );
